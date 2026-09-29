@@ -51,6 +51,28 @@ def absolute(path: str) -> str:
     return f"{DOMAIN}{path}" if DOMAIN else path
 
 
+def inline_mark() -> str:
+    """The S mark (paper + acid on ink), inline and decorative."""
+    svg = (PUBLIC / "assets" / "brand" / "sga-creatives-mark.svg").read_text()
+    svg = re.sub(r'<title id="t">.*?</title>', "", svg)
+    svg = svg.replace(' role="img" aria-labelledby="t"', ' aria-hidden="true" focusable="false"')
+    return re.sub(r' width="\d+" height="\d+"', "", svg, count=1)
+
+
+# 24px line icons for the contact buttons (stroke = currentColor)
+ICONS = {
+    "mail": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/>',
+    "phone": '<path d="M5.5 3.5h3l1.8 4.6-2.3 1.4a11.5 11.5 0 0 0 6.5 6.5l1.4-2.3 4.6 1.8v3a2 2 0 0 1-2 2A17 17 0 0 1 3.5 5.5a2 2 0 0 1 2-2z"/>',
+    "linkedin": '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V17M8 7.5v.01M12 17v-6.5M12 13.2c0-1.6 1.1-2.7 2.5-2.7s2.5 1 2.5 2.7V17"/>',
+    "instagram": '<rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4"/><path d="M17.3 6.7v.01"/>',
+}
+
+
+def icon(name: str) -> str:
+    return (f'<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" '
+            f'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">{ICONS[name]}</svg>')
+
+
 def inline_logo(kind: str = "horizontal") -> str:
     name = "sga-creatives-logo-horizontal-dark.svg" if kind == "horizontal" else "sga-creatives-logo-dark.svg"
     svg = (PUBLIC / "assets" / "brand" / name).read_text()
@@ -124,22 +146,23 @@ def footer() -> str:
     return f"""
 <footer class="site-footer">
   <div class="container">
-    <div class="footer-grid">
-      <a class="brand brand--footer" href="/" aria-label="SGA creatives, home">{inline_logo("stacked")}</a>
+    <div class="footer-top">
+      <p class="footer-claim">Where brands <em>meet culture.</em></p>
       <nav class="footer-col" aria-label="Footer"><ul>{items}</ul></nav>
       <div class="footer-col"><ul>{work}</ul></div>
-      <div class="footer-col">
+      <div class="footer-col footer-contact">
         <ul>
           <li><a href="mailto:{SITE['email']}">{SITE['email']}</a></li>
           <li><a href="tel:{SITE['phone_href']}">{SITE['phone_display']}</a></li>
-          <li><a href="{SITE['linkedin']}" rel="noopener">Sarah on LinkedIn</a></li>
-          <li><a href="{SITE['instagram']}" rel="noopener">Sarah on Instagram</a></li>
+          <li><a href="{SITE['linkedin']}" rel="noopener">LinkedIn</a></li>
+          <li><a href="{SITE['instagram']}" rel="noopener">Instagram</a></li>
         </ul>
       </div>
     </div>
+    <a class="footer-wordmark" href="/" aria-label="SGA creatives, home" data-reveal>{inline_logo()}</a>
     <div class="footer-bottom">
-      <p>© <span data-year>{YEAR}</span> SGA creatives</p>
-      <a href="#top" class="back-to-top">Back to top <span aria-hidden="true">↑</span></a>
+      <p class="footer-legal"><span class="footer-mark">{inline_mark()}</span>© <span data-year>{YEAR}</span> SGA creatives</p>
+      <a href="#top" class="back-to-top">Back to top</a>
     </div>
   </div>
 </footer>"""
@@ -367,11 +390,11 @@ def home() -> str:
     <ul class="contact-topics" data-reveal>
       <li style="--i:0">Branding</li><li style="--i:1">Campaigns</li><li style="--i:2">Events</li><li style="--i:3">Collaborations</li>
     </ul>
-    <a class="contact-email" href="mailto:{SITE['email']}">{SITE['email']}</a>
-    <ul class="contact-links">
-      <li><a href="tel:{SITE['phone_href']}">{SITE['phone_display']}</a></li>
-      <li><a href="{SITE['linkedin']}" rel="noopener">LinkedIn <span aria-hidden="true">↗</span></a></li>
-      <li><a href="{SITE['instagram']}" rel="noopener">Instagram <span aria-hidden="true">↗</span></a></li>
+    <ul class="contact-icons" data-reveal>
+      <li style="--i:0"><a class="icon-btn" href="mailto:{SITE['email']}">{icon("mail")}<span class="icon-label">Email</span><span class="sr-only"> Sarah at {SITE['email']}</span></a></li>
+      <li style="--i:1"><a class="icon-btn" href="tel:{SITE['phone_href']}">{icon("phone")}<span class="icon-label">Call</span><span class="sr-only"> Sarah on {SITE['phone_display']}</span></a></li>
+      <li style="--i:2"><a class="icon-btn" href="{SITE['linkedin']}" rel="noopener">{icon("linkedin")}<span class="icon-label">LinkedIn</span><span class="sr-only">: Sarah Al-farhan</span></a></li>
+      <li style="--i:3"><a class="icon-btn" href="{SITE['instagram']}" rel="noopener">{icon("instagram")}<span class="icon-label">Instagram</span><span class="sr-only">: @sarahalfarhan</span></a></li>
     </ul>
   </div>
 </section>

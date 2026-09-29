@@ -30,6 +30,8 @@ Statisk hjemmeside for SGA creatives (Sarah Al-farhan). Den forbinder brands med
 - Kontakt: Branding, Campaigns, Events og Collaborations springer ind ét ord ad gangen med en dyb rød understregning (samme rød som Nike, `--red`). Den ligger under ordene, ikke bag dem, af hensyn til kontrasten.
 - About: portrættet afdækkes nedefra med zoom og glider let i rammen ved scroll (`data-scroll="parallax"`). "My process" er fire store ord i omrids, der fyldes fra venstre ved scroll (`data-scroll="fill"`), med en personlig linje i Sarahs stemme. Ingen pile. Titel: "Brand & Creative Manager".
 - Kanten under topmenuen vises først, når man scroller.
+- Kontakt: mail, telefon, LinkedIn og Instagram er runde ikon-knapper (ikke synlig adresse); labels vises ved hover. E-mailadressen står som tekst i footeren.
+- Footer: claim, links og et kæmpe SGA-logo, der rejser sig ved scroll; "Back to top" uden pil; S-mærket snurrer ved hover.
 - Topmenu: logo til venstre, Work, Services og About til højre. Ingen Contact-knap (kontakt findes nederst og i footeren).
 
 ## Arkitektur
