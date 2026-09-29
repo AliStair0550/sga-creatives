@@ -232,11 +232,19 @@ def alt_for(c: dict, name: str) -> str:
     return c["lead"]["alt"] if c["lead"]["image"] == name else ""
 
 
+def pattern_attrs(c: dict) -> tuple[str, str]:
+    """Extra class + data attribute for cases with a halftone pattern (content/cases.json "pattern")."""
+    if not c.get("pattern"):
+        return "", ""
+    return f" has-pattern pattern-{c['pattern']}", ' data-scroll="parallax"'
+
+
 def universe(i: int, c: dict) -> str:
     """One case on the home page: a full-width panel in the case's own tone."""
     flip = " is-flipped" if i % 2 else ""
+    pcls, pdata = pattern_attrs(c)
     return f"""
-  <article class="universe tone-{c['tone']['mode']}{flip}" style="{tone_style(c)}">
+  <article class="universe tone-{c['tone']['mode']}{flip}{pcls}" style="{tone_style(c)}"{pdata}>
     <div class="universe-inner container">
       <div class="universe-main" data-reveal>{media(c['card_image'], alt_for(c, c['card_image']), "(min-width: 900px) 50vw, 100vw")}</div>
       <div class="universe-second" data-reveal>{media(c['card_image_2'], alt_for(c, c['card_image_2']), "(min-width: 900px) 22vw, 45vw")}</div>
@@ -427,7 +435,7 @@ def case_page(i: int, c: dict) -> str:
     body = f"""
 <article class="case tone-{mode}" style="{tone_style(c)}">
   <header class="case-cover">
-    <div class="case-cover-text">
+    <div class="case-cover-text{pattern_attrs(c)[0]}"{pattern_attrs(c)[1]}>
       <nav class="case-crumbs" aria-label="Breadcrumb">
         <a href="/#work"><span aria-hidden="true">←</span> All work</a>
       </nav>

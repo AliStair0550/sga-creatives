@@ -159,50 +159,83 @@ def logo_horizontal_svg(fg: str, title: str) -> tuple[str, float, float]:
     return svg, width, height
 
 
-MARK_SIZE = 58      # S, in units of a 64-unit square
-MARK_STROKE = 0     # Figtree ExtraBold needs no extra weight at 16 px
-MARK_DOT = 11
+# ---------------------------------------------------------------- the mark: a creative S
+# Two hooks that lock into each other (the same idea as the services boxes): the upper hook in
+# paper, the lower in acid, slanted forward. Drawn on a 64-unit grid, stroke 10.
+MARK_SKEW = 0.2126          # tan(12deg), forward slant
+MARK_SHIFT = 7              # re-centres the slanted S
+UPPER = "M46 16H26a8.5 8.5 0 0 0 0 17h8"
+LOWER = "M30 31h8a8.5 8.5 0 0 1 0 17H18"
 
 
-def mark_geometry():
-    s = Text(SERIF_MARK, "S", MARK_SIZE)
-    lsb, rsb = s.ink_bounds()
-    glyph_w = s.width() - lsb - rsb
-    ch = cap_height(SERIF_MARK, MARK_SIZE)
-    total = glyph_w + 2 + MARK_DOT
-    x = (64 - total) / 2 - lsb
-    baseline = (64 + ch) / 2 + 0.5
-    return x, baseline, x + lsb + glyph_w + 2, MARK_DOT
-
-
-def mark_svg(bg: str = INK, fg: str = PAPER, accent: str = ACID, radius: float = 0) -> str:
-    """Compact mark: serif S with an acid full stop on an ink square (64-unit grid)."""
-    x, baseline, dot_x, dot = mark_geometry()
-    s = Text(SERIF_MARK, "S", MARK_SIZE)
+def mark_svg(bg: str = INK, radius: float = 0) -> str:
     return (
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" '
         'role="img" aria-labelledby="t"><title id="t">SGA creatives</title>'
         f'<rect width="64" height="64" rx="{radius}" fill="{bg}"/>'
-        f'<path fill="{fg}" stroke="{fg}" stroke-width="{MARK_STROKE}" stroke-linejoin="round" d="{s.path(x, baseline)}"/>'
-        f'<rect x="{dot_x:.2f}" y="{baseline - dot:.2f}" width="{dot}" height="{dot}" fill="{accent}"/>'
+        f'<g transform="skewX(-12) translate({MARK_SHIFT} 0)" fill="none" stroke-width="10">'
+        f'<path d="{UPPER}" stroke="{PAPER}"/><path d="{LOWER}" stroke="{ACID}"/></g>'
         "</svg>"
     )
 
 
+def _hook_mask(n: int, unit: float, upper: bool) -> Image.Image:
+    """Unslanted hook as a mask: two bars plus a half ring (outer r 13.5, inner r 3.5)."""
+    m = Image.new("L", (n, n), 0)
+    d = ImageDraw.Draw(m)
+    u = lambda v: v * unit
+    if upper:
+        bars = [(26, 11, 46, 21), (26, 28, 34, 38)]
+        cx, cy, start, end = 26, 24.5, 90, 270        # left half
+    else:
+        bars = [(30, 26, 38, 36), (18, 43, 38, 53)]
+        cx, cy, start, end = 38, 39.5, 270, 450       # right half
+    for x0, y0, x1, y1 in bars:
+        d.rectangle([u(x0), u(y0), u(x1), u(y1)], fill=255)
+    d.pieslice([u(cx - 13.5), u(cy - 13.5), u(cx + 13.5), u(cy + 13.5)], start, end, fill=255)
+    d.ellipse([u(cx - 3.5), u(cy - 3.5), u(cx + 3.5), u(cy + 3.5)], fill=0)
+    # keep the bars that pass through the inner circle
+    for x0, y0, x1, y1 in bars:
+        d.rectangle([u(x0), u(y0), u(x1), u(y1)], fill=255)
+    return m
+
+
 def raster_mark(px: int, radius_ratio: float = 0.0) -> Image.Image:
-    """Pixel version of the compact mark, drawn from the same font at 8x and downsampled."""
+    """Pixel version of the mark, drawn at 8x, slanted with an affine transform, then downsampled."""
     ss = 8
     n = px * ss
+    unit = n / 64
     im = Image.new("RGBA", (n, n), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
     d.rounded_rectangle([0, 0, n - 1, n - 1], radius=int(n * radius_ratio), fill=INK)
-    unit = n / 64
-    font = static_font(FIGTREE, MARK_AXES, round(MARK_SIZE * unit))
-    x, baseline, dx, dot = mark_geometry()
-    d.text((x * unit, baseline * unit), "S", font=font, fill=PAPER, anchor="ls",
-           stroke_width=round(MARK_STROKE / 2 * unit), stroke_fill=PAPER)
-    d.rectangle([dx * unit, (baseline - dot) * unit, (dx + dot) * unit, baseline * unit], fill=ACID)
+    # output (x, y) samples input (x - shift + skew*y, y): the inverse of skewX(-12) translate(7 0)
+    affine = (1, MARK_SKEW, -MARK_SHIFT * unit, 0, 1, 0)
+    for upper, colour in ((True, PAPER), (False, ACID)):
+        mask = _hook_mask(n, unit, upper).transform((n, n), Image.AFFINE, affine, resample=Image.BICUBIC)
+        im.paste(Image.new("RGBA", (n, n), colour), (0, 0), mask)
     return im.resize((px, px), Image.LANCZOS)
+
+
+# ---------------------------------------------------------------- halftone pattern
+def halftone_svg(cols: int = 64, rows: int = 40, step: float = 12, max_r: float = 6.4) -> str:
+    """Halftone dot field: dots are largest in the bottom-left corner and fade out towards the
+    opposite side. One colour (paper); the page sets its opacity and position."""
+    import math
+    W, H = cols * step, rows * step
+    diag = math.hypot(W, H) * 0.66
+    dots = []
+    for j in range(rows):
+        for i in range(cols):
+            x, y = i * step + step / 2, j * step + step / 2
+            t = 1 - math.hypot(x, H - y) / diag          # 1 in the corner, 0 far away
+            if t <= 0:
+                continue
+            r = max_r * (t ** 1.25)             # dots merge into a solid field in the corner
+            if r < 0.35:
+                continue
+            dots.append(f'<circle cx="{x:g}" cy="{y:g}" r="{r:.2f}"/>')
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W:g} {H:g}" preserveAspectRatio="xMinYMax slice">'
+            f'<g fill="#F3F0E9">{"".join(dots)}</g></svg>')
 
 
 def og_image(path: Path) -> None:
@@ -244,6 +277,8 @@ def main() -> None:
     hlight, _, _ = logo_horizontal_svg(PAPER, "SGA creatives")
     mark = mark_svg()
     mark_round = mark_svg(radius=12)
+    (PUBLIC / "assets" / "pattern").mkdir(parents=True, exist_ok=True)
+    (PUBLIC / "assets" / "pattern" / "halftone.svg").write_text(halftone_svg())
 
     files = {
         "sga-creatives-logo-dark.svg": dark,    # ink logo for light backgrounds
