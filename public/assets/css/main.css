@@ -618,8 +618,8 @@ main:focus { outline: none; }
   transition: background-color 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
 }
 .back-to-top:hover { background: var(--acid); color: var(--ink); border-color: var(--acid); }
-@media (min-width: 700px) { .footer-top { grid-template-columns: repeat(3, minmax(0, 1fr)); } .footer-claim { grid-column: 1 / -1; } }
-@media (min-width: 1100px) { .footer-top { grid-template-columns: 1.6fr 1fr 1.2fr 1.2fr; } .footer-claim { grid-column: auto; } }
+@media (min-width: 700px) { .footer-top { grid-template-columns: repeat(2, minmax(0, 1fr)); } .footer-claim { grid-column: 1 / -1; } }
+@media (min-width: 1100px) { .footer-top { grid-template-columns: 2fr 1fr 1.2fr; } .footer-claim { grid-column: auto; } }
 
 /* ------------------------------------------------------------ placeholders */
 

@@ -33,7 +33,7 @@ Statisk hjemmeside for SGA creatives (Sarah Al-farhan). Den forbinder brands med
 - Kanten under topmenuen vises først, når man scroller.
 - Casesider: én "Get in touch"-knap (details/summary), der folder ud til Email og Call. Ingen henvisning til kontaktsektionen.
 - Kontakt: mail, telefon, LinkedIn og Instagram er runde ikon-knapper (ikke synlig adresse); labels vises ved hover. E-mailadressen står som tekst i footeren.
-- Footer: claim, links og et kæmpe SGA-logo, der rejser sig ved scroll; "Back to top" uden pil; S-mærket snurrer ved hover.
+- Footer: kun Portfolio, Services, About og Contact (ingen caseliste). Claim, links og et kæmpe SGA-logo, der rejser sig ved scroll; "Back to top" uden pil; S-mærket snurrer ved hover.
 - Topmenu: logo til venstre, **Portfolio** (`/work/`) og About til højre. Footeren har Portfolio, Services, About og Contact.
 - Portfolio-siden (`/work/`) er et fedt indeks med kæmpe projektnavne. På desktop fyldes rækken ved hover med casens tone, de andre tones ned, og billedet følger musen (`main.js`). På touch vises en thumbnail. Casesidernes brødkrumme peger på Portfolio. Ingen Contact-knap (kontakt findes nederst og i footeren).
 
@@ -45,6 +45,7 @@ content/cases.json     de fem cases (tekst, roller, credits, billeder, alt-tekst
 tools/build_site.py    genererer ALLE html-sider + robots, sitemap, manifest, _headers i public/
 tools/optimize_media.py  assets/ (originaler) -> public/assets/img + video (AVIF/WebP/JPEG)
 tools/make_brand.py    logoer, favicons, delingsbillede
+tools/share/            delingsbilleder pr. side (node + playwright-core, bruger Google Chrome)
 tools/retouch_lookbook_hero.py  hero-udgave af lookbook-coveret uden tekst (kræver numpy + opencv); originalen bruges på casesiden
 tools/check.py         kvalitetsgate før commit
 public/                det publicerede site (html genereres, css/js redigeres direkte)

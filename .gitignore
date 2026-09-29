@@ -11,3 +11,6 @@ __pycache__/
 
 # Private material: brief, CV, source docs and open questions. Never commit (the repo is public).
 docs/intern/
+
+# share image tool scratch
+tools/share/.tmp/

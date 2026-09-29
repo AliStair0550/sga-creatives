@@ -1,0 +1,8 @@
+{
+  "name": "sga-share-images",
+  "private": true,
+  "type": "module",
+  "description": "Generates the Open Graph share images for SGA creatives (see make_share_images.mjs).",
+  "scripts": { "build": "node make_share_images.mjs" },
+  "devDependencies": { "playwright-core": "^1.63.0" }
+}

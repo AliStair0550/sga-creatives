@@ -27,7 +27,7 @@ CASES = json.loads((ROOT / "content" / "cases.json").read_text())
 MANIFEST = json.loads((ROOT / "content" / "media-manifest.json").read_text())
 DOMAIN = SITE.get("domain", "").rstrip("/")
 YEAR = date.today().year
-OG_IMAGE = "/assets/og/sga-creatives-share.jpg"
+OG_IMAGE = "/assets/og/home.jpg"   # share images are made by tools/make_share_images.mjs
 
 # Runs before first paint: flags JS support (for reveal animations) and removes
 # the flag again if main.js never loads, so content can never stay hidden.
@@ -161,14 +161,12 @@ def header(tone: str = "dark", path: str = "/") -> str:
 
 def footer() -> str:
     items = "".join(f'<li><a href="{href}">{label}</a></li>' for label, href in NAV)
-    work = "".join(f'<li><a href="/work/{c["slug"]}/">{e(c["title"])}</a></li>' for c in CASES)
     return f"""
 <footer class="site-footer">
   <div class="container">
     <div class="footer-top">
       <p class="footer-claim">Where brands <em>meet culture.</em></p>
       <nav class="footer-col" aria-label="Footer"><ul>{items}</ul></nav>
-      <div class="footer-col"><ul>{work}</ul></div>
       <div class="footer-col footer-contact">
         <ul>
           <li><a href="mailto:{SITE['email']}">{SITE['email']}</a></li>
@@ -188,8 +186,8 @@ def footer() -> str:
 
 
 def page(*, title: str, description: str, path: str, body: str, body_class: str = "",
-         og_type: str = "website", og_image: str = OG_IMAGE, extra_head: str = "",
-         indexable: bool = True, header_tone: str = "dark") -> str:
+         og_type: str = "website", og_image: str = OG_IMAGE, og_image_alt: str = "SGA creatives: Where brands meet culture.",
+         extra_head: str = "", indexable: bool = True, header_tone: str = "dark", jsonld: list | None = None) -> str:
     canonical = f'<link rel="canonical" href="{DOMAIN}{path}">' if DOMAIN and indexable else ""
     og_url = f'<meta property="og:url" content="{DOMAIN}{path}">' if DOMAIN and indexable else ""
     robots = "" if indexable else '<meta name="robots" content="noindex">'
@@ -208,11 +206,20 @@ def page(*, title: str, description: str, path: str, body: str, body_class: str 
 <meta property="og:type" content="{og_type}">
 <meta property="og:title" content="{e(title)}">
 <meta property="og:description" content="{e(description)}">
+<meta name="author" content="SGA creatives">
 <meta property="og:image" content="{absolute(og_image)}">
-<meta property="og:image:alt" content="SGA creatives: Where brands meet culture.">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{e(og_image_alt)}">
 <meta property="og:locale" content="en_GB">
 {og_url}
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{e(title)}">
+<meta name="twitter:description" content="{e(description)}">
+<meta name="twitter:image" content="{absolute(og_image)}">
+<meta name="twitter:image:alt" content="{e(og_image_alt)}">
+{"".join(f'<script type="application/ld+json">{json.dumps(block, ensure_ascii=False)}</script>' for block in (jsonld or []))}
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -233,6 +240,58 @@ def page(*, title: str, description: str, path: str, body: str, body_class: str 
 </body>
 </html>
 """
+
+
+# ---------------------------------------------------------------- structured data (search engines only)
+
+def _id(frag: str) -> str:
+    return f"{DOMAIN}/#{frag}"
+
+
+def org_ld() -> dict:
+    return {
+        "@type": "Organization", "@id": _id("org"), "name": "SGA creatives", "url": DOMAIN + "/",
+        "logo": DOMAIN + "/assets/brand/icon-512.png",
+        "description": "SGA creatives connects brands with creative people and leads projects across branding, campaigns and cultural experiences.",
+        "email": SITE["email"], "telephone": SITE["phone_display"],
+        "founder": {"@id": _id("sarah")},
+        "knowsAbout": ["Brand strategy", "Creative direction", "Campaigns", "Creative production", "Events", "Brand experiences", "Project management"],
+    }
+
+
+def person_ld() -> dict:
+    ld = {
+        "@type": "Person", "@id": _id("sarah"), "name": "Sarah Al-farhan", "jobTitle": "Brand & Creative Manager",
+        "sameAs": [SITE["linkedin"], SITE["instagram"]], "worksFor": {"@id": _id("org")},
+    }
+    if "sarah-al-farhan-01" in MANIFEST:
+        ld["image"] = f"{DOMAIN}/assets/img/sarah-al-farhan-01-800.jpg"
+    return ld
+
+
+def breadcrumbs_ld(trail: list[tuple[str, str]]) -> dict:
+    return {"@type": "BreadcrumbList", "itemListElement": [
+        {"@type": "ListItem", "position": i + 1, "name": name, "item": DOMAIN + path} for i, (name, path) in enumerate(trail)]}
+
+
+def graph(*nodes: dict) -> list[dict]:
+    return [{"@context": "https://schema.org", "@graph": list(nodes)}] if DOMAIN else []
+
+
+def case_ld(c: dict) -> dict:
+    ld = {
+        "@type": "CreativeWork", "@id": f"{DOMAIN}/work/{c['slug']}/#work",
+        "name": f"{c['title']}: {c['subtitle']}", "headline": c["title"], "description": c["meta_description"],
+        "url": f"{DOMAIN}/work/{c['slug']}/", "inLanguage": "en", "genre": c["category"],
+        "isPartOf": {"@id": f"{DOMAIN}/work/#page"}, "publisher": {"@id": _id("org")},
+    }
+    lead = c["lead"]["image"]
+    if lead in MANIFEST:
+        ld["image"] = f"{DOMAIN}/assets/img/{lead}-{MANIFEST[lead]['fallback']}.jpg"
+    # credit Sarah only where her role is documented on the page itself
+    if any(k.startswith("Sarah") for k, _ in c["facts"]):
+        ld["creator"] = {"@id": _id("sarah")}
+    return ld
 
 
 # ---------------------------------------------------------------- home page
@@ -328,24 +387,8 @@ def home() -> str:
           <li><span class="xp-company">{e(co)}</span><span class="xp-role">{e(role)}</span><span class="xp-years">{yrs}</span></li>"""
                          for co, role, yrs in EXPERIENCE)
 
-    ld = {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "SGA creatives",
-        "description": "SGA creatives connects brands with creative people and leads projects across branding, campaigns and cultural experiences.",
-        "email": SITE["email"],
-        "telephone": SITE["phone_display"],
-        "founder": {
-            "@type": "Person",
-            "name": "Sarah Al-farhan",
-            "jobTitle": "Brand & Creative Manager",
-            "sameAs": [SITE["linkedin"], SITE["instagram"]],
-        },
-    }
-    if DOMAIN:
-        ld["url"] = DOMAIN + "/"
-        ld["logo"] = DOMAIN + "/assets/brand/icon-512.png"
-    extra_head = f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>'
+    website = {"@type": "WebSite", "@id": _id("website"), "url": DOMAIN + "/", "name": "SGA creatives",
+               "inLanguage": "en", "publisher": {"@id": _id("org")}}
 
     hero_imgs = [
         ("rezet-lookbook-01-hero", "A model from the Rezet Store Lookbook Autumn Winter 2025 in a black track jacket and a long grey pleated skirt.", "hero-img hero-img--side"),
@@ -420,11 +463,12 @@ def home() -> str:
 """
     return page(
         title="SGA creatives: Where brands meet culture",
-        description="SGA creatives connects brands with creative people and leads projects across branding, campaigns and cultural experiences, with a focus on fashion, footwear, lifestyle and culture.",
+        description="SGA creatives connects brands with creative people and leads projects in branding, campaigns and cultural experiences for fashion, footwear and lifestyle.",
         path="/",
         body=body,
         body_class="page-home",
-        extra_head=extra_head,
+        og_image_alt="SGA creatives: Where brands meet culture. Portraits from the Rezet Lookbook, adidas Ways to Style and Timberland × Rezet.",
+        jsonld=graph(org_ld(), person_ld(), website),
     )
 
 
@@ -524,8 +568,6 @@ def case_page(i: int, c: dict) -> str:
   </section>
 </article>
 """
-    lead = c["lead"]["image"]
-    og = f"/assets/img/{lead}-{MANIFEST[lead]['fallback']}.jpg" if lead in MANIFEST else OG_IMAGE
     return page(
         title=f"{c['title']}: {c['subtitle']} | SGA creatives",
         description=c["meta_description"],
@@ -533,7 +575,9 @@ def case_page(i: int, c: dict) -> str:
         body=body,
         body_class=f"page-case tone-page-{mode}",
         og_type="article",
-        og_image=og,
+        og_image=f"/assets/og/{c['slug']}.jpg",
+        og_image_alt=f"{c['title']}, {c['subtitle']}. A project in the SGA creatives portfolio.",
+        jsonld=graph(case_ld(c), breadcrumbs_ld([("Home", "/"), ("Portfolio", "/work/"), (c["title"], f"/work/{c['slug']}/")])),
         header_tone=mode,
     )
 
@@ -562,6 +606,16 @@ def portfolio() -> str:
         path="/work/",
         body=body,
         body_class="page-portfolio",
+        og_image="/assets/og/portfolio.jpg",
+        og_image_alt="SGA creatives portfolio: adidas, Rezet Store, Timberland and Nike.",
+        jsonld=graph(
+            {"@type": "CollectionPage", "@id": f"{DOMAIN}/work/#page", "url": f"{DOMAIN}/work/", "name": "Portfolio",
+             "isPartOf": {"@id": _id("website")}, "about": {"@id": _id("sarah")},
+             "mainEntity": {"@type": "ItemList", "itemListElement": [
+                 {"@type": "ListItem", "position": i + 1, "url": f"{DOMAIN}/work/{c['slug']}/", "name": c["title"]}
+                 for i, c in enumerate(CASES)]}},
+            breadcrumbs_ld([("Home", "/"), ("Portfolio", "/work/")]),
+        ),
     )
 
 

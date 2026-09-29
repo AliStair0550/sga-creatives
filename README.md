@@ -23,6 +23,7 @@ SGAcreatives/                ← repo-roden (github.com/AliStair0550/sga-creativ
 │   ├── optimize_media.py    laver AVIF/WebP/JPEG i flere størrelser samt video og poster
 │   ├── make_brand.py        genererer logoer, favicons og delingsbillede
 │   ├── retouch_lookbook_hero.py  hero-udgave af lookbook-coveret uden coverteksten
+│   ├── share/               delingsbilleder (Open Graph) til hver side: `cd tools/share && npm install && npm run build`
 │   └── fonts-src/           originale fontfiler og OFL-licenser
 │   └── check.py             kvalitetstjek før hver commit
 ├── brand/                   logofiler (SVG/PNG) og brandguide.html
@@ -99,6 +100,16 @@ Galleriet i hver case (`gallery` i `content/cases.json`) kan indeholde billeder,
 4. Commit og push.
 
 `layout` styrer formatet: `wide` er fuld bredde (16:9), `half` er halv bredde og `third` er en tredjedel (begge 4:5). Portrættet i About hedder `sarah-al-farhan-01`. `check.py` viser, hvilke pladsholdere der stadig venter.
+
+## Deling og SEO
+
+- Hver side har sit eget delingsbillede i 1200 × 630 (`public/assets/og/`): forsiden, Portfolio og én pr. case i casens farve. Lav dem igen efter ændringer i cases eller billeder:
+  ```bash
+  cd tools/share && npm install && npm run build && cd ../.. && python3 tools/build_site.py
+  ```
+- Titler, beskrivelser, canonical, Open Graph og Twitter/X-kort genereres af `tools/build_site.py`. Beskrivelserne til cases står i `meta_description` i `content/cases.json` (hold dem under 160 tegn).
+- Strukturerede data (JSON-LD) er usynlige for besøgende: organisation, person (Sarah), website, portfolio-liste, casene som `CreativeWork` og brødkrummer.
+- Test en delt side med LinkedIns Post Inspector (https://www.linkedin.com/post-inspector/) og Facebooks Sharing Debugger. De tømmer også deres cache, hvis et gammelt billede hænger ved.
 
 ## Tilføj en ny case
 

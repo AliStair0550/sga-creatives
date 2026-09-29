@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the SGA creatives logo files, favicons and share image.
+"""Generate the SGA creatives logo files and favicons (share images: tools/share/).
 
 Usage (from the project root):
     python3 tools/make_brand.py
@@ -217,38 +217,9 @@ def raster_mark(px: int, radius_ratio: float = 0.0) -> Image.Image:
     return im.resize((px, px), Image.LANCZOS)
 
 
-def og_image(path: Path) -> None:
-    """1200x630 share image: ink panel with the wordmark + project photo."""
-    W, H = 1200, 630
-    im = Image.new("RGB", (W, H), INK)
-    photo = Image.open(ROOT / "assets/images/adidas-kiosk-04.jpg").convert("RGB")
-    pw = 520
-    ph = round(photo.height * pw / photo.width)
-    photo = photo.resize((pw, ph), Image.LANCZOS)
-    top = int((ph - H) * 0.42)
-    im.paste(photo.crop((0, top, pw, top + H)), (W - pw, 0))
-    d = ImageDraw.Draw(im)
-    serif = static_font(FIGTREE, LOGO_AXES, 150)
-    grot = static_font(FONTS / "Archivo-VF.ttf", {"wght": 560, "wdth": 125}, 26)
-    d.text((68, 236), "SGA", font=serif, fill=PAPER, anchor="ls")
-    d.rectangle([72, 262, 72 + 150, 263], fill=PAPER)
-    d.text((240, 272), "creatives", font=grot, fill=PAPER, anchor="lm")
-    # Pillow has no kerning here, so the tagline is set in tracked capitals.
-    caps = static_font(FONTS / "Archivo-VF.ttf", {"wght": 560, "wdth": 125}, 22)
-    x = 72
-    for word in ["WHERE", "BRANDS", "MEET", "CULTURE"]:
-        for ch in word:
-            d.text((x, 560), ch, font=caps, fill=PAPER, anchor="ls")
-            x += d.textlength(ch, font=caps) + 4
-        x += 14
-    d.rectangle([x - 6, 548, x + 6, 560], fill=ACID)
-    im.save(path, quality=86, optimize=True, progressive=True)
-
-
 def main() -> None:
     BRAND.mkdir(exist_ok=True)
     (PUBLIC / "assets" / "brand").mkdir(parents=True, exist_ok=True)
-    (PUBLIC / "assets" / "og").mkdir(parents=True, exist_ok=True)
 
     dark, w, h = logo_svg(INK, "SGA creatives")
     light, _, _ = logo_svg(PAPER, "SGA creatives")
@@ -277,7 +248,6 @@ def main() -> None:
     base = raster_mark(48, 0.19)
     base.save(PUBLIC / "favicon.ico", sizes=[(s, s) for s in ico_sizes],
               append_images=[raster_mark(s, 0.19) for s in ico_sizes[:-1]])
-    og_image(PUBLIC / "assets" / "og" / "sga-creatives-share.jpg")
     print(f"logo viewBox {w:.1f} x {h:.1f}")
 
 
