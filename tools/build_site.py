@@ -300,7 +300,6 @@ def case_ld(c: dict) -> dict:
 # the problem on the left, the solution on the right. The service name is a hidden heading
 # for screen readers and search engines. Keep the lines short and roughly equal in length.
 SERVICES = [
-    ("Brand strategy & creative direction", "Your brand lacks a clear identity.", "We make it distinctive and culturally relevant."),
     ("Campaigns & creative production", "Your campaigns don’t connect with people.", "We turn cultural insight into campaigns that land."),
     ("Events & experiences", "Your events lack real connection.", "We create experiences that bring people together."),
     ("Connections & project management", "Your projects lose direction and momentum.", "We bring the right people in and keep it moving."),
