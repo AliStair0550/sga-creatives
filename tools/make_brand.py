@@ -216,28 +216,6 @@ def raster_mark(px: int, radius_ratio: float = 0.0) -> Image.Image:
     return im.resize((px, px), Image.LANCZOS)
 
 
-# ---------------------------------------------------------------- halftone pattern
-def halftone_svg(cols: int = 64, rows: int = 40, step: float = 12, max_r: float = 6.4) -> str:
-    """Halftone dot field: dots are largest in the bottom-left corner and fade out towards the
-    opposite side. One colour (paper); the page sets its opacity and position."""
-    import math
-    W, H = cols * step, rows * step
-    diag = math.hypot(W, H) * 0.66
-    dots = []
-    for j in range(rows):
-        for i in range(cols):
-            x, y = i * step + step / 2, j * step + step / 2
-            t = 1 - math.hypot(x, H - y) / diag          # 1 in the corner, 0 far away
-            if t <= 0:
-                continue
-            r = max_r * (t ** 1.25)             # dots merge into a solid field in the corner
-            if r < 0.35:
-                continue
-            dots.append(f'<circle cx="{x:g}" cy="{y:g}" r="{r:.2f}"/>')
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W:g} {H:g}" preserveAspectRatio="xMinYMax slice">'
-            f'<g fill="#F3F0E9">{"".join(dots)}</g></svg>')
-
-
 def og_image(path: Path) -> None:
     """1200x630 share image: ink panel with the wordmark + project photo."""
     W, H = 1200, 630
@@ -277,8 +255,6 @@ def main() -> None:
     hlight, _, _ = logo_horizontal_svg(PAPER, "SGA creatives")
     mark = mark_svg()
     mark_round = mark_svg(radius=12)
-    (PUBLIC / "assets" / "pattern").mkdir(parents=True, exist_ok=True)
-    (PUBLIC / "assets" / "pattern" / "halftone.svg").write_text(halftone_svg())
 
     files = {
         "sga-creatives-logo-dark.svg": dark,    # ink logo for light backgrounds

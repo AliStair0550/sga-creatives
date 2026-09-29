@@ -337,21 +337,6 @@ main:focus { outline: none; }
   .universe.is-flipped .universe-text { grid-column: 1 / span 5; }
 }
 
-/* halftone pattern (the adidas universes): a dot field that grows into a solid corner and drifts
-   slowly with scroll (--py from main.js). It sits behind the content and fades out naturally. */
-.has-pattern { position: relative; isolation: isolate; }
-.has-pattern > * { position: relative; z-index: 1; }
-.has-pattern::before {
-  content: ""; position: absolute; inset: -12% -4%; z-index: 0; pointer-events: none;
-  background: url("/assets/pattern/halftone.svg") no-repeat left bottom / cover;
-  opacity: 0.2;
-  -webkit-mask: radial-gradient(130% 110% at 0% 100%, #000 35%, transparent 80%);
-          mask: radial-gradient(130% 110% at 0% 100%, #000 35%, transparent 80%);
-  transform: translate3d(0, calc(var(--py, 0) * -5%), 0);
-}
-.pattern-top-right::before { transform: rotate(180deg) translate3d(0, calc(var(--py, 0) * -5%), 0); }
-@media (prefers-reduced-motion: reduce) { .has-pattern::before { transform: none; } .pattern-top-right::before { transform: rotate(180deg); } }
-
 /* ------------------------------------------------------------ sections */
 
 .section { padding-block: var(--space-2xl); }
