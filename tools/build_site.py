@@ -495,10 +495,13 @@ def case_page(i: int, c: dict) -> str:
 
   <section class="case-cta container" aria-labelledby="cta-title">
     <h2 id="cta-title" class="cta-title">Have a project <em>in mind?</em></h2>
-    <div class="hero-actions">
-      <a class="btn btn--light" href="mailto:{SITE['email']}">Email Sarah</a>
-      <a class="btn btn--ghost" href="/#contact">Contact</a>
-    </div>
+    <details class="reach">
+      <summary class="btn btn--light reach-toggle"><span>Get in touch</span><span class="reach-plus" aria-hidden="true"></span></summary>
+      <div class="reach-options">
+        <a class="reach-option" href="mailto:{SITE['email']}">{icon("mail")}<span>Email</span><span class="sr-only"> Sarah at {SITE['email']}</span></a>
+        <a class="reach-option" href="tel:{SITE['phone_href']}">{icon("phone")}<span>Call</span><span class="sr-only"> Sarah on {SITE['phone_display']}</span></a>
+      </div>
+    </details>
   </section>
 </article>
 """

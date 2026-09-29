@@ -159,6 +159,19 @@
     paint();
   }
 
+  /* ---------------------------------------------------------- "Get in touch": close on Escape or click outside */
+  Array.prototype.forEach.call(document.querySelectorAll('details.reach'), function (reach) {
+    document.addEventListener('click', function (event) {
+      if (reach.open && !reach.contains(event.target)) reach.open = false;
+    });
+    reach.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && reach.open) {
+        reach.open = false;
+        reach.querySelector('summary').focus();
+      }
+    });
+  });
+
   /* ---------------------------------------------------------- year */
   Array.prototype.forEach.call(document.querySelectorAll('[data-year]'), function (el) {
     el.textContent = String(new Date().getFullYear());

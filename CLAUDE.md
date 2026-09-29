@@ -16,8 +16,9 @@ Statisk hjemmeside for SGA creatives (Sarah Al-farhan). Den forbinder brands med
   - Warm Paper `#F3F0E9` er den lyse verden (services, contact) og tekstfarven på mørkt.
   - Ink `#171918` er tekst på lyst.
   - Acid Note `#D8F267` bruges kun til små accenter (mærkets punktum, fokusring).
+  - Deep red `#5E0B10` (`--red`) bruges til markering (::selection), kontaktordenes understregning og hover på ikon-knapper.
   - Bordeaux/Oxblood er udgået.
-  - **Hver case har sin egen tone** (`tone` i `content/cases.json`): Kiosk sort, Lookbook lys salvie-oliven (#B3B18C, mørk tekst), Ways to Style grafit, Timberland dyb petrol og Nike dyb rød (#5E0B10). Nye cases får deres egen dybe tone med mindst AA-kontrast.
+  - **Hver case har sin egen tone** (`tone` i `content/cases.json`): Kiosk og Ways to Style sort (#0C0C0C), Lookbook og Timberland dyb petrol (#0F2926), Nike dyb rød (#5E0B10). På forsiden skifter de sort, petrol, sort, petrol, rød. Nye cases får deres egen dybe tone med mindst AA-kontrast.
 - Fonte:
   - **Figtree** (fed 700 til 800, stram spatiering) til logo og overskrifter. Det er en geometrisk grotesk i stil med Spotifys Circular. Vægtkontrast (700 mod 400) bruges i stedet for kursiv.
   - **Archivo** til brødtekst og spærrede versaler til labels.
@@ -30,6 +31,7 @@ Statisk hjemmeside for SGA creatives (Sarah Al-farhan). Den forbinder brands med
 - Kontakt: Branding, Campaigns, Events og Collaborations springer ind ét ord ad gangen med en dyb rød understregning (samme rød som Nike, `--red`). Den ligger under ordene, ikke bag dem, af hensyn til kontrasten.
 - About: portrættet afdækkes nedefra med zoom og glider let i rammen ved scroll (`data-scroll="parallax"`). "My process" er fire store ord i omrids, der fyldes fra venstre ved scroll (`data-scroll="fill"`), med en personlig linje i Sarahs stemme. Ingen pile. Titel: "Brand & Creative Manager".
 - Kanten under topmenuen vises først, når man scroller.
+- Casesider: én "Get in touch"-knap (details/summary), der folder ud til Email og Call. Ingen henvisning til kontaktsektionen.
 - Kontakt: mail, telefon, LinkedIn og Instagram er runde ikon-knapper (ikke synlig adresse); labels vises ved hover. E-mailadressen står som tekst i footeren.
 - Footer: claim, links og et kæmpe SGA-logo, der rejser sig ved scroll; "Back to top" uden pil; S-mærket snurrer ved hover.
 - Topmenu: logo til venstre, Work, Services og About til højre. Ingen Contact-knap (kontakt findes nederst og i footeren).

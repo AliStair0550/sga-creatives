@@ -111,7 +111,7 @@ em { font-style: normal; font-weight: 400; }  /* emphasis in headlines = lighter
 
 :focus-visible { outline: 2px solid var(--focus, var(--acid)); outline-offset: 3px; }
 main:focus { outline: none; }
-::selection { background: var(--acid); color: var(--ink); }
+::selection { background: var(--red); color: var(--paper); }
 
 .container { width: 100%; max-width: var(--max); margin-inline: auto; padding-inline: var(--page-pad); }
 
@@ -741,6 +741,28 @@ main:focus { outline: none; }
 @media (prefers-reduced-motion: no-preference) { .next-inner:hover .next-media img { transform: scale(1.05); } }
 
 .case-cta { display: grid; gap: var(--space-l); justify-items: start; padding-block: var(--space-2xl); }
+/* one button: "Get in touch" folds out into Email and Call right where you are (details/summary, no JS needed) */
+.reach { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.reach-toggle { list-style: none; cursor: pointer; user-select: none; gap: 0.9rem; border-radius: 999px; }
+.reach-toggle::-webkit-details-marker { display: none; }
+.reach-plus { position: relative; width: 0.8rem; height: 0.8rem; }
+.reach-plus::before, .reach-plus::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; margin-top: -0.75px; background: currentColor; transition: transform 0.4s var(--ease); }
+.reach-plus::after { transform: rotate(90deg); }
+.reach[open] .reach-plus::after { transform: rotate(0deg); }
+.reach-options { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.reach-option {
+  display: inline-flex; align-items: center; gap: 0.6rem; min-height: 3.1rem; padding: 0 1.4rem 0 1.1rem;
+  border: 1px solid rgba(243, 240, 233, 0.55); border-radius: 999px; color: var(--paper); text-decoration: none;
+  font-size: 0.7rem; font-weight: 560; font-stretch: 118%; letter-spacing: 0.2em; text-transform: uppercase;
+  transition: transform 0.4s cubic-bezier(0.2, 1.6, 0.35, 1), background-color 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+.reach-option svg { width: 1.15rem; height: 1.15rem; }
+.reach-option:hover, .reach-option:focus-visible { transform: translateY(-0.2rem); background: var(--paper); color: var(--ink); border-color: var(--paper); }
+@media (prefers-reduced-motion: no-preference) {
+  .reach[open] .reach-option { animation: reach-in 0.6s cubic-bezier(0.2, 1.5, 0.35, 1) both; }
+  .reach[open] .reach-option + .reach-option { animation-delay: 0.08s; }
+}
+@keyframes reach-in { from { opacity: 0; transform: translateX(-1rem) scale(0.85); } to { opacity: 1; transform: none; } }
 .cta-title {
   font-family: var(--font-display); font-weight: var(--display-weight);
   font-size: var(--step-4); line-height: 0.95; letter-spacing: -0.04em;
