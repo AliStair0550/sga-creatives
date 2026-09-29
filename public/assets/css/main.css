@@ -195,7 +195,7 @@ main:focus { outline: none; }
   background: currentColor; transform: scaleX(0); transform-origin: right;
   transition: transform 0.5s var(--ease);
 }
-.nav-list a:hover::after { transform: scaleX(1); transform-origin: left; }
+.nav-list a:hover::after, .nav-list a[aria-current="page"]::after { transform: scaleX(1); transform-origin: left; }
 .nav-extra { display: none; }
 
 
@@ -413,6 +413,10 @@ main:focus { outline: none; }
 @keyframes key-click { 0% { transform: scale(1); } 35% { transform: scale(1.22); } 100% { transform: scale(1); } }
 @keyframes jolt-left { 0% { transform: none; } 30% { transform: translateX(-0.4rem); } 100% { transform: none; } }
 @keyframes jolt-right { 0% { transform: none; } 30% { transform: translateX(0.4rem); } 100% { transform: none; } }
+
+/* "For fashion, footwear & lifestyle.": light words, one bold word */
+.section-title.is-light { font-weight: 400; }
+.section-title.is-light strong { font-weight: 800; }
 
 /* headline words rise one by one when the section comes into view */
 .rise .rw { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.08em; margin-bottom: -0.08em; }
@@ -766,6 +770,63 @@ main:focus { outline: none; }
 .cta-title {
   font-family: var(--font-display); font-weight: var(--display-weight);
   font-size: var(--step-4); line-height: 0.95; letter-spacing: -0.04em;
+}
+
+/* ------------------------------------------------------------ portfolio (/work/) */
+/* A bold index: giant project names. On hover (desktop) the row fills with the case tone, the
+   other rows step back and the project image follows the cursor (main.js sets --mx/--my).
+   On touch screens a small thumbnail sits next to each name instead. */
+.pf { padding-top: calc(var(--header-h) + var(--space-xl)); padding-bottom: var(--space-2xl); }
+.pf-heading {
+  margin-bottom: var(--space-l);
+  font-family: var(--font-body); font-stretch: 125%; font-weight: 560;
+  font-size: clamp(0.75rem, 0.7rem + 0.3vw, 0.9rem); letter-spacing: 0.22em; text-transform: uppercase; color: var(--paper-muted);
+}
+.pf-list { position: relative; border-top: 1px solid rgba(243, 240, 233, 0.2); }
+.pf-item { position: relative; border-bottom: 1px solid rgba(243, 240, 233, 0.2); transition: opacity 0.4s var(--ease); }
+.pf-item::before {
+  content: ""; position: absolute; inset: -1px calc(-1 * var(--page-pad)); z-index: 0; background: var(--tone);
+  transform: scaleY(0); transform-origin: bottom; transition: transform 0.55s var(--ease);
+}
+.pf-link {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 0.4rem var(--gutter);
+  padding-block: clamp(1rem, 0.6rem + 1.4vw, 2rem); text-decoration: none; color: var(--paper);
+}
+.pf-name {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(2.3rem, 0.9rem + 6.2vw, 8rem); line-height: 0.92; letter-spacing: -0.055em;
+  transition: transform 0.6s var(--ease);
+}
+.pf-meta {
+  grid-column: 1; display: flex; flex-wrap: wrap; gap: 0.2rem 1.25rem; color: var(--paper-muted);
+  font-size: 0.68rem; font-weight: 560; font-stretch: 118%; letter-spacing: 0.2em; text-transform: uppercase;
+}
+.pf-thumb { grid-column: 2; grid-row: 1 / span 2; width: clamp(4.5rem, 3rem + 6vw, 7rem); overflow: hidden; }
+.pf-thumb img, .pf-thumb .ph { aspect-ratio: 4 / 5; object-fit: cover; width: 100%; }
+@media (hover: hover) and (min-width: 900px) {
+  .pf-link { grid-template-columns: 1fr; }
+  .pf-meta { justify-content: flex-start; }
+  .pf-item:hover::before { transform: scaleY(1); }
+  .pf-item:hover .pf-name, .pf-link:focus-visible .pf-name { transform: translateX(2vw); }
+  .pf-list:hover .pf-item:not(:hover) { opacity: 0.35; }
+  /* the image that follows the cursor */
+  .pf-thumb {
+    position: fixed; left: 0; top: 0; z-index: 3; grid-column: auto; grid-row: auto;
+    width: clamp(14rem, 8rem + 12vw, 22rem); pointer-events: none;
+    opacity: 0; transform: translate3d(calc(var(--mx, 50vw) - 50%), calc(var(--my, 50vh) - 50%), 0) rotate(-5deg) scale(0.7);
+    transition: opacity 0.35s var(--ease), transform 0.5s var(--ease);
+    box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.35);
+  }
+  .pf-item:hover .pf-thumb { opacity: 1; transform: translate3d(calc(var(--mx, 50vw) - 50%), calc(var(--my, 50vh) - 50%), 0) rotate(-3deg) scale(1); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* "backwards": the entrance must not linger, or it would pin opacity and trap the fixed cursor image */
+  .pf-item { animation: lift 0.9s var(--ease) backwards; }
+  .pf-item:nth-child(2) { animation-delay: 0.06s; }
+  .pf-item:nth-child(3) { animation-delay: 0.12s; }
+  .pf-item:nth-child(4) { animation-delay: 0.18s; }
+  .pf-item:nth-child(5) { animation-delay: 0.24s; }
 }
 
 /* ------------------------------------------------------------ 404 */

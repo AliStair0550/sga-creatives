@@ -100,8 +100,8 @@ def picture(name: str, alt: str, sizes: str, cls: str = "", eager: bool = False,
     )
 
 
-NAV_LEFT = [("Services", "/#services"), ("Work", "/#work"), ("About", "/#about")]
-NAV = NAV_LEFT + [("Contact", "/#contact")]
+NAV_LEFT = [("Portfolio", "/work/"), ("About", "/#about")]                 # top menu
+NAV = [("Portfolio", "/work/"), ("Services", "/#services"), ("About", "/#about"), ("Contact", "/#contact")]  # footer
 
 
 def media(name: str, alt: str, sizes: str, *, cls: str = "", eager: bool = False,
@@ -118,8 +118,11 @@ def media(name: str, alt: str, sizes: str, *, cls: str = "", eager: bool = False
             f'<span class="ph-mark">S<i></i></span><span class="ph-num">{num}</span></div>')
 
 
-def header(tone: str = "dark") -> str:
-    left = "".join(f'<li><a href="{href}">{label}</a></li>' for label, href in NAV_LEFT)
+def header(tone: str = "dark", path: str = "/") -> str:
+    def item(label, href):
+        current = ' aria-current="page"' if href == "/work/" and path.startswith("/work/") else ""
+        return f'<li><a href="{href}"{current}>{label}</a></li>'
+    left = "".join(item(label, href) for label, href in NAV_LEFT)
     return f"""
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header" data-header data-tone="{tone}">
@@ -206,7 +209,7 @@ def page(*, title: str, description: str, path: str, body: str, body_class: str 
 {extra_head}
 </head>
 <body class="{body_class}">
-{header(header_tone)}
+{header(header_tone, path)}
 <main id="main" tabindex="-1">
 {body}
 </main>
@@ -275,19 +278,19 @@ def universe(i: int, c: dict) -> str:
 
 def rise_words(html_text: str) -> str:
     """Wrap words in a headline so they can rise one by one when revealed."""
-    parts = re.split(r"(<em>.*?</em>)", html_text)
+    parts = re.split(r"(<(?:em|strong)>.*?</(?:em|strong)>)", html_text)
     out, i = [], 0
     for part in parts:
-        if not part:
+        if not part.strip():
             continue
-        em = part.startswith("<em>")
-        inner = part[4:-5] if em else part
+        m = re.match(r"<(em|strong)>(.*)</\1>$", part)
+        tag, inner = (m.group(1), m.group(2)) if m else (None, part)
         spans = []
         for w in inner.split():
             spans.append(f'<span class="rw"><span style="--i:{i}">{w}</span></span>')
             i += 1
         chunk = " ".join(spans)
-        out.append(f"<em>{chunk}</em>" if em else chunk)
+        out.append(f"<{tag}>{chunk}</{tag}>" if tag else chunk)
     return " ".join(out)
 
 
@@ -351,7 +354,7 @@ def home() -> str:
 <section id="services" class="section services tone-light" aria-labelledby="services-title">
   <div class="container">
     <header class="section-head" data-reveal>
-      <h2 id="services-title" class="section-title rise">{rise_words("For fashion, footwear, <em>lifestyle.</em>")}</h2>
+      <h2 id="services-title" class="section-title rise is-light">{rise_words("For fashion, footwear &amp; <strong>lifestyle.</strong>")}</h2>
     </header>
     <ol class="svc">{services}
     </ol>
@@ -452,7 +455,7 @@ def case_page(i: int, c: dict) -> str:
   <header class="case-cover">
     <div class="case-cover-text">
       <nav class="case-crumbs" aria-label="Breadcrumb">
-        <a href="/#work"><span aria-hidden="true">←</span> All work</a>
+        <a href="/work/"><span aria-hidden="true">←</span> Portfolio</a>
       </nav>
       <div>
         <p class="label">{e(c['category'])}</p>
@@ -519,6 +522,33 @@ def case_page(i: int, c: dict) -> str:
     )
 
 
+def portfolio() -> str:
+    """/work/: a bold index of all projects. Hovering a row fills it with the case tone and
+    lets the project image follow the cursor (main.js); on touch screens a thumbnail shows."""
+    rows = "".join(f"""
+      <li class="pf-item" style="{tone_style(c)}">
+        <a class="pf-link" href="/work/{c['slug']}/">
+          <span class="pf-name">{e(c['title'])}</span>
+          <span class="pf-meta"><span>{e(c['category'])}</span><span>{e(c['partners'])}</span></span>
+          <span class="pf-thumb">{media(c['card_image'], alt_for(c, c['card_image']), "(min-width: 900px) 24vw, 22vw")}</span>
+        </a>
+      </li>""" for c in CASES)
+    body = f"""
+<section class="pf container" aria-labelledby="pf-title">
+  <h1 id="pf-title" class="pf-heading rise"><span class="rw"><span style="--i:0">Portfolio</span></span></h1>
+  <ol class="pf-list" data-pf>{rows}
+  </ol>
+</section>
+"""
+    return page(
+        title="Portfolio | SGA creatives",
+        description="Selected projects from Sarah Al-farhan’s work across brands, campaigns and cultural experiences: adidas, Rezet Store, Timberland and Nike.",
+        path="/work/",
+        body=body,
+        body_class="page-portfolio",
+    )
+
+
 def not_found() -> str:
     links = "".join(f'<li><a href="/work/{c["slug"]}/">{e(c["title"])}</a></li>'
                     for i, c in enumerate(CASES))
@@ -559,13 +589,14 @@ def main(dry_run: bool = False) -> dict[Path, str]:
     write(PUBLIC / "index.html", home())
     for i, c in enumerate(CASES):
         write(PUBLIC / "work" / c["slug"] / "index.html", case_page(i, c))
+    write(PUBLIC / "work" / "index.html", portfolio())
     write(PUBLIC / "404.html", not_found())
 
     robots = "User-agent: *\nAllow: /\n"
     sitemap = PUBLIC / "sitemap.xml"
     if DOMAIN:
         robots += f"\nSitemap: {DOMAIN}/sitemap.xml\n"
-        urls = ["/"] + [f"/work/{c['slug']}/" for c in CASES]
+        urls = ["/", "/work/"] + [f"/work/{c['slug']}/" for c in CASES]
         sitemap_xml = ('<?xml version="1.0" encoding="UTF-8"?>\n'
                        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
                        + "".join(f"  <url><loc>{DOMAIN}{u}</loc></url>\n" for u in urls)
