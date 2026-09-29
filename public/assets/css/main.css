@@ -514,16 +514,13 @@ main:focus { outline: none; }
 .stat-text { max-width: 26ch; color: var(--muted); font-size: var(--step--1); line-height: 1.45; }
 .about-lead { max-width: 46ch; font-size: var(--step-1); line-height: 1.5; }
 .xp-list li {
-  display: grid; grid-template-columns: 1fr auto; gap: 0 var(--space-s);
+  display: grid; grid-template-columns: 1fr; gap: 0 var(--space-s);
   padding-block: 0.8rem; border-bottom: 1px solid var(--line); font-size: var(--step--1);
 }
 .xp-company { font-weight: 600; }
-.xp-role { grid-column: 1; grid-row: 2; color: var(--muted); }
-.xp-years { grid-column: 2; grid-row: 1 / span 2; align-self: center; color: var(--muted); font-variant-numeric: tabular-nums; }
+.xp-role { color: var(--muted); }
 @media (min-width: 700px) {
-  .xp-list li { grid-template-columns: 1fr 1.4fr auto; }
-  .xp-role { grid-column: 2; grid-row: 1; }
-  .xp-years { grid-row: 1; grid-column: 3; }
+  .xp-list li { grid-template-columns: 1fr 1.4fr; }
 }
 @media (min-width: 900px) {
   .about-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }

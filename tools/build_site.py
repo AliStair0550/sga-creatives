@@ -313,11 +313,11 @@ PROCESS = [
     ("Deliver", "I run it all the way, down to the last detail on the day."),
 ]
 
-EXPERIENCE = [
-    ("Rezet Store", "Brand and Community Manager", "2025-2026"),
-    ("Envii", "Brand Manager", "2024-2025"),
-    ("NAKED Copenhagen", "Social Media and Community Manager", "2023-2024"),
-    ("Bestseller A/S · NAME IT", "Social Media and PR Manager", "2021-2023"),
+EXPERIENCE = [   # (company, role), most recent first; no years on the site
+    ("Rezet Store", "Brand and Community Manager"),
+    ("Envii", "Brand Manager"),
+    ("NAKED Copenhagen", "Social Media and Community Manager"),
+    ("Bestseller A/S · NAME IT", "Social Media and PR Manager"),
 ]
 
 
@@ -383,8 +383,8 @@ def home() -> str:
         <li class="step" data-scroll="fill"><span class="step-word">{t}</span><span class="step-note">{e(d)}</span></li>"""
                       for t, d in PROCESS)
     experience = "".join(f"""
-          <li><span class="xp-company">{e(co)}</span><span class="xp-role">{e(role)}</span><span class="xp-years">{yrs}</span></li>"""
-                         for co, role, yrs in EXPERIENCE)
+          <li><span class="xp-company">{e(co)}</span><span class="xp-role">{e(role)}</span></li>"""
+                         for co, role in EXPERIENCE)
 
     website = {"@type": "WebSite", "@id": _id("website"), "url": DOMAIN + "/", "name": "SGA creatives",
                "inLanguage": "en", "publisher": {"@id": _id("org")}}
@@ -433,7 +433,7 @@ def home() -> str:
       <h2 id="about-title" class="about-name">Sarah <em>Al-farhan</em></h2>
       <p class="about-role">Brand &amp; Creative Manager</p>
       <p class="about-stat"><span class="stat-figure">13+</span><span class="stat-text">years across fashion, footwear, branding, marketing, community and culture.</span></p>
-      <p class="about-lead">Sarah connects brands, people and culture through creative vision and practical experience. She brings the right partners together and manages teams, budgets and every detail from concept to execution.</p>
+      <p class="about-lead">I connect brands, people and culture through creative vision and practical experience. I bring the right partners together and manage teams, budgets and every detail from concept to execution.</p>
       <ul class="xp-list">{experience}
       </ul>
     </div>
