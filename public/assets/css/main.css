@@ -199,12 +199,14 @@ main:focus { outline: none; }
 
 
 .nav-toggle {
-  display: none; align-items: center; gap: 0.8rem; min-height: 44px; min-width: 44px; padding: 0 0 0 0.5rem;
+  display: none; align-items: center; gap: 0.8rem; min-height: 44px; min-width: 44px; padding: 0; margin-right: -8px;
   border: 0; background: none; color: inherit; font: inherit;
   font-size: 0.75rem; font-weight: 520; font-stretch: 118%; letter-spacing: 0.22em; text-transform: uppercase;
   cursor: pointer; position: relative; z-index: 3;
+  justify-content: center;
 }
-.nav-toggle-label { display: inline-block; width: 4.4em; text-align: right; }  /* fixed width: no shift when the web font arrives or "Menu" becomes "Close" */
+/* icon only on screen; "Menu"/"Close" stays for screen readers */
+.nav-toggle-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .nav-toggle-icon { display: grid; gap: 7px; width: 28px; }
 .nav-toggle-icon span { display: block; height: 1px; background: currentColor; transition: transform 0.45s var(--ease); }
 
