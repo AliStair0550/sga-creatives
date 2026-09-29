@@ -26,6 +26,7 @@
   --paper: #F3F0E9;          /* secondary background, text on dark */
   --paper-deep: #E6E1D6;
   --acid: #D8F267;           /* tiny accents only, never text on light */
+  --red: #5E0B10;            /* deep red, shared with the Nike case tone */
   --paper-muted: rgba(243, 240, 233, 0.72);
   --ink-muted: #4A4C4A;
 
@@ -518,16 +519,17 @@ main:focus { outline: none; }
   font-family: var(--font-display); font-weight: var(--display-weight);
   font-size: var(--step-5); line-height: 0.9; letter-spacing: -0.045em; max-width: 12ch;
 }
-/* what to talk about: four bold words that spring in one by one, then get a highlighter stroke */
+/* what to talk about: four bold words that spring in one by one, then get a deep red underline stroke
+   (a bar below the letters, not behind them: ink on deep red would be unreadable) */
 .contact-topics {
-  display: flex; flex-wrap: wrap; gap: 0.15em 0.55em; margin-bottom: var(--space-xl);
+  display: flex; flex-wrap: wrap; gap: 0.3em 0.55em; margin-bottom: var(--space-xl);
   font-family: var(--font-display); font-weight: 800;
   font-size: clamp(1.9rem, 1rem + 3.6vw, 4.6rem); line-height: 1.05; letter-spacing: -0.045em;
 }
-.contact-topics li { position: relative; display: inline-block; isolation: isolate; }
+.contact-topics li { position: relative; display: inline-block; isolation: isolate; padding-bottom: 0.2em; }
 .contact-topics li::before {
-  content: ""; position: absolute; z-index: -1; left: -0.06em; right: -0.06em; bottom: 0.08em; height: 0.34em;
-  background: var(--acid);
+  content: ""; position: absolute; z-index: -1; left: 0; right: 0.02em; bottom: 0; height: 0.14em;
+  background: var(--red);
 }
 @media (prefers-reduced-motion: no-preference) {
   html.js .contact-topics[data-reveal] { opacity: 1; transform: none; }
