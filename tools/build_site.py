@@ -100,7 +100,7 @@ def picture(name: str, alt: str, sizes: str, cls: str = "", eager: bool = False,
     )
 
 
-NAV_LEFT = [("Work", "/#work"), ("Services", "/#services"), ("About", "/#about")]
+NAV_LEFT = [("Services", "/#services"), ("Work", "/#work"), ("About", "/#about")]
 NAV = NAV_LEFT + [("Contact", "/#contact")]
 
 
@@ -351,7 +351,7 @@ def home() -> str:
 <section id="services" class="section services tone-light" aria-labelledby="services-title">
   <div class="container">
     <header class="section-head" data-reveal>
-      <h2 id="services-title" class="section-title rise">{rise_words("For fashion, footwear, lifestyle <em>and culture.</em>")}</h2>
+      <h2 id="services-title" class="section-title rise">{rise_words("For fashion, footwear, <em>lifestyle.</em>")}</h2>
     </header>
     <ol class="svc">{services}
     </ol>

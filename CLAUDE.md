@@ -34,7 +34,7 @@ Statisk hjemmeside for SGA creatives (Sarah Al-farhan). Den forbinder brands med
 - Casesider: én "Get in touch"-knap (details/summary), der folder ud til Email og Call. Ingen henvisning til kontaktsektionen.
 - Kontakt: mail, telefon, LinkedIn og Instagram er runde ikon-knapper (ikke synlig adresse); labels vises ved hover. E-mailadressen står som tekst i footeren.
 - Footer: claim, links og et kæmpe SGA-logo, der rejser sig ved scroll; "Back to top" uden pil; S-mærket snurrer ved hover.
-- Topmenu: logo til venstre, Work, Services og About til højre. Ingen Contact-knap (kontakt findes nederst og i footeren).
+- Topmenu: logo til venstre, Services, Work og About til højre (samme rækkefølge som på siden). Ingen Contact-knap (kontakt findes nederst og i footeren).
 
 ## Arkitektur
 
