@@ -26,7 +26,7 @@ Statisk hjemmeside for SGA creatives (Sarah Al-farhan). Den forbinder brands med
 - Ingen rullende tekst eller karuseller. Bevægelse er rolig: hero-indgang, reveals og let billedzoom.
 - Minimal tekst: heroen har kun overskriften, ingen knapper og ingen ydelseslinje. Ingen numre på cases og ingen intro over casene.
 - Forsidens rækkefølge: hero, services (problem → løsning), work (case-universer), about med process, contact.
-- Services er par af kasser: **problem** (lys, venstre) og **løsning** (mørk, højre), som glider sammen ved scroll (`main.js` sætter `--p` pr. række) og låses med SGA-nøglen (S med acid-punktum) i et hak. Når de mødes, får rækken `.is-locked`, og der kommer et "klik". Teksterne står i `SERVICES` i `tools/build_site.py`. Uden JS eller ved reduced motion står parrene låst fra start.
+- Services er par af kasser: **problem** (lys, venstre) og **løsning** (mørk, højre), som glider sammen ved scroll (`main.js` sætter `--p` pr. række) og låses med en ren mørk tap i et hak (intet logo i tappen). Hver kasse har kun én kort linje, uden labels, og linjerne holdes omtrent lige lange (to linjer ved alle bredder). Når de mødes, får rækken `.is-locked`, og der kommer et "klik". Teksterne står i `SERVICES` i `tools/build_site.py`. Uden JS eller ved reduced motion står parrene låst fra start.
 - Kontakt: Branding, Campaigns, Events og Collaborations springer ind ét ord ad gangen med en acid-highlighter.
 - Kanten under topmenuen vises først, når man scroller.
 - Topmenu: logo til venstre, Work, Services og About til højre. Ingen Contact-knap (kontakt findes nederst og i footeren).

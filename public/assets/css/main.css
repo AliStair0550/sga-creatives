@@ -347,7 +347,7 @@ main:focus { outline: none; }
   font-size: var(--step-4); line-height: 0.95; letter-spacing: -0.04em;
 }
 
-/* services (paper): problem + solution, two boxes that slide together and lock with the SGA key.
+/* services (paper): problem + solution, two boxes that slide together and lock (tab into notch).
    main.js sets --p (0 to 1) per row while it scrolls into view and adds .is-locked when they meet.
    Without JS or with reduced motion --p stays 1: the boxes simply sit locked together. */
 .services { padding-top: var(--space-2xl); }
@@ -362,7 +362,6 @@ main:focus { outline: none; }
   min-height: clamp(9rem, 6rem + 9vw, 15rem);
   padding: clamp(1.5rem, 1rem + 2vw, 3rem);
 }
-.svc-box .label { color: inherit; opacity: 0.72; }
 .svc-problem {
   background: var(--paper-deep); color: var(--ink);
   /* the notch the key locks into (bottom edge on mobile, right edge on desktop) */
@@ -370,27 +369,19 @@ main:focus { outline: none; }
           mask: radial-gradient(circle calc(var(--key) / 2 + 1px) at 50% 100%, transparent 98%, #000 100%);
   padding-bottom: calc(var(--key) / 2 + clamp(1.5rem, 1rem + 2vw, 3rem));
 }
-.svc-problem-text {
-  max-width: 18ch;
+/* one sharp line per box, same size on both sides */
+.svc-line {
+  max-width: 20ch;
   font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(1.5rem, 1rem + 2vw, 2.8rem); line-height: 1.02; letter-spacing: -0.04em;
+  font-size: clamp(1.4rem, 0.7rem + 1.9vw, 2.6rem); line-height: 1.04; letter-spacing: -0.04em;
 }
 .svc-solution { background: var(--ink); color: var(--paper); padding-top: calc(var(--key) / 2 + clamp(1.5rem, 1rem + 2vw, 3rem)); }
-.svc-title {
-  font-family: var(--font-display); font-weight: 800;
-  font-size: clamp(1.6rem, 1rem + 2.3vw, 3.2rem); line-height: 1; letter-spacing: -0.045em;
-}
-.svc-title .amp { font-weight: 400; }
-.svc-answer { max-width: 30ch; color: var(--paper-muted); font-size: var(--step-1); line-height: 1.4; }
 .svc-key {
   position: absolute; z-index: 2; left: 50%; top: calc(var(--key) / -2);
   width: var(--key); height: var(--key); margin-left: calc(var(--key) / -2);
-  display: grid; place-items: center; border-radius: 50%;
-  background: var(--ink); color: var(--paper);
-  font-family: var(--font-display); font-weight: 800; font-size: calc(var(--key) * 0.5); line-height: 1; letter-spacing: -0.04em;
+  border-radius: 50%; background: var(--ink);   /* the plain tab that locks into the notch */
 }
-.svc-key i { position: absolute; width: 0.2em; height: 0.2em; right: 26%; bottom: 29%; background: var(--acid); }
-@media (min-width: 800px) {
+@media (min-width: 960px) {
   .svc-row { grid-template-columns: 1fr 1fr; }
   .svc-problem {
     -webkit-mask: radial-gradient(circle calc(var(--key) / 2 + 1px) at 100% 50%, transparent 98%, #000 100%);
@@ -413,14 +404,12 @@ main:focus { outline: none; }
     opacity: calc(0.25 + var(--p) * 0.75);
   }
   .svc-key { transform: rotate(calc((1 - var(--p)) * -180deg)); }
-  /* the click: key pops, the acid dot flashes, both boxes give a small jolt */
+  /* the click: the tab pops and both boxes give a small jolt */
   .svc-row.is-locked .svc-key { animation: key-click 0.55s var(--ease); }
-  .svc-row.is-locked .svc-key i { animation: key-flash 0.9s var(--ease); }
   .svc-row.is-locked .svc-problem { animation: jolt-left 0.45s var(--ease); }
   .svc-row.is-locked .svc-solution { animation: jolt-right 0.45s var(--ease); }
 }
 @keyframes key-click { 0% { transform: scale(1); } 35% { transform: scale(1.22); } 100% { transform: scale(1); } }
-@keyframes key-flash { 0%, 100% { box-shadow: 0 0 0 0 rgba(216, 242, 103, 0); } 30% { box-shadow: 0 0 0 0.35em rgba(216, 242, 103, 0.55); } }
 @keyframes jolt-left { 0% { transform: none; } 30% { transform: translateX(-0.4rem); } 100% { transform: none; } }
 @keyframes jolt-right { 0% { transform: none; } 30% { transform: translateX(0.4rem); } 100% { transform: none; } }
 

@@ -195,13 +195,14 @@ def page(*, title: str, description: str, path: str, body: str, body_class: str 
 
 # ---------------------------------------------------------------- home page
 
-# (problem, service, what it does). Each row is two boxes that slide together on scroll:
-# the problem on the left, the solution on the right, locked together by the SGA key.
+# (service, problem, solution). Each row is two boxes that slide together on scroll and lock:
+# the problem on the left, the solution on the right. The service name is a hidden heading
+# for screen readers and search engines. Keep the lines short and roughly equal in length.
 SERVICES = [
-    ("The brand feels unclear or out of step.", "Brand strategy & creative direction", "Makes the brand clear, distinctive and relevant."),
-    ("Great ideas never leave the deck.", "Campaigns & creative production", "Turns ideas into campaigns, editorials and content."),
-    ("Launches no one remembers.", "Experiences & activations", "Creates events and launches people show up for."),
-    ("Too many moving parts, not the right people.", "Creative connections & project management", "Brings the right people together and keeps it on track."),
+    ("Brand strategy & creative direction", "Your brand lacks a clear identity.", "We make it distinctive and culturally relevant."),
+    ("Campaigns & creative production", "Your campaigns don’t connect with people.", "We turn cultural insight into campaigns that land."),
+    ("Events & experiences", "Your events lack real connection.", "We create experiences that bring people together."),
+    ("Connections & project management", "Your projects lose direction and momentum.", "We bring the right people in and keep it moving."),
 ]
 
 PROCESS = [
@@ -270,17 +271,13 @@ def home() -> str:
     universes = "".join(universe(i, c) for i, c in enumerate(CASES))
     services = "".join(f"""
       <li class="svc-row" style="--tilt:{1 if i % 2 == 0 else -1}">
-        <div class="svc-box svc-problem">
-          <p class="label">Problem</p>
-          <p class="svc-problem-text">{e(prob)}</p>
-        </div>
+        <h3 class="sr-only">{e(t)}</h3>
+        <div class="svc-box svc-problem"><p class="svc-line">{e(prob)}</p></div>
         <div class="svc-box svc-solution">
-          <span class="svc-key" aria-hidden="true">S<i></i></span>
-          <p class="label">Solution</p>
-          <h3 class="svc-title">{e(t).replace(" &amp; ", ' <span class="amp">&amp;</span> ')}</h3>
-          <p class="svc-answer">{e(d)}</p>
+          <span class="svc-key" aria-hidden="true"></span>
+          <p class="svc-line">{e(sol)}</p>
         </div>
-      </li>""" for i, (prob, t, d) in enumerate(SERVICES))
+      </li>""" for i, (t, prob, sol) in enumerate(SERVICES))
     process = "".join(f"""
         <li><span class="step-word">{t}</span><span class="step-note">{e(d)}</span></li>"""
                       for t, d in PROCESS)
