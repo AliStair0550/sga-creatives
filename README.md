@@ -83,6 +83,22 @@ python3 tools/build_site.py
 
 Scriptet bruger kun Pythons standardbibliotek. Det tilføjer automatisk en versionsnøgle til CSS og JS (`main.css?v=…`), så besøgende altid får den nyeste version, selvom filerne caches i et år.
 
+## Billeder og pladsholdere
+
+Galleriet i hver case (`gallery` i `content/cases.json`) kan indeholde billeder, der ikke findes endnu. De vises som elegante pladsholdere med SGA-mærket. Sådan udskifter du en pladsholder:
+
+1. Gem billedet som `assets/images/<navn>.jpg`, fx `rezet-lookbook-03.jpg`. Navnet står i `cases.json`.
+2. Skriv en engelsk alt-tekst i feltet `"alt"` for billedet i `cases.json`.
+3. Kør:
+   ```bash
+   python3 tools/optimize_media.py
+   python3 tools/build_site.py
+   python3 tools/check.py
+   ```
+4. Commit og push.
+
+`layout` styrer formatet: `wide` er fuld bredde (16:9), `half` er halv bredde og `third` er en tredjedel (begge 4:5). Portrættet i About hedder `sarah-al-farhan-01`. `check.py` viser, hvilke pladsholdere der stadig venter.
+
 ## Tilføj en ny case
 
 1. Læg originalbillederne i `assets/images/` med navne som `<slug>-01.jpg`, `<slug>-02.jpg` (JPEG, gerne 1000 til 1400 px brede).
@@ -92,10 +108,10 @@ Scriptet bruger kun Pythons standardbibliotek. Det tilføjer automatisk en versi
    ```
 3. Kopiér en eksisterende case i `content/cases.json`, og udfyld felterne:
    - `slug` bliver URL'en (`/work/<slug>/`).
-   - `card_image` og `card_intro` bruges på forsiden.
+   - `card_image` og `card_image_2` er de to billeder på forsiden, og `tone` er casens farveunivers (`bg` og `mode`: `dark` eller `light`).
    - `provenance` fortæller, i hvilken rolle Sarah lavede projektet.
-   - `facts`, `context`, `role`, `execution` og `credits` er casesidens indhold.
-   - `gallery`: `span` er bredden i 12-kolonne-grid'et, `start` er startkolonnen, og `shift: true` forskyder billedet nedad.
+   - `intro`, `facts`, `done` (Sarahs arbejde som korte punkter) og `credits` er casesidens tekst. Hold den kort.
+   - `gallery`: se "Billeder og pladsholdere" ovenfor.
    - Rækkefølgen i filen er rækkefølgen på siden. "Next project" linker automatisk videre.
 4. Kør `python3 tools/build_site.py`, og tjek siden lokalt.
 5. Tilføj den nye URL i sitemap. Det sker automatisk, når domænet er sat.
@@ -127,6 +143,12 @@ Alternativ uden Git (Direct Upload): `npx wrangler pages deploy public --project
 **Grænser:** Free-planen tillader 20.000 filer pr. site og 25 MiB pr. fil, `_headers` højst 100 regler. Sitet består af 163 filer på i alt ca. 12 MB, og den største fil er videoen på 1,1 MB.
 
 ## Domæne: www på Pages, DNS hos Simply
+
+**Status 29. september 2026:**
+- Domænet er **www.sgacreatives.com**. `www` har CNAME til `sga-creatives.pages.dev` hos Simply.
+- `content/site.json` har domænet sat, så canonical-links og sitemap peger på det.
+- Roddomænet `sgacreatives.com` mangler stadig viderestilling (trin 4).
+- Domænet har ingen MX-records, så der er ingen mail at passe på.
 
 Rækkefølgen er vigtig. Hvis CNAME oprettes, før domænet er tilføjet i Pages, giver det fejl 522.
 
@@ -185,7 +207,7 @@ Det kræver, at domænets **nameservere flyttes til Cloudflare**. En CNAME hos S
 
 ## Tekniske valg
 
-- **Fonte:** Instrument Serif (overskrifter) og Archivo (brødtekst, variabel bredde). Begge er under SIL OFL 1.1 og hostes lokalt, uden kald til Google.
+- **Fonte:** Bodoni Moda (fed, til logo og overskrifter) og Archivo (brødtekst og labels). Begge er under SIL OFL 1.1 og hostes lokalt, uden kald til Google. Bindestreger i overskrifter hentes fra Archivo, fordi Bodonis bindestreg er for tynd til skærm.
 - **Billeder:** AVIF og WebP i 480/800/fuld bredde med `srcset`, JPEG-fallback, faste dimensioner (ingen layout-skift) og lazy loading under heroen.
 - **Video:** Kun Nike-casen, med poster, kontroller og `preload="none"`. Ingen autoplay og ingen lyd uden klik.
 - **Bevægelse:** Kort hero-indgang, reveals ved scroll, let billedskalering og glidende menu. Alt slås fra ved `prefers-reduced-motion`. Uden JavaScript er alt indhold synligt, og navigationen vises som almindelige links.
@@ -200,7 +222,7 @@ Testet mod `wrangler pages dev` (Cloudflares lokale Pages-emulator) med Chromium
 - Routing: `/work/adidas-kiosk` og `/work/adidas-kiosk/index.html` giver 308 til `/work/adidas-kiosk/`. Ukendte stier giver 404 med 404-siden, og query-parametre giver 200. `_headers` bliver anvendt.
 - Mobilmenu: åbnes med tastatur, fokus flyttes ind i menuen, Tab går rundt i menuen, Escape lukker og returnerer fokus til knappen, og klik på et link lukker menuen.
 - Uden JavaScript: alt indhold synligt, navigation synlig som links, menuknap skjult.
-- `prefers-reduced-motion`: ingen skjulte elementer, ticker stoppet.
+- `prefers-reduced-motion`: ingen skjulte elementer, ingen animationer.
 - Tastaturrækkefølge på desktop: skip-link, logo, navigation, knapper, cases. Fokusmarkering er synlig.
 - Kontrast (beregnet): laveste tekstkontrast er 6,7:1 (AA), de fleste over 7:1 (AAA).
 - Lighthouse (lokalt, simuleret throttling):

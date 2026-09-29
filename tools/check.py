@@ -87,6 +87,20 @@ for page in sorted(PUBLIC.rglob("*.html")):
         if " alt=" not in img:
             fail(f"a11y: {rel(page)} has an <img> without alt: {img[:80]}")
 
+# 4b. images that have arrived must have alt text; count remaining placeholders
+placeholders = []
+for c in build_site.CASES:
+    for g in c["gallery"]:
+        name = g.get("image")
+        if not name:
+            continue
+        if name in build_site.MANIFEST and not g.get("alt"):
+            fail(f"a11y: {name} now exists but has no alt text in content/cases.json ({c['slug']})")
+        if name not in build_site.MANIFEST:
+            placeholders.append(name)
+if "sarah-al-farhan-01" not in build_site.MANIFEST:
+    placeholders.append("sarah-al-farhan-01")
+
 # 5. secrets and private files --------------------------------------------------
 try:
     tracked = subprocess.run(["git", "ls-files", "-co", "--exclude-standard"], cwd=ROOT,
@@ -124,3 +138,5 @@ if failures:
     sys.exit(1)
 size_mb = sum(p.stat().st_size for p in files) / 1e6
 print(f"check.py: all checks passed ({len(outputs)} generated files current, {len(files)} files / {size_mb:.1f} MB in public/)")
+if placeholders:
+    print(f"          {len(placeholders)} image placeholders waiting for photos: {', '.join(placeholders)}")

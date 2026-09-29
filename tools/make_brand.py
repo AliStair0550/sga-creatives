@@ -6,8 +6,9 @@ Usage (from the project root):
 
 Glyph outlines are converted to SVG paths, so the logos never depend on
 installed fonts. Requires fontTools and Pillow.
-Fonts (SIL Open Font License): Instrument Serif and Archivo, in tools/fonts-src/.
+Fonts (SIL Open Font License): Bodoni Moda and Archivo, in tools/fonts-src/.
 """
+import tempfile
 from pathlib import Path
 
 from fontTools.pens.boundsPen import BoundsPen
@@ -24,10 +25,24 @@ PUBLIC = ROOT / "public"
 
 PAPER = "#F3F0E9"
 INK = "#171918"
-OXBLOOD = "#542536"
 ACID = "#D8F267"
 
-SERIF = TTFont(FONTS / "InstrumentSerif-Regular.ttf")
+BODONI = FONTS / "BodoniModa-VF.ttf"
+BODONI_ITALIC = FONTS / "BodoniModa-Italic-VF.ttf"
+# Logo: bold display cut (sharp contrast). Mark: heavier, low optical size so it holds at 16 px.
+LOGO_AXES = {"wght": 800, "opsz": 28}
+MARK_AXES = {"wght": 900, "opsz": 11}
+SERIF = instantiateVariableFont(TTFont(BODONI), LOGO_AXES)
+SERIF_MARK = instantiateVariableFont(TTFont(BODONI), MARK_AXES)
+_TMP = Path(tempfile.mkdtemp())
+
+
+def static_font(src: Path, axes: dict, size: int) -> ImageFont.FreeTypeFont:
+    """Pillow font from a pinned instance (Pillow mis-spaces variable fonts)."""
+    out = _TMP / (src.stem + "".join(f"-{k}{v}" for k, v in sorted(axes.items())) + ".ttf")
+    if not out.exists():
+        instantiateVariableFont(TTFont(src), axes).save(out)
+    return ImageFont.truetype(str(out), size)
 _vf = TTFont(FONTS / "Archivo-VF.ttf")
 GROTESK = instantiateVariableFont(_vf, {"wght": 560, "wdth": 125})
 
@@ -83,8 +98,8 @@ def cap_height(font: TTFont, size: float) -> float:
 def logo_svg(fg: str, title: str) -> tuple[str, float, float]:
     """Primary lockup: large serif SGA, small expanded 'creatives' tucked under the A."""
     size = 100
-    # Tight, masthead-like spacing; the G–A pair closes up a little further.
-    sga = Text(SERIF, "SGA", size, tracking=-0.02, kern={1: -0.015})
+    # Tight, masthead-like spacing.
+    sga = Text(SERIF, "SGA", size, tracking=-0.015)
     lsb, rsb = sga.ink_bounds()
     x0 = -lsb
     baseline = cap_height(SERIF, size) + 2
@@ -118,7 +133,7 @@ def logo_svg(fg: str, title: str) -> tuple[str, float, float]:
 def logo_horizontal_svg(fg: str, title: str) -> tuple[str, float, float]:
     """Horizontal lockup for headers and small spaces: SGA | creatives on one baseline."""
     size = 100
-    sga = Text(SERIF, "SGA", size, tracking=-0.02, kern={1: -0.015})
+    sga = Text(SERIF, "SGA", size, tracking=-0.015)
     lsb, rsb = sga.ink_bounds()
     baseline = cap_height(SERIF, size) + 2
     sga_w = sga.width() - lsb - rsb
@@ -145,16 +160,16 @@ def logo_horizontal_svg(fg: str, title: str) -> tuple[str, float, float]:
     return svg, width, height
 
 
-MARK_SIZE = 74      # serif S, in units of a 64-unit square
-MARK_STROKE = 2.4   # thickens the hairlines so the S survives 16 px
+MARK_SIZE = 62      # serif S, in units of a 64-unit square
+MARK_STROKE = 1.2   # extra weight on the hairlines so the S survives 16 px
 MARK_DOT = 11
 
 
 def mark_geometry():
-    s = Text(SERIF, "S", MARK_SIZE)
+    s = Text(SERIF_MARK, "S", MARK_SIZE)
     lsb, rsb = s.ink_bounds()
     glyph_w = s.width() - lsb - rsb
-    ch = cap_height(SERIF, MARK_SIZE)
+    ch = cap_height(SERIF_MARK, MARK_SIZE)
     total = glyph_w + 2 + MARK_DOT
     x = (64 - total) / 2 - lsb
     baseline = (64 + ch) / 2 + 0.5
@@ -164,7 +179,7 @@ def mark_geometry():
 def mark_svg(bg: str = INK, fg: str = PAPER, accent: str = ACID, radius: float = 0) -> str:
     """Compact mark: serif S with an acid full stop on an ink square (64-unit grid)."""
     x, baseline, dot_x, dot = mark_geometry()
-    s = Text(SERIF, "S", MARK_SIZE)
+    s = Text(SERIF_MARK, "S", MARK_SIZE)
     return (
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" '
         'role="img" aria-labelledby="t"><title id="t">SGA creatives</title>'
@@ -183,7 +198,7 @@ def raster_mark(px: int, radius_ratio: float = 0.0) -> Image.Image:
     d = ImageDraw.Draw(im)
     d.rounded_rectangle([0, 0, n - 1, n - 1], radius=int(n * radius_ratio), fill=INK)
     unit = n / 64
-    font = ImageFont.truetype(str(FONTS / "InstrumentSerif-Regular.ttf"), round(MARK_SIZE * unit))
+    font = static_font(BODONI, MARK_AXES, round(MARK_SIZE * unit))
     x, baseline, dx, dot = mark_geometry()
     d.text((x * unit, baseline * unit), "S", font=font, fill=PAPER, anchor="ls",
            stroke_width=round(MARK_STROKE / 2 * unit), stroke_fill=PAPER)
@@ -192,7 +207,7 @@ def raster_mark(px: int, radius_ratio: float = 0.0) -> Image.Image:
 
 
 def og_image(path: Path) -> None:
-    """1200x630 share image: project photo + ink panel with the wordmark."""
+    """1200x630 share image: ink panel with the wordmark + project photo."""
     W, H = 1200, 630
     im = Image.new("RGB", (W, H), INK)
     photo = Image.open(ROOT / "assets/images/adidas-kiosk-04.jpg").convert("RGB")
@@ -202,17 +217,20 @@ def og_image(path: Path) -> None:
     top = int((ph - H) * 0.42)
     im.paste(photo.crop((0, top, pw, top + H)), (W - pw, 0))
     d = ImageDraw.Draw(im)
-    serif = ImageFont.truetype(str(FONTS / "InstrumentSerif-Regular.ttf"), 190)
-    serif_i = ImageFont.truetype(str(FONTS / "InstrumentSerif-Italic.ttf"), 64)
-    grot = ImageFont.truetype(str(FONTS / "Archivo-VF.ttf"), 26)
-    grot.set_variation_by_axes([560, 125])  # wght, wdth
+    serif = static_font(BODONI, LOGO_AXES, 150)
+    grot = static_font(FONTS / "Archivo-VF.ttf", {"wght": 560, "wdth": 125}, 26)
     d.text((68, 236), "SGA", font=serif, fill=PAPER, anchor="ls")
     d.rectangle([72, 262, 72 + 150, 263], fill=PAPER)
     d.text((240, 272), "creatives", font=grot, fill=PAPER, anchor="lm")
-    d.text((72, 500), "Where brands", font=serif_i, fill=PAPER, anchor="ls")
-    d.text((72, 560), "meet culture", font=serif_i, fill=PAPER, anchor="ls")
-    end = d.textlength("meet culture", font=serif_i)
-    d.rectangle([72 + end + 6, 548, 72 + end + 18, 560], fill=ACID)
+    # Pillow has no kerning here, so the tagline is set in tracked capitals.
+    caps = static_font(FONTS / "Archivo-VF.ttf", {"wght": 560, "wdth": 125}, 22)
+    x = 72
+    for word in ["WHERE", "BRANDS", "MEET", "CULTURE"]:
+        for ch in word:
+            d.text((x, 560), ch, font=caps, fill=PAPER, anchor="ls")
+            x += d.textlength(ch, font=caps) + 4
+        x += 14
+    d.rectangle([x - 6, 548, x + 6, 560], fill=ACID)
     im.save(path, quality=86, optimize=True, progressive=True)
 
 

@@ -78,27 +78,39 @@ def picture(name: str, alt: str, sizes: str, cls: str = "", eager: bool = False,
     )
 
 
-NAV = [("Work", "/#work"), ("Services", "/#services"), ("About", "/#about")]
+NAV_LEFT = [("Work", "/#work"), ("Services", "/#services"), ("About", "/#about")]
+NAV = NAV_LEFT + [("Contact", "/#contact")]
 
 
-def header() -> str:
-    items = "".join(f'<li><a href="{href}">{label}</a></li>' for label, href in NAV)
+def media(name: str, alt: str, sizes: str, *, cls: str = "", eager: bool = False,
+          priority: bool = False, label: str = "") -> str:
+    """A picture when the image exists, otherwise an elegant placeholder frame.
+
+    Placeholders are filled by dropping assets/images/<name>.jpg in place and running
+    tools/optimize_media.py + tools/build_site.py (remember the alt text in content/).
+    """
+    if name in MANIFEST:
+        return picture(name, alt, sizes, cls=cls, eager=eager, priority=priority)
+    num = e(label or name.rsplit("-", 1)[-1])
+    return (f'<div class="ph {cls}" aria-hidden="true" data-placeholder="{e(name)}">'
+            f'<span class="ph-mark">S<i></i></span><span class="ph-num">{num}</span></div>')
+
+
+def header(tone: str = "dark") -> str:
+    left = "".join(f'<li><a href="{href}">{label}</a></li>' for label, href in NAV_LEFT)
     return f"""
 <a class="skip-link" href="#main">Skip to content</a>
-<header class="site-header" data-header>
-  <div class="container header-inner">
+<header class="site-header" data-header data-tone="{tone}">
+  <div class="header-inner">
     <a class="brand" href="/" aria-label="SGA creatives, home">{inline_logo()}</a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>
       <span class="nav-toggle-label" data-label-closed="Menu" data-label-open="Close">Menu</span>
       <span class="nav-toggle-icon" aria-hidden="true"><span></span><span></span></span>
     </button>
     <nav id="site-nav" class="site-nav" aria-label="Main">
-      <ul class="nav-list">
-        {items}
-        <li><a class="nav-cta" href="/#contact">Contact</a></li>
-      </ul>
+      <ul class="nav-list nav-list--left">{left}</ul>
+      <ul class="nav-list nav-list--right"><li><a class="nav-cta" href="/#contact">Contact</a></li></ul>
       <div class="nav-extra">
-        <p class="label">Get in touch</p>
         <a href="mailto:{SITE['email']}">{SITE['email']}</a>
         <a href="tel:{SITE['phone_href']}">{SITE['phone_display']}</a>
       </div>
@@ -108,26 +120,16 @@ def header() -> str:
 
 
 def footer() -> str:
-    items = "".join(f'<li><a href="{href}">{label}</a></li>' for label, href in NAV + [("Contact", "/#contact")])
+    items = "".join(f'<li><a href="{href}">{label}</a></li>' for label, href in NAV)
     work = "".join(f'<li><a href="/work/{c["slug"]}/">{e(c["title"])}</a></li>' for c in CASES)
     return f"""
 <footer class="site-footer">
   <div class="container">
     <div class="footer-grid">
-      <div class="footer-brand">
-        <a class="brand brand--footer" href="/" aria-label="SGA creatives, home">{inline_logo("stacked")}</a>
-        <p>Connecting brands with creative people, across branding, campaigns and cultural experiences.</p>
-      </div>
-      <nav class="footer-col" aria-label="Footer">
-        <p class="label">Navigate</p>
-        <ul>{items}</ul>
-      </nav>
+      <a class="brand brand--footer" href="/" aria-label="SGA creatives, home">{inline_logo("stacked")}</a>
+      <nav class="footer-col" aria-label="Footer"><ul>{items}</ul></nav>
+      <div class="footer-col"><ul>{work}</ul></div>
       <div class="footer-col">
-        <p class="label">Work</p>
-        <ul>{work}</ul>
-      </div>
-      <div class="footer-col">
-        <p class="label">Contact</p>
         <ul>
           <li><a href="mailto:{SITE['email']}">{SITE['email']}</a></li>
           <li><a href="tel:{SITE['phone_href']}">{SITE['phone_display']}</a></li>
@@ -146,7 +148,7 @@ def footer() -> str:
 
 def page(*, title: str, description: str, path: str, body: str, body_class: str = "",
          og_type: str = "website", og_image: str = OG_IMAGE, extra_head: str = "",
-         indexable: bool = True) -> str:
+         indexable: bool = True, header_tone: str = "dark") -> str:
     canonical = f'<link rel="canonical" href="{DOMAIN}{path}">' if DOMAIN and indexable else ""
     og_url = f'<meta property="og:url" content="{DOMAIN}{path}">' if DOMAIN and indexable else ""
     robots = "" if indexable else '<meta name="robots" content="noindex">'
@@ -160,7 +162,7 @@ def page(*, title: str, description: str, path: str, body: str, body_class: str 
 <title>{e(title)}</title>
 <meta name="description" content="{e(description)}">
 {canonical}{robots}
-<meta name="theme-color" content="#F3F0E9">
+<meta name="theme-color" content="#0E0F0F">
 <meta property="og:site_name" content="SGA creatives">
 <meta property="og:type" content="{og_type}">
 <meta property="og:title" content="{e(title)}">
@@ -174,7 +176,7 @@ def page(*, title: str, description: str, path: str, body: str, body_class: str 
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<link rel="preload" href="/assets/fonts/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/BodoniModa-VF.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/Archivo-VF.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{css}">
 <script>{HEAD_SCRIPT}</script>
@@ -182,7 +184,7 @@ def page(*, title: str, description: str, path: str, body: str, body_class: str 
 {extra_head}
 </head>
 <body class="{body_class}">
-{header()}
+{header(header_tone)}
 <main id="main" tabindex="-1">
 {body}
 </main>
@@ -195,25 +197,17 @@ def page(*, title: str, description: str, path: str, body: str, body_class: str 
 # ---------------------------------------------------------------- home page
 
 SERVICES = [
-    ("Brand strategy & creative direction",
-     "Positioning, concepts, storytelling and visual direction that make a brand clear, distinctive and relevant to the culture it wants to be part of.",
-     ["Positioning", "Concepts", "Storytelling", "Visual direction"]),
-    ("Campaigns & creative production",
-     "Campaigns, editorials and content, from the first idea to the finished material, with the right creative partners on board.",
-     ["Campaigns", "Editorials", "Content", "Creative partners"]),
-    ("Experiences & activations",
-     "Events, launches and brand experiences that give people a reason to show up, take part and remember the brand afterwards.",
-     ["Events", "Launches", "Brand experiences"]),
-    ("Creative connections & project management",
-     "The right people for the job, and the coordination to match: budgets, timelines, partners and delivery handled from start to finish.",
-     ["The right people", "Coordination", "Budgets", "Timelines", "Delivery"]),
+    ("Brand strategy & creative direction", "Positioning, concepts, storytelling, visual direction."),
+    ("Campaigns & creative production", "Campaigns, editorials, content, creative partners."),
+    ("Experiences & activations", "Events, launches, brand experiences."),
+    ("Creative connections & project management", "The right people, budgets, timelines, delivery."),
 ]
 
 PROCESS = [
-    ("Understand", "Clarifying the brand, the goal and the audience, along with the practical frame: budget, timeline and what a good result looks like."),
-    ("Connect", "Putting the right team together: creatives, partners and suppliers who fit the brief and the culture around it."),
-    ("Create", "Developing the concept and turning it into a clear plan, with creative direction from the first sketch to the final detail."),
-    ("Deliver", "Producing and running the project: coordination, follow-up and care in the execution, right through to the day itself."),
+    ("Understand", "Brief, goals, frame"),
+    ("Connect", "The right team"),
+    ("Create", "Concept and direction"),
+    ("Deliver", "Production, on the day"),
 ]
 
 EXPERIENCE = [
@@ -223,51 +217,52 @@ EXPERIENCE = [
     ("Bestseller A/S · NAME IT", "Social Media and PR Manager", "2021-2023"),
 ]
 
-# Grid placements for the cards on the home page; they repeat for a sixth case onwards.
-CARD_LAYOUT = ["card--a", "card--b", "card--c", "card--d", "card--e"]
+
+def tone_style(c: dict) -> str:
+    return f'--tone:{c["tone"]["bg"]}'
 
 
-def work_card(i: int, c: dict) -> str:
+def alt_for(c: dict, name: str) -> str:
+    for g in c["gallery"]:
+        if g.get("image") == name and g.get("alt"):
+            return g["alt"]
+    return c["lead"]["alt"] if c["lead"]["image"] == name else ""
+
+
+def universe(i: int, c: dict) -> str:
+    """One case on the home page: a full-width panel in the case's own tone."""
     num = f"{i + 1:02d}"
-    img_name = c["card_image"]
-    alt = next((g["alt"] for g in c["gallery"] if g.get("image") == img_name), None) or c["lead"]["alt"]
-    sizes = "(min-width: 900px) 55vw, (min-width: 600px) 50vw, 100vw" if i % 5 in (0, 4) else \
-            "(min-width: 900px) 40vw, (min-width: 600px) 50vw, 90vw"
+    flip = " is-flipped" if i % 2 else ""
     return f"""
-    <article class="card {CARD_LAYOUT[i % len(CARD_LAYOUT)]}" data-reveal>
-      <div class="card-media">
-        {picture(img_name, alt, sizes)}
+  <article class="universe tone-{c['tone']['mode']}{flip}" style="{tone_style(c)}">
+    <div class="universe-inner container">
+      <div class="universe-main" data-reveal>{media(c['card_image'], alt_for(c, c['card_image']), "(min-width: 900px) 50vw, 100vw")}</div>
+      <div class="universe-second" data-reveal>{media(c['card_image_2'], alt_for(c, c['card_image_2']), "(min-width: 900px) 22vw, 45vw")}</div>
+      <div class="universe-text" data-reveal>
+        <p class="universe-num">{num}</p>
+        <p class="label">{e(c['category'])}</p>
+        <h3 class="universe-title"><a href="/work/{c['slug']}/">{e(c['title'])}</a></h3>
+        <p class="universe-partners">{e(c['partners'])}</p>
+        <p class="universe-link" aria-hidden="true">View case <span>→</span></p>
       </div>
-      <div class="card-body">
-        <p class="card-meta"><span class="num">{num}</span><span class="label">{e(c['category'])}</span></p>
-        <h3 class="card-title"><a href="/work/{c['slug']}/">{e(c['title'])}</a></h3>
-        <p class="card-partners">{e(c['partners'])}</p>
-        <p class="card-intro">{e(c['card_intro'])}</p>
-        <p class="card-link" aria-hidden="true">View case <span>→</span></p>
-      </div>
-    </article>"""
+    </div>
+  </article>"""
 
 
 def home() -> str:
-    cards = "".join(work_card(i, c) for i, c in enumerate(CASES))
+    universes = "".join(universe(i, c) for i, c in enumerate(CASES))
     services = "".join(f"""
       <li class="service" data-reveal>
         <span class="num">{i + 1:02d}</span>
         <h3>{e(t)}</h3>
         <p>{e(d)}</p>
-        <p class="service-tags">{' · '.join(e(x) for x in tags)}</p>
-      </li>""" for i, (t, d, tags) in enumerate(SERVICES))
+      </li>""" for i, (t, d) in enumerate(SERVICES))
     process = "".join(f"""
-      <li class="step" data-reveal>
-        <span class="num">{i + 1:02d}</span>
-        <h3>{t}{'<span class="step-arrow" aria-hidden="true">→</span>' if i < len(PROCESS) - 1 else ''}</h3>
-        <p>{e(d)}</p>
-      </li>""" for i, (t, d) in enumerate(PROCESS))
+        <li><span class="step-word">{t}</span><span class="step-note">{e(d)}</span></li>"""
+                      for t, d in PROCESS)
     experience = "".join(f"""
           <li><span class="xp-company">{e(co)}</span><span class="xp-role">{e(role)}</span><span class="xp-years">{yrs}</span></li>"""
                          for co, role, yrs in EXPERIENCE)
-    ticker_words = ["Fashion", "Footwear", "Lifestyle", "Culture", "Branding", "Campaigns", "Experiences", "Creative connections"]
-    ticker_run = "".join(f'<span>{w}</span><i aria-hidden="true"></i>' for w in ticker_words)
 
     ld = {
         "@context": "https://schema.org",
@@ -288,117 +283,84 @@ def home() -> str:
         ld["logo"] = DOMAIN + "/assets/brand/icon-512.png"
     extra_head = f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>'
 
+    hero_imgs = [
+        ("adidas-kiosk-04", "Three people seen from behind on a city street, wearing Rezet Store × adidas Originals Kiosk T-shirts.", "hero-img hero-img--side"),
+        ("adidas-ways-to-style-01", "A man in a black puffer jacket and red trousers wearing silver Adistar Control 5 sneakers.", "hero-img hero-img--main"),
+        ("timberland-rezet-03", "A guest in a camouflage hoodie and trousers with Timberland boots at the Timberland × Rezet evening event.", "hero-img hero-img--side"),
+    ]
+    hero_media = "".join(
+        f'<div class="{cls}">{picture(n, a, "(min-width: 900px) 34vw, 100vw", eager=(k == 1), priority=(k == 1))}</div>'
+        for k, (n, a, cls) in enumerate(hero_imgs))
+
     body = f"""
-<section class="hero container" aria-labelledby="hero-title">
-  <div class="hero-text">
-    <p class="label hero-eyebrow">Branding · Campaigns · Experiences</p>
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-media">{hero_media}</div>
+  <div class="hero-content container">
     <h1 id="hero-title" class="hero-title">
       <span class="line"><span>Where brands</span></span>
       <span class="line"><span>meet <em>culture.</em></span></span>
     </h1>
-    <p class="hero-lead">SGA creatives connects brands with creative people and leads projects across branding, campaigns and cultural experiences.</p>
-    <div class="hero-actions">
-      <a class="btn btn--solid" href="#work">Explore the work <span aria-hidden="true">↓</span></a>
-      <a class="btn btn--line" href="#contact">Let’s talk</a>
+    <div class="hero-foot">
+      <p class="hero-lead">SGA creatives connects brands with creative people and leads projects across branding, campaigns and cultural experiences.</p>
+      <div class="hero-actions">
+        <a class="btn btn--light" href="#work">Explore the work</a>
+        <a class="btn btn--ghost" href="#contact">Let’s talk</a>
+      </div>
     </div>
-  </div>
-  <div class="hero-media">
-    <figure class="hero-main">
-      {picture("adidas-kiosk-04", "Three people seen from behind on a city street, wearing Rezet Store × adidas Originals Kiosk T-shirts.", "(min-width: 900px) 42vw, 92vw", eager=True, priority=True)}
-      <figcaption><a href="/work/adidas-kiosk/"><span class="num">01</span> adidas Kiosk <span class="muted">Rezet Store × adidas Originals</span></a></figcaption>
-    </figure>
-    <figure class="hero-inset" aria-hidden="true">
-      {picture("timberland-rezet-03", "", "(min-width: 900px) 16vw, 36vw", eager=True)}
-    </figure>
   </div>
 </section>
 
-<div class="ticker" aria-hidden="true">
-  <div class="ticker-track"><div class="ticker-run">{ticker_run}</div><div class="ticker-run">{ticker_run}</div></div>
-</div>
-
-<section id="work" class="section work container" aria-labelledby="work-title">
-  <header class="section-head" data-reveal>
-    <p class="label"><span class="num">({len(CASES):02d})</span> Projects</p>
-    <h2 id="work-title" class="section-title">Selected work</h2>
-    <div class="section-intro">
-      <p>Selected projects from <span class="nowrap">Sarah Al-farhan’s</span> work across brands, campaigns and cultural experiences.</p>
-      <p class="muted">The projects were created in Sarah’s previous roles, including at Rezet Store and as a consultant for Nike. Each case lists her documented role.</p>
-    </div>
+<section id="work" class="work" aria-labelledby="work-title">
+  <header class="work-head container" data-reveal>
+    <p class="label">Selected work <span class="num">({len(CASES):02d})</span></p>
+    <h2 id="work-title" class="work-title">Selected projects from <span class="nowrap">Sarah Al-farhan’s</span> work across brands, campaigns and cultural experiences.</h2>
+    <p class="work-note">Created in Sarah’s previous roles. Each case lists her role.</p>
   </header>
-  <div class="work-grid">
-    {cards}
-  </div>
+  {universes}
 </section>
 
-<section id="services" class="section services" aria-labelledby="services-title">
+<section id="services" class="section services tone-light" aria-labelledby="services-title">
   <div class="container">
     <header class="section-head" data-reveal>
-      <p class="label"><span class="num">(04)</span> Services</p>
-      <h2 id="services-title" class="section-title">From the first idea <em>to the final detail.</em></h2>
-      <div class="section-intro">
-        <p>For fashion, footwear, lifestyle and culture brands that want to be part of the conversation, not just advertise in it.</p>
-      </div>
+      <p class="label">Services</p>
+      <h2 id="services-title" class="section-title">For fashion, footwear, lifestyle <em>and culture.</em></h2>
     </header>
-    <ol class="service-list">
-      {services}
+    <ol class="service-list">{services}
     </ol>
+    <div class="process" data-reveal>
+      <p class="label">Process</p>
+      <ol class="process-list" aria-label="Process">{process}
+      </ol>
+    </div>
   </div>
 </section>
 
-<section id="about" class="section about container" aria-labelledby="about-title">
-  <header class="section-head" data-reveal>
-    <p class="label">About</p>
-    <h2 id="about-title" class="section-title">The person <em>behind SGA.</em></h2>
-  </header>
-  <div class="about-grid">
-    <div class="about-stat" data-reveal>
-      <p class="stat-figure">13<span>+</span></p>
-      <p class="stat-text">years of experience across fashion, footwear, branding, marketing, community and culture.</p>
-    </div>
+<section id="about" class="section about" aria-labelledby="about-title">
+  <div class="container about-grid">
+    <div class="about-portrait" data-reveal>{media("sarah-al-farhan-01", "Portrait of Sarah Al-farhan.", "(min-width: 900px) 40vw, 100vw", label="Sarah")}</div>
     <div class="about-body" data-reveal>
-      <p class="about-lead">SGA creatives is led by <span class="nowrap">Sarah Al-farhan</span>, a brand and creative consultant with more than thirteen years of experience across fashion, footwear, branding, marketing, community and culture.</p>
-      <p>Most recently, Sarah was Brand and Community Manager at Rezet Store, where she owned the visual identity, creative direction and brand strategy, managed relationships with brand partners and led campaigns and activations from concept to execution. Before that, she was Brand Manager at Envii, Social Media and Community Manager at NAKED Copenhagen, and Social Media and PR Manager for NAME IT at Bestseller.</p>
-      <p>For clients, that means a partner who knows the brand side from the inside: pitching concepts, negotiating budgets, working with internal and external teams, and caring about every part of the experience, from the bigger idea to the smallest execution.</p>
-      <blockquote class="about-quote">
-        <p>“I enjoy combining strategy, creativity, and culture to create meaningful brand experiences that connect with people.”</p>
-        <footer>Sarah Al-farhan</footer>
-      </blockquote>
-      <h3 class="label xp-title">Selected experience</h3>
+      <p class="label">About</p>
+      <h2 id="about-title" class="about-name">Sarah <em>Al-farhan</em></h2>
+      <p class="about-role">The person behind SGA. Brand and creative consultant.</p>
+      <p class="about-stat"><span class="stat-figure">13+</span><span class="stat-text">years across fashion, footwear, branding, marketing, community and culture.</span></p>
+      <p class="about-lead">Most recently Brand and Community Manager at Rezet Store. Sarah knows the brand side from the inside: partners, budgets, teams and every detail from the big idea to the smallest execution.</p>
       <ul class="xp-list">{experience}
       </ul>
-      <p class="muted small">Education: Bachelor in Digital Concept Development and Multimedia Designer, Aarhus Business Academy.</p>
     </div>
   </div>
 </section>
 
-<section class="section process" aria-labelledby="process-title">
-  <div class="container">
-    <header class="section-head" data-reveal>
-      <p class="label">Process</p>
-      <h2 id="process-title" class="section-title">How a project <em>comes together.</em></h2>
-    </header>
-    <ol class="process-list">
-      {process}
-    </ol>
-  </div>
-</section>
-
-<section id="contact" class="section contact" aria-labelledby="contact-title">
+<section id="contact" class="section contact tone-light" aria-labelledby="contact-title">
   <div class="container">
     <p class="label">Contact</p>
     <h2 id="contact-title" class="contact-title" data-reveal>Let’s make <em>something happen.</em></h2>
-    <div class="contact-grid" data-reveal>
-      <p class="contact-intro">Planning a brand project, a campaign, an event or a collaboration? Get in touch for a conversation about what you want to create.</p>
-      <div class="contact-main">
-        <a class="contact-email" href="mailto:{SITE['email']}">{SITE['email']}</a>
-        <dl class="contact-list">
-          <div><dt>Phone</dt><dd><a href="tel:{SITE['phone_href']}">{SITE['phone_display']}</a></dd></div>
-          <div><dt>LinkedIn</dt><dd><a href="{SITE['linkedin']}" rel="noopener">Sarah Al-farhan <span aria-hidden="true">↗</span></a></dd></div>
-          <div><dt>Instagram</dt><dd><a href="{SITE['instagram']}" rel="noopener">@sarahalfarhan <span aria-hidden="true">↗</span></a></dd></div>
-        </dl>
-      </div>
-    </div>
+    <p class="contact-intro">Branding, campaigns, events and collaborations.</p>
+    <a class="contact-email" href="mailto:{SITE['email']}">{SITE['email']}</a>
+    <ul class="contact-links">
+      <li><a href="tel:{SITE['phone_href']}">{SITE['phone_display']}</a></li>
+      <li><a href="{SITE['linkedin']}" rel="noopener">LinkedIn <span aria-hidden="true">↗</span></a></li>
+      <li><a href="{SITE['instagram']}" rel="noopener">Instagram <span aria-hidden="true">↗</span></a></li>
+    </ul>
   </div>
 </section>
 """
@@ -414,13 +376,15 @@ def home() -> str:
 
 # ---------------------------------------------------------------- case pages
 
+GALLERY_SIZES = {"wide": "100vw", "half": "(min-width: 700px) 50vw, 100vw", "third": "(min-width: 700px) 33vw, 100vw"}
+
+
 def gallery_item(c: dict, g: dict) -> str:
-    style = f'--span:{g.get("span", 6)};--start:{g.get("start", "auto")}'
-    shift = " is-shifted" if g.get("shift") else ""
+    layout = g.get("layout", "half")
     if "video" in g:
         v = g["video"]
         m = MANIFEST[f"video:{v}"]
-        media = (
+        inner = (
             f'<video controls preload="none" playsinline width="{m["width"]}" height="{m["height"]}" '
             f'poster="/assets/video/{v}-poster.jpg" aria-label="{e(g["label"])}">'
             f'<source src="/assets/video/{v}.mp4" type="video/mp4">'
@@ -428,14 +392,8 @@ def gallery_item(c: dict, g: dict) -> str:
             f'</video>'
         )
     else:
-        span = g.get("span", 6)
-        sizes = f"(min-width: 900px) {round(span / 12 * 100)}vw, (min-width: 600px) 50vw, 100vw"
-        media = picture(g["image"], g["alt"], sizes)
-    return f"""
-      <figure class="g-item{shift}" style="{style}" data-reveal>
-        {media}
-        <figcaption>{e(g['caption'])}</figcaption>
-      </figure>"""
+        inner = media(g["image"], g.get("alt", ""), GALLERY_SIZES[layout])
+    return f'\n      <figure class="g-item g-{layout}" data-reveal>{inner}</figure>'
 
 
 def case_page(i: int, c: dict) -> str:
@@ -443,104 +401,85 @@ def case_page(i: int, c: dict) -> str:
     num = f"{i + 1:02d}"
     nxt = CASES[(i + 1) % n]
     facts = "".join(f'<div><dt>{e(k)}</dt><dd>{e(v)}</dd></div>' for k, v in c["facts"])
-    context = "".join(f"<p>{e(p)}</p>" for p in c["context"])
-    role = "".join(f"<p>{e(p)}</p>" for p in c["role"])
-    execution = "".join(f"<li>{e(x)}</li>" for x in c["execution"])
+    done = "".join(f"<li>{e(x)}</li>" for x in c["done"])
     credits = "".join(f'<div><dt>{e(k)}</dt><dd>{e(v)}</dd></div>' for k, v in c["credits"])
     gallery = "".join(gallery_item(c, g) for g in c["gallery"])
     programme = ""
     if c.get("programme"):
         rows = "".join(f"""
-          <li><p class="prog-time"><span class="label">{e(p['time'])}</span><span class="prog-place">{e(p['place'])}</span></p><p>{e(p['text'])}</p></li>"""
+        <li><span class="label">{e(p['time'])}</span><span class="prog-place">{e(p['place'])}</span><span class="prog-text">{e(p['text'])}</span></li>"""
                        for p in c["programme"])
-        programme = f"""
-    <div class="case-row" data-reveal>
-      <h2 class="case-row-title label">Programme</h2>
-      <ol class="programme">{rows}
-      </ol>
-    </div>"""
-    quote = c.get("quote")
-    quote_html = f"""
-  <blockquote class="case-quote container" data-reveal>
-    <p>“{e(quote['text'])}”</p>
-    <footer>{e(quote['by'])}</footer>
-  </blockquote>""" if quote else ""
-    nxt_img = next((g["alt"] for g in nxt["gallery"] if g.get("image") == nxt["card_image"]), nxt["lead"]["alt"])
+        programme = f'\n    <ol class="programme" data-reveal>{rows}\n    </ol>'
+    provenance = e(c["provenance"]).replace("Sarah Al-farhan", '<span class="nowrap">Sarah Al-farhan</span>')
+    mode = c["tone"]["mode"]
 
     body = f"""
-<article class="case">
-  <header class="case-hero container">
-    <nav class="case-crumbs" aria-label="Breadcrumb">
-      <a href="/#work"><span aria-hidden="true">←</span> All work</a>
-      <span class="num" aria-label="Case {i + 1} of {n}">{num} / {n:02d}</span>
-    </nav>
-    <div class="case-hero-grid">
-      <div class="case-hero-text">
+<article class="case tone-{mode}" style="{tone_style(c)}">
+  <header class="case-cover">
+    <div class="case-cover-text">
+      <nav class="case-crumbs" aria-label="Breadcrumb">
+        <a href="/#work"><span aria-hidden="true">←</span> All work</a>
+        <span class="num" aria-label="Case {i + 1} of {n}">{num} / {n:02d}</span>
+      </nav>
+      <div>
         <p class="label">{e(c['category'])}</p>
         <h1 class="case-title">{e(c['title'])}</h1>
         <p class="case-subtitle">{e(c['subtitle'])}</p>
-        <p class="case-intro">{e(c['intro'])}</p>
-        <p class="case-provenance">{e(c['provenance']).replace('Sarah Al-farhan', '<span class="nowrap">Sarah Al-farhan</span>')}</p>
       </div>
-      <figure class="case-lead">
-        {picture(c['lead']['image'], c['lead']['alt'], "(min-width: 900px) 45vw, 100vw", eager=True, priority=True)}
-      </figure>
     </div>
-    <dl class="facts">{facts}</dl>
+    <figure class="case-cover-media">
+      {media(c['lead']['image'], c['lead']['alt'], "(min-width: 900px) 50vw, 100vw", eager=True, priority=True)}
+    </figure>
   </header>
-{quote_html}
-  <div class="case-body container">
-    <div class="case-row" data-reveal>
-      <h2 class="case-row-title label">Context</h2>
-      <div class="case-row-text">{context}</div>
-    </div>{programme}
-    <div class="case-row" data-reveal>
-      <h2 class="case-row-title label">{e(c.get('role_heading', 'Sarah’s role'))}</h2>
-      <div class="case-row-text">{role}</div>
-    </div>
-    <div class="case-row" data-reveal>
-      <h2 class="case-row-title label">{e(c.get('execution_heading', 'Execution'))}</h2>
-      <ul class="exec-list">{execution}</ul>
-    </div>
-  </div>
 
-  <section class="case-gallery container" aria-label="Images from the project">
-    {gallery}
+  <section class="case-intro container" aria-label="About the project">
+    <p class="case-lead" data-reveal>{e(c['intro'])}</p>
+    <dl class="facts" data-reveal>{facts}</dl>{programme}
   </section>
 
-  <div class="case-body container">
-    <div class="case-row" data-reveal>
-      <h2 class="case-row-title label">Credits</h2>
-      <dl class="credits">{credits}</dl>
-    </div>
-  </div>
+  <section class="case-gallery" aria-label="Images from the project">{gallery}
+  </section>
 
-  <nav class="next-case" aria-label="Next project">
-    <a class="container next-inner" href="/work/{nxt['slug']}/">
+  <section class="case-details container" aria-label="Credits">
+    <div data-reveal>
+      <h2 class="label">{e(c.get('done_heading', 'Sarah’s work'))}</h2>
+      <ul class="done">{done}</ul>
+    </div>
+    <div data-reveal>
+      <h2 class="label">Credits</h2>
+      <dl class="credits">{credits}</dl>
+      <p class="case-provenance">{provenance}</p>
+    </div>
+  </section>
+
+  <nav class="next-case tone-{nxt['tone']['mode']}" style="{tone_style(nxt)}" aria-label="Next project">
+    <a class="next-inner container" href="/work/{nxt['slug']}/">
       <span class="label">Next project <span class="num">{(i + 1) % n + 1:02d}</span></span>
       <span class="next-title">{e(nxt['title'])} <span class="next-arrow" aria-hidden="true">→</span></span>
-      <span class="next-media">{picture(nxt['card_image'], nxt_img, "(min-width: 900px) 20vw, 40vw")}</span>
+      <span class="next-media">{media(nxt['card_image'], alt_for(nxt, nxt['card_image']), "(min-width: 900px) 24vw, 40vw")}</span>
     </a>
   </nav>
 
   <section class="case-cta container" aria-labelledby="cta-title">
-    <h2 id="cta-title" class="cta-title">Have a project in mind?</h2>
-    <p>Branding, campaigns, events or a collaboration: let’s talk about what you want to create.</p>
+    <h2 id="cta-title" class="cta-title">Have a project <em>in mind?</em></h2>
     <div class="hero-actions">
-      <a class="btn btn--solid" href="mailto:{SITE['email']}">Email Sarah</a>
-      <a class="btn btn--line" href="/#contact">Contact details</a>
+      <a class="btn btn--light" href="mailto:{SITE['email']}">Email Sarah</a>
+      <a class="btn btn--ghost" href="/#contact">Contact</a>
     </div>
   </section>
 </article>
 """
+    lead = c["lead"]["image"]
+    og = f"/assets/img/{lead}-{MANIFEST[lead]['fallback']}.jpg" if lead in MANIFEST else OG_IMAGE
     return page(
         title=f"{c['title']}: {c['subtitle']} | SGA creatives",
         description=c["meta_description"],
         path=f"/work/{c['slug']}/",
         body=body,
-        body_class="page-case",
+        body_class=f"page-case tone-page-{mode}",
         og_type="article",
-        og_image=f"/assets/img/{c['lead']['image']}-{MANIFEST[c['lead']['image']]['fallback']}.jpg",
+        og_image=og,
+        header_tone=mode,
     )
 
 
@@ -551,10 +490,9 @@ def not_found() -> str:
 <section class="notfound container" aria-labelledby="nf-title">
   <p class="label">Error 404</p>
   <h1 id="nf-title" class="notfound-title">This page <em>has moved on.</em></h1>
-  <p class="case-intro">The page you were looking for does not exist or is no longer here. Try one of these instead.</p>
   <div class="hero-actions">
-    <a class="btn btn--solid" href="/">Go to the front page</a>
-    <a class="btn btn--line" href="/#contact">Contact</a>
+    <a class="btn btn--light" href="/">Front page</a>
+    <a class="btn btn--ghost" href="/#contact">Contact</a>
   </div>
   <ul class="nf-links">{links}</ul>
 </section>

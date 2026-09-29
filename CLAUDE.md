@@ -4,22 +4,27 @@ Statisk hjemmeside for SGA creatives (Sarah Al-farhan). Den forbinder brands med
 
 - Repo: https://github.com/AliStair0550/sga-creatives (offentligt, branch `main`)
 - Hosting: Cloudflare Pages, build output `public/`, ingen build-kommando
-- DNS: Simply. `www` er primær adresse (CNAME til `<projekt>.pages.dev`). Roddomænet viderestilles via Simplys "URL viderestilling".
+- Domæne: **https://www.sgacreatives.com** (primær). DNS hos Simply: `www` er CNAME til `sga-creatives.pages.dev`. Roddomænet `sgacreatives.com` skal viderestilles via Simplys "URL viderestilling".
+- Pages-adresse: https://sga-creatives.pages.dev
 - Fuld vejledning til drift, DNS og gendannelse: `README.md`
 
 ## Brand
 
-- Retning: **Luxury meets urban culture**. Redaktionelt og magasinagtigt, med rigtige projekter og mennesker.
-- Farver (CSS-variabler i `public/assets/css/main.css`):
-  - Warm Paper `#F3F0E9` er primær baggrund.
-  - Ink `#171918` bruges til tekst, logo og mørke flader.
-  - Oxblood `#542536` bruges til dybde og udvalgte sektioner.
-  - Acid Note `#D8F267` bruges kun til små accenter og altid med mørk tekst.
+- Retning: **Luxury meets urban culture**. Redaktionelt, premium og magasinagtigt. Færre ord, flere billeder.
+- Farver (CSS-variabler i `public/assets/css/main.css`). **Mørkt først, lyst bagefter:**
+  - Night `#0E0F0F` er grundbaggrunden (hero, work, about, footer).
+  - Warm Paper `#F3F0E9` er den lyse verden (services, contact) og tekstfarven på mørkt.
+  - Ink `#171918` er tekst på lyst.
+  - Acid Note `#D8F267` bruges kun til små accenter (mærkets punktum, fokusring).
+  - Bordeaux/Oxblood er udgået.
+  - **Hver case har sin egen tone** (`tone` i `content/cases.json`): Kiosk sort, Lookbook oliven, Ways to Style grafit, Timberland dyb petrol og Nike lys. Nye cases får deres egen dybe tone med mindst AA-kontrast.
 - Fonte:
-  - Instrument Serif til overskrifter.
-  - Archivo (variabel, expanded til labels) til brødtekst.
+  - **Bodoni Moda** (fed 700, optisk størrelse låst til 30 for kraftige hårstreger) til logo og overskrifter.
+  - **Archivo** til brødtekst og spærrede versaler til labels.
+  - Bindestreger i overskrifter hentes fra Archivo (Bodonis bindestreg er en usynlig hårstreg).
   - Begge er under OFL og hostes lokalt. Der må højst være to familier.
-- Logo: SVG-stier genereret af `tools/make_brand.py`. Mærket er et serif-S med et acid-punktum. Se `brand/brandguide.html`.
+- Logo: SVG-stier genereret af `tools/make_brand.py`. Mærket er et fedt Bodoni-S med et acid-punktum. Se `brand/brandguide.html`.
+- Ingen rullende tekst eller karuseller. Bevægelse er rolig: hero-indgang, reveals og let billedzoom.
 
 ## Arkitektur
 
@@ -51,6 +56,7 @@ Lokal visning: `python3 -m http.server 8000 --directory public`, eller `npx wran
 
 - **Sitet er på engelsk.** Det gælder tekst, metadata, alt-tekster og fejltekster (`lang="en"`). Dokumentation og commitbeskeder er på dansk.
 - **Ingen lange tankestreger** (— eller –) på sitet eller i `content/`. Brug kolon, komma eller almindelig bindestreg. `check.py` fanger dem.
+- **Billeder og pladsholdere:** Et galleribillede i `content/cases.json`, hvis fil ikke findes endnu, vises som en pladsholder. Læg `assets/images/<navn>.jpg`, kør `optimize_media.py` og `build_site.py`, og skriv alt-teksten i `cases.json`. `check.py` fejler, hvis et nyt billede mangler alt-tekst. Portrættet i About hedder `sarah-al-farhan-01`.
 - **Rediger aldrig html i `public/` direkte.** Ret i `content/` eller `tools/build_site.py`, og byg. CSS og JS i `public/assets/` redigeres direkte.
 - **Korrekt kreditering:** Sarahs tidligere arbejde vises som hendes arbejde med dokumenteret rolle og arbejdsgiver (Rezet Store, konsulent for Nike), aldrig som SGA-opgaver. Opfind aldrig kunder, credits, resultater, citater, årstal eller virksomhedsoplysninger. Er noget uafklaret, noteres det i `docs/intern/AFKLARINGER.md`.
 - **Repoet er offentligt:** CV, brief og interne noter ligger kun i `docs/intern/`. Ingen hemmeligheder i Git. `check.py` scanner for begge dele.

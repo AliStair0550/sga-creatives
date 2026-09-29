@@ -2,40 +2,29 @@
   {
     "slug": "adidas-kiosk",
     "title": "adidas Kiosk",
-    "subtitle": "Friends & Family Kiosk at Fashion Week",
+    "subtitle": "Friends & Family Kiosk",
     "partners": "Rezet Store × adidas Originals",
     "category": "Activation · Fashion Week",
+    "tone": {"bg": "#0C0C0C", "mode": "dark"},
     "meta_description": "The Rezet Store × adidas Originals Friends & Family Kiosk: a Fashion Week activation with custom sodas, ice cream and T-shirt printing, developed by Sarah Al-farhan from concept to execution.",
-    "card_image": "adidas-kiosk-02",
-    "card_intro": "An open meeting point during Fashion Week, with custom sodas, ice cream and T-shirt printing. Developed from concept to execution.",
-    "provenance": "A project from Sarah Al-farhan’s portfolio, created during her time as Brand and Community Manager at Rezet Store.",
-    "intro": "With everyone constantly on the move during Fashion Week, the idea was a space where people could stop, recharge and enjoy something refreshing. The Friends & Family Kiosk turned Rezet Store into an open, welcoming meeting point: part break, part brand experience.",
+    "card_image": "adidas-kiosk-01",
+    "card_image_2": "adidas-kiosk-04",
+    "provenance": "From Sarah Al-farhan’s portfolio. Created as Brand and Community Manager at Rezet Store.",
+    "intro": "An open meeting point inside Rezet Store during Fashion Week. A place to stop, recharge and enjoy something refreshing.",
     "facts": [
       ["Partners", "Rezet Store × adidas Originals"],
-      ["Setting", "Fashion Week, at Rezet Store"],
-      ["Sarah’s role", "Concept to execution"],
-      ["Position", "Brand and Community Manager, Rezet Store"]
+      ["Setting", "Fashion Week, Rezet Store"],
+      ["Sarah’s role", "Concept to execution"]
     ],
-    "lead": {"image": "adidas-kiosk-01", "alt": "The Friends & Family Kiosk inside Rezet Store: a black counter with white adidas stripes, menu boards and walls of sneakers behind it."},
-    "quote": {"text": "My idea was to create something different: an activation that felt authentic to our community while also offering something genuinely valuable to the consumer.", "by": "Sarah Al-farhan"},
-    "context": [
-      "Fashion Week is full of people on the move. The kiosk gave them a reason to slow down: an open and welcoming environment where everyone felt invited to come by, connect and take a break from the busy pace.",
-      "The aim was a playful, accessible space that felt as much like an experience as it did a place to take a break."
-    ],
-    "role": [
-      "Sarah developed the entire kiosk experience from concept to execution: shaping the initial idea, designing the space, creating custom sodas and ice creams, developing custom T-shirt printing and bringing all of the visual details together."
-    ],
-    "execution": [
-      "Concept for an open Friends & Family Kiosk during Fashion Week",
-      "Space design: a black counter with white stripes, finished like an oversized shoebox with its own Rezet Store label",
-      "Custom sodas and ice creams, alongside a coffee menu",
-      "Custom T-shirt printing: Rezet Store × adidas Originals Kiosk tees",
-      "Visual details throughout, from menu boards to packaging"
-    ],
+    "done_heading": "Sarah’s work",
+    "done": ["Concept", "Space design", "Custom sodas", "Ice cream", "T-shirt printing", "Visual details"],
+    "lead": {"image": "adidas-kiosk-02", "alt": "Close-up of the black kiosk counter with the adidas trefoil and a shoebox-style Rezet Store label."},
     "gallery": [
-      {"image": "adidas-kiosk-02", "alt": "Close-up of the black kiosk counter with the adidas trefoil and a shoebox-style Rezet Store label.", "caption": "The counter as an oversized shoebox, complete with a Friends & Family Kiosk label.", "span": 6, "start": 1},
-      {"image": "adidas-kiosk-03", "alt": "The striped kiosk counter with a glass cabinet of drink cans and hanging menu boards for drinks and ice cream.", "caption": "Menu boards for drinks and ice cream above the counter.", "span": 5, "start": 8, "shift": true},
-      {"image": "adidas-kiosk-04", "alt": "Three people seen from behind on a city street, wearing Rezet Store × adidas Originals Kiosk T-shirts.", "caption": "Custom Kiosk T-shirts, out on the street.", "span": 7, "start": 3}
+      {"image": "adidas-kiosk-01", "alt": "The Friends & Family Kiosk inside Rezet Store: a black counter with white adidas stripes, menu boards and walls of sneakers behind it.", "layout": "wide"},
+      {"image": "adidas-kiosk-03", "alt": "The striped kiosk counter with a glass cabinet of drink cans and hanging menu boards for drinks and ice cream.", "layout": "half"},
+      {"image": "adidas-kiosk-04", "alt": "Three people seen from behind on a city street, wearing Rezet Store × adidas Originals Kiosk T-shirts.", "layout": "half"},
+      {"image": "adidas-kiosk-05", "alt": "", "layout": "half"},
+      {"image": "adidas-kiosk-06", "alt": "", "layout": "half"}
     ],
     "credits": [
       ["Concept & execution", "Sarah Al-farhan, Rezet Store"],
@@ -45,37 +34,30 @@
   {
     "slug": "rezet-lookbook",
     "title": "Rezet Lookbook",
-    "subtitle": "Lookbook, Autumn Winter 2025",
+    "subtitle": "Autumn Winter 2025",
     "partners": "Rezet Store",
     "category": "Editorial · Lookbook",
+    "tone": {"bg": "#34331F", "mode": "dark"},
     "meta_description": "The Rezet Store Lookbook Autumn Winter 2025: a store lookbook approached as a magazine, showing brands, products and styling through an editorial, fashion-driven lens.",
     "card_image": "rezet-lookbook-01",
-    "card_intro": "A lookbook approached as a magazine: Rezet Store’s brands, products and styling seen through a more editorial, fashion-driven lens.",
-    "provenance": "A project from Sarah Al-farhan’s portfolio, created during her time as Brand and Community Manager at Rezet Store.",
-    "intro": "The idea was to create a lookbook showcasing the diverse range of brands available at Rezet Store, while presenting them through a more elevated and fashion-driven lens.",
+    "card_image_2": "rezet-lookbook-02",
+    "provenance": "From Sarah Al-farhan’s portfolio. Created as Brand and Community Manager at Rezet Store.",
+    "intro": "Rezet Store’s brands through an elevated, fashion-driven lens. A lookbook approached as a magazine, made to live beyond the store.",
     "facts": [
       ["Client", "Rezet Store"],
       ["Season", "Autumn Winter 2025"],
-      ["Sarah’s role", "Idea and editorial approach"],
-      ["Position", "Brand and Community Manager, Rezet Store"]
+      ["Sarah’s role", "Idea and editorial approach"]
     ],
+    "done_heading": "Sarah’s work",
+    "done": ["Idea", "Editorial approach", "Magazine format", "Content for multiple platforms"],
     "lead": {"image": "rezet-lookbook-01", "alt": "Cover of the Rezet Store Lookbook Autumn Winter 2025: a model in a black track jacket and a long grey skirt against an olive background."},
-    "quote": {"text": "I wanted to approach the lookbook as a magazine: something visually engaging, inspirational, and relevant to our community.", "by": "Sarah Al-farhan"},
-    "context": [
-      "Rather than a product overview, the lookbook was designed to live beyond the store: a piece of content that could be used across different platforms and inspire people to see Rezet Store from a different perspective.",
-      "By highlighting brands, products and styling in a more editorial way, it shows not only what the store had to offer, but how it could be worn, combined and interpreted."
-    ],
-    "role": [
-      "Sarah shaped the idea and the editorial approach: treating the lookbook as a magazine and presenting the store’s brands through a fashion-driven lens."
-    ],
-    "execution": [
-      "Magazine format, with a cover and editorial spreads",
-      "A selection across the diverse range of brands at Rezet Store",
-      "Styling that shows how pieces can be worn, combined and interpreted",
-      "Content made to work across different platforms"
-    ],
     "gallery": [
-      {"image": "rezet-lookbook-02", "alt": "An open spread from the Rezet Store Lookbook showing two styled looks against an olive background.", "caption": "An editorial spread from the Autumn Winter 2025 lookbook.", "span": 8, "start": 3}
+      {"image": "rezet-lookbook-02", "alt": "An open spread from the Rezet Store Lookbook showing two styled looks against an olive background.", "layout": "wide"},
+      {"image": "rezet-lookbook-03", "alt": "", "layout": "half"},
+      {"image": "rezet-lookbook-04", "alt": "", "layout": "half"},
+      {"image": "rezet-lookbook-05", "alt": "", "layout": "third"},
+      {"image": "rezet-lookbook-06", "alt": "", "layout": "third"},
+      {"image": "rezet-lookbook-07", "alt": "", "layout": "third"}
     ],
     "credits": [
       ["Client", "Rezet Store"],
@@ -88,38 +70,26 @@
     "subtitle": "Adistar Control 5",
     "partners": "adidas",
     "category": "Campaign · Social content",
+    "tone": {"bg": "#202428", "mode": "dark"},
     "meta_description": "Ways to Style: an adidas series exploring the Adistar Control 5 through Hashim Musa, Mohammed Chahrour and Elshan Baku in Copenhagen. Individuality, movement and self-expression.",
     "card_image": "adidas-ways-to-style-03",
-    "card_intro": "A series exploring the versatility of the Adistar Control 5 through the people who wear it: individuality in motion, in Copenhagen.",
-    "provenance": "A project from Sarah Al-farhan’s portfolio.",
-    "intro": "Ways to Style is a series exploring the versatility of the Adistar Control 5 through the people who wear them. Each story captures individuality in motion, showing how footwear becomes an extension of self-expression in everyday life.",
+    "card_image_2": "adidas-ways-to-style-02",
+    "provenance": "From Sarah Al-farhan’s portfolio. Role and full credits available on request.",
+    "intro": "The Adistar Control 5 through the people who wear it. Individuality in motion, from creative workspaces to the streets of Copenhagen.",
     "facts": [
       ["Brand", "adidas"],
       ["Product", "Adistar Control 5"],
-      ["Setting", "Copenhagen"],
       ["Featuring", "Hashim Musa, Mohammed Chahrour, Elshan Baku"]
     ],
+    "done_heading": "The series",
+    "done": ["Three Copenhagen creatives", "Workspace to street", "Social-first stories"],
     "lead": {"image": "adidas-ways-to-style-01", "alt": "A man in a black puffer jacket, white T-shirt and red trousers stands by a building entrance, wearing silver Adistar Control 5 sneakers."},
-    "quote": {"text": "An ode to the creatives of the city and to those who live in constant motion.", "by": "Ways to Style"},
-    "context": [
-      "This edition takes place in Copenhagen, in the world of Hashim Musa, Mohammed Chahrour and Elshan Baku. Here, sneakers are more than just style: they are movement, rhythm and identity.",
-      "From each of their creative workspaces to the city streets, the Adistar Control 5 moves with them, adapting to every moment."
-    ],
-    "role_heading": "Credits",
-    "role": [
-      "Ways to Style is part of Sarah Al-farhan’s portfolio. Details of her role and the full production credits are available on request."
-    ],
-    "execution_heading": "The series",
-    "execution": [
-      "Three Copenhagen creatives: Hashim Musa, Mohammed Chahrour and Elshan Baku",
-      "Stories that move from their creative workspaces to the city streets",
-      "The Adistar Control 5 styled in everyday life, from the bike to the pavement",
-      "Short, social-first stories built around individuality and movement"
-    ],
     "gallery": [
-      {"image": "adidas-ways-to-style-03", "alt": "A man in a shearling-collared leather jacket sits on a red bicycle on a city street, wearing Adistar Control 5 sneakers.", "caption": "On the move: the Adistar Control 5 in the city.", "span": 7, "start": 1},
-      {"image": "adidas-ways-to-style-02", "alt": "Close-up of silver Adistar Control 5 sneakers under wide red trousers on cobblestones.", "caption": "Styling detail on cobblestones.", "span": 4, "start": 9, "shift": true},
-      {"image": "adidas-ways-to-style-04", "alt": "Close-up of silver Adistar Control 5 sneakers with black trousers, next to a bicycle.", "caption": "Footwear as an extension of self-expression.", "span": 6, "start": 4}
+      {"image": "adidas-ways-to-style-03", "alt": "A man in a shearling-collared leather jacket sits on a red bicycle on a city street, wearing Adistar Control 5 sneakers.", "layout": "half"},
+      {"image": "adidas-ways-to-style-02", "alt": "Close-up of silver Adistar Control 5 sneakers under wide red trousers on cobblestones.", "layout": "half"},
+      {"image": "adidas-ways-to-style-04", "alt": "Close-up of silver Adistar Control 5 sneakers with black trousers, next to a bicycle.", "layout": "wide"},
+      {"image": "adidas-ways-to-style-05", "alt": "", "layout": "half"},
+      {"image": "adidas-ways-to-style-06", "alt": "", "layout": "half"}
     ],
     "credits": [
       ["Brand", "adidas"],
@@ -130,46 +100,33 @@
   {
     "slug": "timberland-rezet",
     "title": "Timberland × Rezet",
-    "subtitle": "A Fashion Week day of talk, drinks and customization",
+    "subtitle": "Copenhagen Fashion Week",
     "partners": "Rezet Store × Timberland, with Pablo T-Shirt Factory",
     "category": "Event · Copenhagen Fashion Week",
+    "tone": {"bg": "#0F2926", "mode": "dark"},
     "meta_description": "Timberland × Rezet at Copenhagen Fashion Week: a breakfast panel talk at Rezet Store and an evening of live laser-print customization at Pablo T-Shirt Factory, created and produced by Sarah Al-farhan.",
     "card_image": "timberland-rezet-04",
-    "card_intro": "A Copenhagen Fashion Week day that moved from a breakfast panel at Rezet Store to live laser-print customization at Pablo T-Shirt Factory.",
-    "provenance": "A project from Sarah Al-farhan’s portfolio, created during her time as Brand and Community Manager at Rezet Store.",
-    "intro": "For Copenhagen Fashion Week, Sarah created and produced an event with Timberland and Rezet Store, bringing together a morning panel talk, drinks, customization and an evening experience with Pablo T-Shirt Factory.",
+    "card_image_2": "timberland-rezet-03",
+    "provenance": "From Sarah Al-farhan’s portfolio. Created as Brand and Community Manager at Rezet Store.",
+    "intro": "One Fashion Week day, from conversation to craft: a breakfast panel at Rezet Store, then live laser-print customization at Pablo T-Shirt Factory.",
     "facts": [
       ["Partners", "Timberland, Rezet Store, Pablo T-Shirt Factory"],
       ["Setting", "Copenhagen Fashion Week"],
-      ["Sarah’s role", "Event concept and production"],
-      ["Position", "Brand and Community Manager, Rezet Store"]
+      ["Sarah’s role", "Event concept and production"]
     ],
-    "lead": {"image": "timberland-rezet-06", "alt": "Group photo inside Rezet Store after the Timberland breakfast panel talk, with Timberland boots on the shelves behind."},
     "programme": [
-      {"time": "Morning", "place": "Rezet Store", "text": "Breakfast and a panel talk on creativity, culture and the future of fashion, with Mads Damind, Sallys Sneakers and Darron McKoy, Timberland’s VP of Product Design & Creative Direction."},
-      {"time": "Evening", "place": "Pablo T-Shirt Factory", "text": "A live laser-print customization experience with Pablo T-Shirt Factory, where the day’s conversation became something hands-on."}
+      {"time": "Morning", "place": "Rezet Store", "text": "Breakfast and panel talk with Mads Damind, Sallys Sneakers and Darron McKoy, Timberland’s VP of Product Design & Creative Direction."},
+      {"time": "Evening", "place": "Pablo T-Shirt Factory", "text": "Live laser-print customization."}
     ],
-    "quote": {"text": "Guests were able to engage directly with the craft and create something personal, turning the event from a conversation into an interactive experience.", "by": "Sarah Al-farhan"},
-    "context": [
-      "The day brought together voices from across the creative and fashion communities, and then moved from conversation to making: from a panel at Rezet Store in the morning to hands-on customization in the evening."
-    ],
-    "role": [
-      "Sarah was responsible for bringing the different elements together: the event concept and programming, the collaboration with Timberland and Pablo T-Shirt Factory, the panel, drinks, guest experience and the transition from the daytime talk into the evening activation."
-    ],
-    "execution": [
-      "Event concept and programming for Copenhagen Fashion Week",
-      "Collaboration with Timberland and Pablo T-Shirt Factory",
-      "Breakfast panel talk at Rezet Store",
-      "Drinks and guest experience",
-      "Live laser-print customization in the evening",
-      "The transition from daytime talk to evening activation"
-    ],
+    "done_heading": "Sarah’s work",
+    "done": ["Concept & programming", "Partner collaboration", "Panel talk", "Drinks & guest experience", "Customization", "Day-to-evening transition"],
+    "lead": {"image": "timberland-rezet-06", "alt": "Group photo inside Rezet Store after the Timberland breakfast panel talk, with Timberland boots on the shelves behind."},
     "gallery": [
-      {"image": "timberland-rezet-05", "alt": "A hand holds printed pages showing customized boots, next to a pair of wheat Timberland boots on a steel counter.", "caption": "Customization in detail.", "span": 5, "start": 1},
-      {"image": "timberland-rezet-04", "alt": "Guests gather around a counter with Timberland boot boxes and a Rezet Store sign.", "caption": "Timberland boots at the counter.", "span": 6, "start": 7, "shift": true},
-      {"image": "timberland-rezet-01", "alt": "Guests in varsity and denim jackets at the Timberland × Rezet evening event, photographed on film.", "caption": "Evening: guests at the event.", "span": 4, "start": 1},
-      {"image": "timberland-rezet-02", "alt": "Three guests pose together outside at the Timberland × Rezet evening event.", "caption": "Evening: outside the event.", "span": 4, "start": 5},
-      {"image": "timberland-rezet-03", "alt": "A guest in a camouflage hoodie and trousers with Timberland boots at the evening event.", "caption": "Evening: guest portrait.", "span": 4, "start": 9}
+      {"image": "timberland-rezet-04", "alt": "Guests gather around a counter with Timberland boot boxes and a Rezet Store sign.", "layout": "half"},
+      {"image": "timberland-rezet-05", "alt": "A hand holds printed pages showing customized boots, next to a pair of wheat Timberland boots on a steel counter.", "layout": "half"},
+      {"image": "timberland-rezet-01", "alt": "Guests in varsity and denim jackets at the Timberland × Rezet evening event, photographed on film.", "layout": "third"},
+      {"image": "timberland-rezet-02", "alt": "Three guests pose together outside at the Timberland × Rezet evening event.", "layout": "third"},
+      {"image": "timberland-rezet-03", "alt": "A guest in a camouflage hoodie and trousers with Timberland boots at the evening event.", "layout": "third"}
     ],
     "credits": [
       ["Event concept & production", "Sarah Al-farhan, Rezet Store"],
@@ -180,38 +137,29 @@
   {
     "slug": "nike-event-consulting",
     "title": "Nike Event Consulting",
-    "subtitle": "Guest management, seeding and event project management",
+    "subtitle": "Guest management & seeding",
     "partners": "Nike",
     "category": "Consulting · Events",
+    "tone": {"bg": "#ECE9E2", "mode": "light"},
     "meta_description": "Event consulting for Nike: guest lists, invitations, product seeding, relationship management and on-the-ground coordination of events and brand activations by Sarah Al-farhan.",
     "card_image": "nike-event-consulting-03",
-    "card_intro": "Consulting on Nike events and brand activations: guest lists, invitations, product seeding, relationships and on-the-ground coordination.",
-    "provenance": "A project from Sarah Al-farhan’s portfolio, from her work as a consultant for Nike.",
-    "intro": "As a consultant for Nike, Sarah supported the planning and execution of events and brand activations, with a focus on guest management, seeding and overall event project management.",
+    "card_image_2": "nike-event-consulting-02",
+    "provenance": "From Sarah Al-farhan’s portfolio. Work as a consultant for Nike.",
+    "intro": "Events and brand activations for Nike, with the focus on who is in the room: guest management, seeding and event project management.",
     "facts": [
       ["Client", "Nike"],
       ["Scope", "Events and brand activations"],
-      ["Sarah’s role", "Consultant: guest management, seeding, event project management"]
+      ["Sarah’s role", "Event consultant"]
     ],
+    "done_heading": "Sarah’s work",
+    "done": ["Guest lists", "Invitations", "Product seeding", "Relationships", "Stakeholders & logistics", "On-the-ground execution"],
     "lead": {"image": "nike-event-consulting-03", "alt": "Guests gather under a skylight in a white Nike activation space with a large black Swoosh on the wall."},
-    "quote": {"text": "The work combined strategy, project management, community building, and cultural engagement.", "by": "Sarah Al-farhan"},
-    "context": [
-      "An activation depends on who is in the room. The work focused on ensuring the right mix of creatives, athletes, industry voices and cultural figures were engaged with the brand, and on creating relevant touchpoints between Nike and its community."
-    ],
-    "role": [
-      "Sarah developed and managed guest lists, coordinated invitations and attendance, and worked on product seeding and relationship management. She also supported the wider event process: stakeholders, timelines, logistics and on-the-ground execution."
-    ],
-    "execution": [
-      "Developing and managing guest lists",
-      "Coordinating invitations and attendance",
-      "Product seeding and relationship management",
-      "Coordinating stakeholders, timelines and logistics",
-      "On-the-ground execution on the day"
-    ],
     "gallery": [
-      {"image": "nike-event-consulting-01", "alt": "A large black Swoosh on a white wall above a metal truss counter in a Nike activation space.", "caption": "The activation space before guests arrive.", "span": 6, "start": 1},
-      {"image": "nike-event-consulting-02", "alt": "A tray of soap bars wrapped in paper printed with the Nike RUN logo.", "caption": "Nike RUN favors for guests.", "span": 5, "start": 8, "shift": true},
-      {"video": "nike-event-consulting", "label": "Video from the Nike activation space: a host prepares the counter beneath the Swoosh.", "caption": "Behind the scenes in the activation space (video, 10 seconds).", "span": 5, "start": 4}
+      {"image": "nike-event-consulting-01", "alt": "A large black Swoosh on a white wall above a metal truss counter in a Nike activation space.", "layout": "half"},
+      {"video": "nike-event-consulting", "label": "Video from the Nike activation space: a host prepares the counter beneath the Swoosh.", "layout": "half"},
+      {"image": "nike-event-consulting-02", "alt": "A tray of soap bars wrapped in paper printed with the Nike RUN logo.", "layout": "third"},
+      {"image": "nike-event-consulting-04", "alt": "", "layout": "third"},
+      {"image": "nike-event-consulting-05", "alt": "", "layout": "third"}
     ],
     "credits": [
       ["Client", "Nike"],

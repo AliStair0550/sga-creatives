@@ -5,126 +5,132 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SGA creatives: brandguide</title>
 <style>
-  @font-face { font-family: "Instrument Serif"; src: url("../public/assets/fonts/InstrumentSerif-Regular.woff2") format("woff2"); }
-  @font-face { font-family: "Instrument Serif"; font-style: italic; src: url("../public/assets/fonts/InstrumentSerif-Italic.woff2") format("woff2"); }
+  @font-face { font-family: "SGA Hyphen"; src: url("../public/assets/fonts/Archivo-VF.woff2") format("woff2"); unicode-range: U+002D; }
+  @font-face { font-family: "Bodoni Moda"; src: url("../public/assets/fonts/BodoniModa-VF.woff2") format("woff2"); font-weight: 500 800; }
+  @font-face { font-family: "Bodoni Moda"; font-style: italic; src: url("../public/assets/fonts/BodoniModa-Italic-VF.woff2") format("woff2"); font-weight: 500 800; }
   @font-face { font-family: "Archivo"; src: url("../public/assets/fonts/Archivo-VF.woff2") format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; }
-  :root { --paper:#F3F0E9; --ink:#171918; --oxblood:#542536; --acid:#D8F267; --line:rgba(23,25,24,.2); }
+  :root { --night:#0E0F0F; --paper:#F3F0E9; --ink:#171918; --acid:#D8F267; --line:rgba(243,240,233,.18); }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 16px/1.6 "Archivo", Arial, sans-serif; }
-  main { max-width: 1080px; margin: 0 auto; padding: 48px 20px 96px; }
-  h1, h2 { font-family: "Instrument Serif", serif; font-weight: 400; line-height: .95; margin: 0; }
+  body { margin: 0; background: var(--night); color: var(--paper); font: 400 16px/1.6 "Archivo", Arial, sans-serif; }
+  main { max-width: 1080px; margin: 0 auto; padding: 56px 20px 96px; }
+  h1, h2, .serif { font-family: "SGA Hyphen", "Bodoni Moda", serif; font-weight: 700; font-variation-settings: "opsz" 30; line-height: .95; margin: 0; letter-spacing: -0.02em; }
   h1 { font-size: clamp(3rem, 9vw, 6.5rem); }
-  h2 { font-size: clamp(2rem, 5vw, 3.2rem); margin-bottom: 20px; }
-  h1 em, h2 em { font-style: italic; }
-  section { padding: 40px 0; border-top: 1px solid var(--ink); margin-top: 40px; }
-  .label { font-size: .72rem; font-weight: 560; font-stretch: 125%; letter-spacing: .1em; text-transform: uppercase; }
+  h2 { font-size: clamp(2rem, 5vw, 3.4rem); margin-bottom: 20px; }
+  em { font-style: italic; font-weight: 500; }
+  section { padding: 40px 0; border-top: 1px solid var(--line); margin-top: 40px; }
+  .label { font-size: .7rem; font-weight: 520; font-stretch: 125%; letter-spacing: .2em; text-transform: uppercase; color: rgba(243,240,233,.72); }
   p, li { max-width: 68ch; }
-  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-  .tile { padding: 28px; min-height: 180px; display: grid; place-items: center; border: 1px solid var(--line); }
-  .tile img { max-width: 100%; }
-  .dark { background: var(--ink); color: var(--paper); }
-  .ox { background: var(--oxblood); color: var(--paper); }
-  .sw { padding: 18px; min-height: 150px; display: flex; flex-direction: column; justify-content: flex-end; border: 1px solid var(--line); }
-  .sw b { font-family: "Instrument Serif", serif; font-weight: 400; font-size: 1.8rem; }
+  .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .tile { padding: 28px; min-height: 170px; display: grid; place-items: center; border: 1px solid var(--line); }
+  .light { background: var(--paper); color: var(--ink); }
+  .sw { padding: 16px; min-height: 140px; display: flex; flex-direction: column; justify-content: flex-end; border: 1px solid var(--line); }
+  .sw b { font-family: "Bodoni Moda", serif; font-weight: 700; font-size: 1.6rem; }
   table { border-collapse: collapse; width: 100%; font-size: .95rem; }
   td, th { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
-  .small { font-size: .85rem; }
+  .small { font-size: .85rem; color: rgba(243,240,233,.72); }
   .row { display: flex; gap: 24px; align-items: end; flex-wrap: wrap; }
   code { font-size: .88em; }
 </style>
 </head>
 <body>
 <main>
-  <p class="label">SGA creatives · brandguide v1 · 2026</p>
+  <p class="label">SGA creatives · brandguide v2 · september 2026</p>
   <h1>Luxury meets <em>urban culture.</em></h1>
-  <p style="font-size:1.25rem;margin-top:24px">Identiteten kombinerer modemagasinets præcision (store serifoverskrifter, luft, tynde linjer og små numre) med gadekulturens energi: rigtige mennesker, rigtige projekter og en bred, skiltagtig grotesk. Billederne bærer udtrykket; typografien rammer dem ind.</p>
+  <p style="font-size:1.2rem;margin-top:24px">Mørkt, fedt og redaktionelt. Magasinets skarpe Bodoni og masser af luft møder gadekulturens rigtige mennesker og projekter. Færre ord, flere billeder: billederne bærer udtrykket, og typografien rammer dem ind.</p>
 
   <section>
     <p class="label">01 · Logo</p>
     <h2>SGA <em>+ creatives</em></h2>
-    <p>Logoet er typografisk: <strong>SGA</strong> i Instrument Serif med stram spatiering (G og A lukker tættere sammen), og <strong>creatives</strong> mindre i Archivo Expanded. En tynd linje forbinder de to niveauer. Alle logofiler er konverteret til stier og virker uden installerede fonte.</p>
+    <p>Logoet er typografisk: <strong>SGA</strong> i fed Bodoni Moda med stram spatiering og <strong>creatives</strong> mindre i Archivo Expanded. En tynd linje forbinder de to niveauer. Alle logofiler er konverteret til stier og virker uden installerede fonte.</p>
     <div class="grid" style="margin-top:24px">
-      <div class="tile"><img src="sga-creatives-logo-dark.svg" alt="Primært logo, mørkt" width="200"></div>
-      <div class="tile dark"><img src="sga-creatives-logo-light.svg" alt="Primært logo, lyst" width="200"></div>
-      <div class="tile"><img src="sga-creatives-logo-horizontal-dark.svg" alt="Vandret logo, mørkt" width="240"></div>
-      <div class="tile ox"><img src="sga-creatives-logo-horizontal-light.svg" alt="Vandret logo, lyst" width="240"></div>
+      <div class="tile"><img src="sga-creatives-logo-light.svg" alt="Primært logo, lyst" width="200"></div>
+      <div class="tile light"><img src="sga-creatives-logo-dark.svg" alt="Primært logo, mørkt" width="200"></div>
+      <div class="tile"><img src="sga-creatives-logo-horizontal-light.svg" alt="Vandret logo, lyst" width="240"></div>
+      <div class="tile light"><img src="sga-creatives-logo-horizontal-dark.svg" alt="Vandret logo, mørkt" width="240"></div>
     </div>
     <table style="margin-top:24px">
       <tr><th>Fil</th><th>Brug</th></tr>
-      <tr><td><code>sga-creatives-logo-dark.svg</code></td><td>Primært, stablet logo på lyse flader (Warm Paper, hvid).</td></tr>
-      <tr><td><code>sga-creatives-logo-light.svg</code></td><td>Primært logo på Ink, Oxblood eller mørke billeder.</td></tr>
+      <tr><td><code>sga-creatives-logo-light.svg</code></td><td>Primært, stablet logo på mørke flader og billeder (standard).</td></tr>
+      <tr><td><code>sga-creatives-logo-dark.svg</code></td><td>Primært logo på Warm Paper og hvidt.</td></tr>
       <tr><td><code>sga-creatives-logo-horizontal-*.svg</code></td><td>Header, e-mailsignatur, smalle formater.</td></tr>
       <tr><td><code>sga-creatives-mark.svg</code> / <code>-512.png</code></td><td>Kompakt mærke: profilbilleder, favicon, app-ikon.</td></tr>
     </table>
-    <p class="small" style="margin-top:16px"><strong>Frizone:</strong> mindst halvdelen af højden på S’et rundt om logoet. <strong>Minimum:</strong> stablet logo 64 px bredt, vandret logo 110 px bredt, mærket 16 px. <strong>Undgå:</strong> at strække, rotere, farvelægge i Acid Note, lægge skygger på eller placere logoet på urolige billedområder.</p>
+    <p class="small" style="margin-top:16px"><strong>Frizone:</strong> mindst halvdelen af S’ets højde rundt om logoet. <strong>Minimum:</strong> stablet logo 64 px bredt, vandret logo 110 px bredt, mærket 16 px. <strong>Undgå</strong> at strække, rotere, farvelægge i Acid Note eller placere logoet på urolige billedområder uden mørk toning.</p>
   </section>
 
   <section>
     <p class="label">02 · Mærke og favicon</p>
     <h2>S<em>.</em></h2>
-    <p>Det kompakte mærke er et serif-S med et lille Acid Note-punktum på en Ink-flade. S’ets hårstreger er gjort kraftigere, så det står tydeligt ved 16 og 32 px.</p>
+    <p>Mærket er et fedt Bodoni-S med et lille Acid Note-punktum på Night. Det er tegnet ved lav optisk størrelse, så det står skarpt ved 16 og 32 px.</p>
     <div class="row" style="margin-top:20px">
       <img src="sga-creatives-mark.svg" alt="Mærke 16 px" width="16" height="16">
       <img src="sga-creatives-mark.svg" alt="Mærke 32 px" width="32" height="32">
       <img src="sga-creatives-mark.svg" alt="Mærke 64 px" width="64" height="64">
       <img src="sga-creatives-mark.svg" alt="Mærke 128 px" width="128" height="128">
     </div>
-    <p class="small" style="margin-top:16px">Websitet bruger <code>favicon.svg</code>, <code>favicon.ico</code> (16/32/48 px) og <code>apple-touch-icon.png</code> (180 × 180) i <code>public/</code>.</p>
   </section>
 
   <section>
     <p class="label">03 · Farver</p>
-    <h2>Paper og Ink <em>dominerer.</em></h2>
+    <h2>Mørkt først, <em>lyst bagefter.</em></h2>
     <div class="grid">
-      <div class="sw" style="background:var(--paper)"><b>Warm Paper</b><span>#F3F0E9</span><span class="small">Primær baggrund</span></div>
-      <div class="sw dark"><b>Ink</b><span>#171918</span><span class="small">Tekst, logo, mørke flader</span></div>
-      <div class="sw ox"><b>Oxblood</b><span>#542536</span><span class="small">Dybde, udvalgte sektioner</span></div>
-      <div class="sw" style="background:var(--acid)"><b>Acid Note</b><span>#D8F267</span><span class="small">Små accenter, altid med mørk tekst</span></div>
+      <div class="sw" style="background:var(--night)"><b>Night</b><span>#0E0F0F</span><span class="small">Grundbaggrund</span></div>
+      <div class="sw light"><b>Warm Paper</b><span>#F3F0E9</span><span class="small" style="color:#4A4C4A">Lys verden, tekst på mørkt</span></div>
+      <div class="sw" style="background:var(--ink)"><b>Ink</b><span>#171918</span><span class="small">Tekst på lyst</span></div>
+      <div class="sw" style="background:var(--acid);color:var(--ink)"><b>Acid Note</b><span>#D8F267</span><span style="font-size:.85rem">Kun små accenter, altid med mørk tekst</span></div>
+    </div>
+    <p style="margin-top:28px"><strong>Case-toner.</strong> Hver case er sit eget univers med en dyb farve hentet fra billederne:</p>
+    <div class="grid" style="margin-top:12px">
+      <div class="sw" style="background:#0C0C0C"><b>Kiosk</b><span>#0C0C0C</span></div>
+      <div class="sw" style="background:#34331F"><b>Lookbook</b><span>#34331F</span></div>
+      <div class="sw" style="background:#202428"><b>Ways to Style</b><span>#202428</span></div>
+      <div class="sw" style="background:#0F2926"><b>Timberland</b><span>#0F2926</span></div>
+      <div class="sw light" style="background:#ECE9E2"><b>Nike</b><span>#ECE9E2</span></div>
     </div>
     <table style="margin-top:24px">
-      <tr><th>Kombination</th><th>Kontrast</th><th>Vurdering</th></tr>
-      <tr><td>Ink på Warm Paper</td><td>15,5 : 1</td><td>AAA</td></tr>
-      <tr><td>Warm Paper på Oxblood</td><td>10,9 : 1</td><td>AAA</td></tr>
-      <tr><td>Ink på Acid Note</td><td>14,2 : 1</td><td>AAA</td></tr>
-      <tr><td>Sekundær tekst #4A4C4A på Warm Paper</td><td>7,6 : 1</td><td>AAA</td></tr>
-      <tr><td>Warm Paper 74 % på Oxblood</td><td>6,7 : 1</td><td>AA</td></tr>
+      <tr><th>Kombination</th><th>Kontrast</th></tr>
+      <tr><td>Warm Paper på Night</td><td>16,9 : 1 (AAA)</td></tr>
+      <tr><td>Warm Paper 72 % på Night</td><td>9,0 : 1 (AAA)</td></tr>
+      <tr><td>Warm Paper 72 % på Lookbook-oliven (laveste)</td><td>6,7 : 1 (AA)</td></tr>
+      <tr><td>Ink på Warm Paper</td><td>15,5 : 1 (AAA)</td></tr>
+      <tr><td>#4A4C4A på Nike-lys</td><td>7,1 : 1 (AAA)</td></tr>
     </table>
-    <p class="small" style="margin-top:16px">Acid Note bruges sparsomt: fokusmarkering på mørke flader, små firkanter, understregning af e-mail og små tidsmærker. Aldrig som tekstfarve på lys baggrund.</p>
+    <p class="small" style="margin-top:12px">Bordeaux/Oxblood fra version 1 er udgået.</p>
   </section>
 
   <section>
     <p class="label">04 · Typografi</p>
-    <h2>To familier, <em>ikke flere.</em></h2>
+    <h2>Fed og <em>skarp.</em></h2>
     <div class="grid">
       <div>
-        <p style="font-family:'Instrument Serif';font-size:3.4rem;line-height:1;margin:0">Where brands meet <em>culture.</em></p>
-        <p class="small"><strong>Instrument Serif</strong> (regular og italic): overskrifter, citater, store tal. Kursiv til det ene ord, der skal have vægt.</p>
+        <p class="serif" style="font-size:3.2rem">Where brands meet <em>culture.</em></p>
+        <p class="small"><strong>Bodoni Moda</strong>, vægt 700, optisk størrelse låst til 30. Bruges til logo, overskrifter, casetitler og store tal. Kursiv (500) bruges til det ene ord, der skal have vægt.</p>
       </div>
       <div>
-        <p class="label" style="margin:0 0 12px">Label · Archivo Expanded 125 %</p>
-        <p style="margin:0">Brødtekst i Archivo, en neutral, læsbar grotesk med variabel bredde. Den brede version bruges i versaler med spatiering til labels, knapper og navigation, som skilte i byrummet.</p>
-        <p class="small"><strong>Archivo</strong> (variabel: vægt 100 til 900, bredde 62 til 125 %).</p>
+        <p class="label" style="margin:0 0 12px;color:var(--paper)">Label · Archivo Expanded</p>
+        <p style="margin:0">Brødtekst i Archivo, en neutral og læsbar grotesk. Den brede version bruges i spærrede versaler til labels, knapper og navigation.</p>
+        <p class="small">Bodonis bindestreg er en hårstreg, så bindestreger i overskrifter hentes fra Archivo.</p>
       </div>
     </div>
-    <p class="small" style="margin-top:16px">Begge fonte er under SIL Open Font License 1.1, som tillader webbrug og selvhosting. Licensfilerne ligger i <code>public/assets/fonts/</code>, og kildefilerne ligger i <code>tools/fonts-src/</code>.</p>
+    <p class="small" style="margin-top:16px">Begge fonte er under SIL Open Font License 1.1, som tillader webbrug og selvhosting.</p>
   </section>
 
   <section>
     <p class="label">05 · Billeder, layout og bevægelse</p>
-    <h2>Lad projekterne <em>tale.</em></h2>
+    <h2>Færre ord, <em>flere looks.</em></h2>
     <ul>
       <li>Brug autentiske projektbilleder med mennesker, rum og detaljer. Ingen stockfotos.</li>
-      <li>Varier formaterne, og beskær hvert billede for sig, så ansigter, sko og produktdetaljer bevares. Filmrammerne fra Timberland × Rezet er en del af udtrykket og beskæres ikke væk.</li>
-      <li>Brug et 12-kolonne-grid med enkelte brud: forskudte billeder, én stor overskrift og masser af luft.</li>
-      <li>Brug tynde linjer (1 px) og små projektnumre (01 til 05) som redaktionelle markører.</li>
-      <li>Hold bevægelse rolig og kort: en indgang i heroen, diskrete reveals, en let skalering af billeder og en glidende menu. Alt slås fra ved <em>reduced motion</em>.</li>
+      <li>Store billeder i fuld bredde, halve og tredjedele, med smalle mellemrum. Filmrammerne fra Timberland × Rezet er en del af udtrykket.</li>
+      <li>Manglende billeder vises som pladsholdere med S-mærket, indtil de nye fotos lægges ind.</li>
+      <li>Headeren er gennemsigtig over billederne, har logoet i midten og tynde linjer.</li>
+      <li>Ingen rullende tekst. Bevægelse er rolig: en langsom hero-indgang, diskrete reveals og let billedzoom. Alt slås fra ved <em>reduced motion</em>.</li>
     </ul>
   </section>
 
   <section>
     <p class="label">06 · Tone of voice</p>
-    <h2>Direkte, varm, <em>kulturelt skarp.</em></h2>
-    <p>Websitet er på engelsk. Skriv kort og konkret, med aktive verber og uden buzzwords. Beskriv, hvad der faktisk skete, og hvem der gjorde hvad. Sarahs tidligere projekter præsenteres altid som hendes arbejde med den dokumenterede rolle og arbejdsgiver, aldrig som SGA’s opgaver.</p>
+    <h2>Kort, direkte, <em>kulturelt skarp.</em></h2>
+    <p>Websitet er på engelsk. Skriv få ord, og beskriv hvad der faktisk skete. Sarahs tidligere projekter præsenteres altid som hendes arbejde med den dokumenterede rolle og arbejdsgiver, aldrig som SGA’s opgaver. Ingen lange tankestreger.</p>
   </section>
 </main>
 </body>
