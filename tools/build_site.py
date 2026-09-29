@@ -394,8 +394,10 @@ def home() -> str:
         ("adidas-ways-to-style-01", "A man in a black puffer jacket and red trousers wearing silver Adistar Control 5 sneakers.", "hero-img hero-img--main"),
         ("timberland-rezet-04", "A guest holds up a Timberland boot at the counter during the Timberland × Rezet event.", "hero-img hero-img--side hero-img--right"),
     ]
+    # Only the right image (Timberland) shows on phones, so it is the one fetched first; the other two
+    # are lazy, which also means phones never download them (they are display:none there).
     hero_media = "".join(
-        f'<div class="{cls}">{picture(n, a, "(min-width: 900px) 34vw, 100vw", eager=(k == 1), priority=(k == 1))}</div>'
+        f'<div class="{cls}">{picture(n, a, "(min-width: 900px) 34vw, 100vw", eager=(k == 2), priority=(k == 2))}</div>'
         for k, (n, a, cls) in enumerate(hero_imgs))
 
     body = f"""
