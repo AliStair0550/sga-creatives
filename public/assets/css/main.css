@@ -422,23 +422,63 @@ main:focus { outline: none; }
   html.js .section-head[data-reveal].is-in .rise .rw > span { transform: none; }
 }
 
-.process { margin-top: var(--space-2xl); padding-top: var(--space-m); display: grid; gap: var(--space-m); border-top: 1px solid var(--line); }
-.process .label { color: var(--muted); }
-.process-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-m) var(--gutter); }
-.process-list li { display: grid; gap: 0.2rem; }
-.step-word {
-  font-family: var(--font-display); font-weight: 400;
-  font-size: var(--step-3); line-height: 1;
+/* My process (inside About, dark): four giant words drawn in outline that fill with colour
+   from left to right as they scroll through the screen (main.js sets --f from 0 to 1).
+   Sarah's line next to each word arrives once the word is mostly filled. No JS or reduced
+   motion: --f stays 1, so the words are simply solid. */
+.process { margin-top: var(--space-2xl); padding-top: var(--space-xl); border-top: 1px solid var(--line); }
+.process-title {
+  margin-bottom: var(--space-l);
+  font-family: var(--font-display); font-weight: 800;
+  font-size: var(--step-3); line-height: 1; letter-spacing: -0.045em;
 }
-.step-note { font-size: 0.7rem; font-weight: 520; font-stretch: 118%; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+.process-list { display: grid; }
+.step {
+  --f: 1;
+  display: grid; gap: 0.5rem var(--gutter); align-items: end;
+  padding-block: clamp(0.75rem, 0.4rem + 1vw, 1.5rem);
+  border-bottom: 1px solid var(--line);
+}
+.step-word {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(3.2rem, 1rem + 10vw, 11rem); line-height: 0.88; letter-spacing: -0.055em;
+  color: var(--paper);
+}
+.step-note { max-width: 30ch; color: var(--paper-muted); font-size: var(--step-1); line-height: 1.4; padding-bottom: 0.6em; }
 @media (min-width: 900px) {
-  .process-list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .process-list li:not(:last-child) .step-word::after { content: "→"; font-family: var(--font-body); font-style: normal; font-size: 0.45em; margin-left: 0.5em; color: var(--muted); vertical-align: middle; }
+  .step { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); }
+  .step:nth-child(even) .step-word { padding-left: 8vw; }   /* a staggered, editorial rhythm */
+}
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  @media (prefers-reduced-motion: no-preference) {
+    .step-word {
+      color: transparent;
+      -webkit-text-stroke: 1.5px var(--paper);
+      background: linear-gradient(90deg, var(--paper) calc(var(--f) * 100%), transparent calc(var(--f) * 100%));
+      -webkit-background-clip: text; background-clip: text;
+    }
+    .step-note {
+      opacity: clamp(0, calc((var(--f) - 0.55) * 3), 1);
+      transform: translate3d(0, calc((1 - clamp(0, calc((var(--f) - 0.55) * 3), 1)) * 1.25rem), 0);
+    }
+  }
 }
 
 /* about (dark) */
 .about-grid { display: grid; gap: var(--space-xl) var(--gutter); align-items: start; }
-.about-portrait img, .about-portrait .ph { aspect-ratio: 4 / 5; object-fit: cover; width: 100%; }
+/* the portrait is revealed from below with a slow zoom, then drifts inside its frame while you scroll
+   (main.js sets --rv 0..1 for the reveal and --py -1..1 for the drift) */
+.about-portrait { --rv: 1; --py: 0; position: relative; overflow: hidden; aspect-ratio: 4 / 5; }
+.about-portrait picture { height: 100%; }
+.about-portrait img, .about-portrait .ph { width: 100%; height: 100%; object-fit: cover; }
+@media (prefers-reduced-motion: no-preference) {
+  .about-portrait { clip-path: inset(calc((1 - var(--rv)) * 100%) 0 0 0); }
+  .about-portrait img {
+    height: 116%;
+    transform: translate3d(0, calc(-7% + var(--py) * -6%), 0) scale(calc(1.18 - var(--rv) * 0.18));
+    transform-origin: 50% 60%;
+  }
+}
 .about-body { display: grid; gap: var(--space-m); }
 .about-body > .label { color: var(--muted); }
 .about-name {

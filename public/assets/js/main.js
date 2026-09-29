@@ -128,6 +128,37 @@
     assemble();
   }
 
+  /* ---------------------------------------------------------- About: portrait reveal + drift, process words fill */
+  // data-scroll="fill":     --f 0..1 as the element travels from the bottom of the screen to above the middle
+  // data-scroll="parallax": --rv 0..1 reveal on the way in, --py -1..1 drift across the whole passage
+  var scrollEls = Array.prototype.slice.call(document.querySelectorAll('[data-scroll]'));
+  if (scrollEls.length && !calm.matches) {
+    var pending = false;
+    var clamp01 = function (v) { return Math.min(1, Math.max(0, v)); };
+    var paint = function () {
+      pending = false;
+      var vh = window.innerHeight;
+      scrollEls.forEach(function (el) {
+        var r = el.getBoundingClientRect();
+        if (r.top > vh * 1.3 || r.bottom < -vh * 0.3) return;
+        if (el.getAttribute('data-scroll') === 'fill') {
+          var f = clamp01((vh * 0.92 - r.top) / (vh * 0.5));
+          el.style.setProperty('--f', f.toFixed(3));
+        } else {
+          var t = clamp01((vh - r.top) / (vh + r.height));
+          var rv = clamp01(t / 0.32);
+          rv = 1 - Math.pow(1 - rv, 3);
+          el.style.setProperty('--rv', rv.toFixed(3));
+          el.style.setProperty('--py', (t * 2 - 1).toFixed(3));
+        }
+      });
+    };
+    var ask = function () { if (!pending) { pending = true; window.requestAnimationFrame(paint); } };
+    window.addEventListener('scroll', ask, { passive: true });
+    window.addEventListener('resize', ask);
+    paint();
+  }
+
   /* ---------------------------------------------------------- year */
   Array.prototype.forEach.call(document.querySelectorAll('[data-year]'), function (el) {
     el.textContent = String(new Date().getFullYear());

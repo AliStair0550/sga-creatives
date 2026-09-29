@@ -205,11 +205,12 @@ SERVICES = [
     ("Connections & project management", "Your projects lose direction and momentum.", "We bring the right people in and keep it moving."),
 ]
 
+# "My process": four giant words that fill in as you scroll, each with a line in Sarah's own voice.
 PROCESS = [
-    ("Understand", "Brief, goals, frame"),
-    ("Connect", "The right team"),
-    ("Create", "Concept and direction"),
-    ("Deliver", "Production, on the day"),
+    ("Understand", "I start by listening: the brand, the goal and the people it is for."),
+    ("Connect", "I bring in the right creatives, partners and suppliers."),
+    ("Create", "Together we shape the idea into a clear, bold concept."),
+    ("Deliver", "I run it all the way, down to the last detail on the day."),
 ]
 
 EXPERIENCE = [
@@ -279,7 +280,7 @@ def home() -> str:
         </div>
       </li>""" for i, (t, prob, sol) in enumerate(SERVICES))
     process = "".join(f"""
-        <li><span class="step-word">{t}</span><span class="step-note">{e(d)}</span></li>"""
+        <li class="step" data-scroll="fill"><span class="step-word">{t}</span><span class="step-note">{e(d)}</span></li>"""
                       for t, d in PROCESS)
     experience = "".join(f"""
           <li><span class="xp-company">{e(co)}</span><span class="xp-role">{e(role)}</span><span class="xp-years">{yrs}</span></li>"""
@@ -295,7 +296,7 @@ def home() -> str:
         "founder": {
             "@type": "Person",
             "name": "Sarah Al-farhan",
-            "jobTitle": "Brand and Creative Consultant",
+            "jobTitle": "Brand & Creative Manager",
             "sameAs": [SITE["linkedin"], SITE["instagram"]],
         },
     }
@@ -341,21 +342,20 @@ def home() -> str:
 
 <section id="about" class="section about" aria-labelledby="about-title">
   <div class="container about-grid">
-    <div class="about-portrait" data-reveal>{media("sarah-al-farhan-01", "Sarah Al-farhan on set in a photo studio, working on a laptop.", "(min-width: 900px) 40vw, 100vw", label="Sarah")}</div>
+    <div class="about-portrait" data-scroll="parallax">{media("sarah-al-farhan-01", "Sarah Al-farhan on set in a photo studio, working on a laptop.", "(min-width: 900px) 40vw, 100vw", label="Sarah")}</div>
     <div class="about-body" data-reveal>
-      <p class="label">About</p>
       <h2 id="about-title" class="about-name">Sarah <em>Al-farhan</em></h2>
-      <p class="about-role">The person behind SGA. Brand and creative consultant.</p>
+      <p class="about-role">Brand &amp; Creative Manager</p>
       <p class="about-stat"><span class="stat-figure">13+</span><span class="stat-text">years across fashion, footwear, branding, marketing, community and culture.</span></p>
-      <p class="about-lead">Most recently Brand and Community Manager at Rezet Store. Sarah knows the brand side from the inside: partners, budgets, teams and every detail from the big idea to the smallest execution.</p>
+      <p class="about-lead">Sarah connects brands, people and culture through creative vision and practical experience. She brings the right partners together and manages teams, budgets and every detail from concept to execution.</p>
       <ul class="xp-list">{experience}
       </ul>
     </div>
   </div>
   <div class="container">
-    <div class="process about-process" data-reveal>
-      <p class="label">Process</p>
-      <ol class="process-list" aria-label="Process">{process}
+    <div class="process about-process">
+      <h3 class="process-title">My <em>process</em></h3>
+      <ol class="process-list">{process}
       </ol>
     </div>
   </div>
