@@ -101,6 +101,30 @@
     });
   });
 
+  /* ---------------------------------------------------------- services: scroll-driven assembly */
+  // Each row gets --p from 0 (just entering at the bottom) to 1 (assembled, a little above the middle).
+  var svcRows = Array.prototype.slice.call(document.querySelectorAll('.svc-row'));
+  var calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (svcRows.length && !calm.matches) {
+    var queued = false;
+    var assemble = function () {
+      queued = false;
+      var vh = window.innerHeight;
+      svcRows.forEach(function (row) {
+        var top = row.getBoundingClientRect().top;
+        if (top > vh * 1.2 || top < -vh) return;
+        var p = (vh - top) / (vh * 0.55);
+        p = Math.min(1, Math.max(0, p));
+        p = 1 - Math.pow(1 - p, 3); // ease out: fast gathering, soft landing
+        row.style.setProperty('--p', p.toFixed(3));
+      });
+    };
+    var request = function () { if (!queued) { queued = true; window.requestAnimationFrame(assemble); } };
+    window.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', request);
+    assemble();
+  }
+
   /* ---------------------------------------------------------- year */
   Array.prototype.forEach.call(document.querySelectorAll('[data-year]'), function (el) {
     el.textContent = String(new Date().getFullYear());

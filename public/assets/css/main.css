@@ -70,7 +70,7 @@ body, .tone-dark {
 }
 .tone-light {
   --fg: var(--ink);
-  --muted: var(--ink-muted);
+  --muted: rgba(23, 25, 24, 0.8);
   --line: rgba(23, 25, 24, 0.16);
   --line-strong: rgba(23, 25, 24, 0.55);
   --ph: rgba(23, 25, 24, 0.05);
@@ -169,17 +169,16 @@ main:focus { outline: none; }
   display: flex; align-items: center; justify-content: space-between; gap: var(--space-m);
   min-height: var(--header-h);
   padding-inline: var(--page-pad);
-  border-bottom: 1px solid rgba(243, 240, 233, 0.16);
+  border-bottom: 1px solid transparent;   /* the line appears only once the page scrolls */
   transition: border-color 0.5s var(--ease);
 }
 .site-header[data-tone="light"]:not(.is-scrolled) { color: var(--ink); --focus: var(--ink); }
-.site-header[data-tone="light"]:not(.is-scrolled) .header-inner { border-bottom-color: rgba(23, 25, 24, 0.14); }
 .site-header.is-scrolled {
   background: rgba(14, 15, 15, 0.9);
   -webkit-backdrop-filter: blur(14px) saturate(1.1);
   backdrop-filter: blur(14px) saturate(1.1);
 }
-.site-header.is-scrolled .header-inner { border-bottom-color: rgba(243, 240, 233, 0.1); }
+.site-header.is-scrolled .header-inner { border-bottom-color: rgba(243, 240, 233, 0.14); }
 
 .brand { display: inline-flex; align-items: center; min-height: 44px; color: inherit; z-index: 3; }
 .brand svg { height: 1.9rem; width: auto; }
@@ -366,7 +365,6 @@ main:focus { outline: none; }
   font-size: clamp(1.9rem, 1rem + 3.4vw, 4.4rem); line-height: 0.98; letter-spacing: -0.045em;
   transition: color 0.4s var(--ease), transform 1.1s var(--ease), opacity 1s var(--ease);
 }
-.svc-title span { font-weight: 400; }
 .svc-answer {
   max-width: 28ch;
   font-family: var(--font-display); font-weight: 400;
@@ -391,17 +389,41 @@ main:focus { outline: none; }
   .svc-row:hover .svc-title, .svc-row:hover .svc-answer { color: var(--paper); }
   .svc-row:hover .svc-arrow { color: var(--acid); }
 }
-/* the reveal: title from the left, answer from the right, the arrow draws between them */
+/* Scroll-driven assembly (main.js sets --p from 0 to 1 as a row travels up the screen).
+   Words start spread out and slanted, then gather into the line; the answer arrives from the
+   right (they never cross), the slant alternates per row (--tilt) and the arrow draws last. Without JS or with
+   reduced motion --p stays 1, so everything simply sits in place. */
+.svc-row { --p: 1; --tilt: 1; }
+.svc-title .w { display: inline-block; }
+.svc-title .amp { font-weight: 400; }
 @media (prefers-reduced-motion: no-preference) {
-  html.js .svc-row[data-reveal] { opacity: 1; transform: none; }
-  html.js .svc-row[data-reveal] .svc-title { opacity: 0; transform: translateX(-8vw); }
-  html.js .svc-row[data-reveal] .svc-answer { opacity: 0; transform: translateX(8vw); }
-  html.js .svc-row[data-reveal] .svc-arrow { transform: scaleX(0); }
-  html.js .svc-row[data-reveal].is-in .svc-title,
-  html.js .svc-row[data-reveal].is-in .svc-answer { opacity: 1; transform: none; }
-  html.js .svc-row[data-reveal].is-in .svc-arrow { transform: none; }
+  .svc-title .w {
+    transform: translate3d(calc((1 - var(--p)) * var(--o) * -1vw), 0, 0) skewX(calc((1 - var(--p)) * var(--tilt) * 16deg));
+    opacity: calc(0.12 + var(--p) * 0.88);
+    will-change: transform;
+  }
+  .svc-answer {
+    transform: translate3d(calc((1 - var(--p)) * 34vw), 0, 0);
+    opacity: calc(var(--p) * 1.4 - 0.4);
+    transition: color 0.4s var(--ease);
+  }
+  .svc-arrow {
+    transform: scaleX(clamp(0, calc((var(--p) - 0.55) * 2.3), 1));
+    opacity: clamp(0, calc((var(--p) - 0.55) * 4), 1);
+    transition: width 0.5s var(--ease);
+  }
 }
-.process { margin-top: var(--space-xl); display: grid; gap: var(--space-m); }
+
+/* headline words rise one by one when the section comes into view */
+.rise .rw { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.rise .rw > span { display: inline-block; }
+@media (prefers-reduced-motion: no-preference) {
+  html.js .section-head[data-reveal] { opacity: 1; transform: none; }
+  html.js .section-head[data-reveal] .rise .rw > span { transform: translateY(110%); transition: transform 1s var(--ease); transition-delay: calc(var(--i) * 70ms); }
+  html.js .section-head[data-reveal].is-in .rise .rw > span { transform: none; }
+}
+
+.process { margin-top: var(--space-2xl); padding-top: var(--space-m); display: grid; gap: var(--space-m); border-top: 1px solid var(--line); }
 .process .label { color: var(--muted); }
 .process-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-m) var(--gutter); }
 .process-list li { display: grid; gap: 0.2rem; }
@@ -534,8 +556,8 @@ main:focus { outline: none; }
 .case-cover-media { position: relative; overflow: hidden; }
 /* keeps the transparent header legible where it crosses the photo */
 .tone-dark .case-cover-media::after {
-  content: ""; position: absolute; inset: 0 0 auto; height: 9rem; pointer-events: none;
-  background: linear-gradient(to bottom, rgba(10, 10, 10, 0.55), rgba(10, 10, 10, 0));
+  content: ""; position: absolute; inset: 0 0 auto; height: 11rem; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(10, 10, 10, 0.72), rgba(10, 10, 10, 0.3) 45%, rgba(10, 10, 10, 0));
 }
 .case-cover-media img, .case-cover-media .ph { width: 100%; height: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
 @media (min-width: 900px) {

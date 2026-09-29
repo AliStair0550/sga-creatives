@@ -247,14 +247,44 @@ def universe(i: int, c: dict) -> str:
   </article>"""
 
 
+def split_words(text: str) -> str:
+    """Wrap each word so the services rows can assemble word by word (see main.js).
+    --o is how far a word travels: the first word travels furthest."""
+    words = text.split(" ")
+    n = len(words)
+    out = []
+    for k, w in enumerate(words):
+        cls = "w amp" if w == "&" else "w"
+        out.append(f'<span class="{cls}" style="--o:{(n - k) * 9 + 6}">{e(w)}</span>')
+    return " ".join(out)
+
+
+def rise_words(html_text: str) -> str:
+    """Wrap words in a headline so they can rise one by one when revealed."""
+    parts = re.split(r"(<em>.*?</em>)", html_text)
+    out, i = [], 0
+    for part in parts:
+        if not part:
+            continue
+        em = part.startswith("<em>")
+        inner = part[4:-5] if em else part
+        spans = []
+        for w in inner.split():
+            spans.append(f'<span class="rw"><span style="--i:{i}">{w}</span></span>')
+            i += 1
+        chunk = " ".join(spans)
+        out.append(f"<em>{chunk}</em>" if em else chunk)
+    return " ".join(out)
+
+
 def home() -> str:
     universes = "".join(universe(i, c) for i, c in enumerate(CASES))
     services = "".join(f"""
-      <li class="svc-row" data-reveal>
-        <h3 class="svc-title">{e(t).replace(" &amp; ", " <span>&amp;</span> ")}</h3>
+      <li class="svc-row" style="--tilt:{1 if i % 2 == 0 else -1}">
+        <h3 class="svc-title">{split_words(t)}</h3>
         <span class="svc-arrow" aria-hidden="true"></span>
         <p class="svc-answer">{e(d)}</p>
-      </li>""" for t, d in SERVICES)
+      </li>""" for i, (t, d) in enumerate(SERVICES))
     process = "".join(f"""
         <li><span class="step-word">{t}</span><span class="step-note">{e(d)}</span></li>"""
                       for t, d in PROCESS)
@@ -304,15 +334,10 @@ def home() -> str:
 <section id="services" class="section services tone-light" aria-labelledby="services-title">
   <div class="container">
     <header class="section-head" data-reveal>
-      <h2 id="services-title" class="section-title">For fashion, footwear, lifestyle <em>and culture.</em></h2>
+      <h2 id="services-title" class="section-title rise">{rise_words("For fashion, footwear, lifestyle <em>and culture.</em>")}</h2>
     </header>
     <ol class="svc">{services}
     </ol>
-    <div class="process" data-reveal>
-      <p class="label">Process</p>
-      <ol class="process-list" aria-label="Process">{process}
-      </ol>
-    </div>
   </div>
 </section>
 
@@ -334,11 +359,17 @@ def home() -> str:
       </ul>
     </div>
   </div>
+  <div class="container">
+    <div class="process about-process" data-reveal>
+      <p class="label">Process</p>
+      <ol class="process-list" aria-label="Process">{process}
+      </ol>
+    </div>
+  </div>
 </section>
 
 <section id="contact" class="section contact tone-light" aria-labelledby="contact-title">
   <div class="container">
-    <p class="label">Contact</p>
     <h2 id="contact-title" class="contact-title" data-reveal>Let’s make <em>something happen.</em></h2>
     <p class="contact-intro">Branding, campaigns, events and collaborations.</p>
     <a class="contact-email" href="mailto:{SITE['email']}">{SITE['email']}</a>
