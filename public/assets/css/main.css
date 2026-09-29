@@ -395,8 +395,9 @@ main:focus { outline: none; }
   .svc-key { left: calc(var(--key) / -2); top: 50%; margin-left: 0; margin-top: calc(var(--key) / -2); }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  /* the two halves travel in from opposite sides, slightly rotated, and meet in the middle */
+/* Desktop (side by side): scroll-scrubbed. The two halves travel in from opposite sides,
+   slightly rotated, and meet in the middle (main.js drives --p). */
+@media (prefers-reduced-motion: no-preference) and (min-width: 960px) {
   .svc-problem {
     transform: translate3d(calc((1 - var(--p)) * -30vw), 0, 0) rotate(calc((1 - var(--p)) * var(--tilt) * -4deg));
   }
@@ -409,6 +410,18 @@ main:focus { outline: none; }
   .svc-row.is-locked .svc-problem { animation: jolt-left 0.45s var(--ease); }
   .svc-row.is-locked .svc-solution { animation: jolt-right 0.45s var(--ease); }
 }
+/* Phones and tablets (stacked): no scroll-scrubbing, which stutters on touch scrolling.
+   Each pair plays once as it enters: a short vertical move towards each other, the tab pops
+   into the notch, then a small click. Pure CSS transitions, run by the compositor. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 959px) {
+  html.js .svc-problem, html.js .svc-solution { transition: transform 0.75s cubic-bezier(0.2, 0.9, 0.25, 1); }
+  html.js .svc-problem { transform: translate3d(0, -0.5rem, 0); }
+  html.js .svc-solution { transform: translate3d(0, 2rem, 0); transition-delay: 0.06s; }
+  html.js .svc-key { transform: scale(0); transition: transform 0.5s cubic-bezier(0.2, 1.6, 0.35, 1) 0.45s; }
+  html.js .svc-row.is-met .svc-problem, html.js .svc-row.is-met .svc-solution, html.js .svc-row.is-met .svc-key { transform: none; }
+  html.js .svc-row.is-met .svc-solution { animation: settle-y 0.4s var(--ease) 0.8s; }
+}
+@keyframes settle-y { 0% { transform: none; } 35% { transform: translateY(0.25rem); } 100% { transform: none; } }
 @keyframes key-click { 0% { transform: scale(1); } 35% { transform: scale(1.22); } 100% { transform: scale(1); } }
 @keyframes jolt-left { 0% { transform: none; } 30% { transform: translateX(-0.4rem); } 100% { transform: none; } }
 @keyframes jolt-right { 0% { transform: none; } 30% { transform: translateX(0.4rem); } 100% { transform: none; } }
