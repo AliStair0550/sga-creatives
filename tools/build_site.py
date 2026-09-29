@@ -344,7 +344,7 @@ def home() -> str:
 
 <section id="about" class="section about" aria-labelledby="about-title">
   <div class="container about-grid">
-    <div class="about-portrait" data-reveal>{media("sarah-al-farhan-01", "Portrait of Sarah Al-farhan.", "(min-width: 900px) 40vw, 100vw", label="Sarah")}</div>
+    <div class="about-portrait" data-reveal>{media("sarah-al-farhan-01", "Sarah Al-farhan on set in a photo studio, working on a laptop.", "(min-width: 900px) 40vw, 100vw", label="Sarah")}</div>
     <div class="about-body" data-reveal>
       <p class="label">About</p>
       <h2 id="about-title" class="about-name">Sarah <em>Al-farhan</em></h2>

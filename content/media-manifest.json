@@ -139,6 +139,16 @@
     ],
     "fallback": 800
   },
+  "sarah-al-farhan-01": {
+    "width": 1249,
+    "height": 1536,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "fallback": 800
+  },
   "timberland-rezet-01": {
     "width": 1040,
     "height": 1300,
