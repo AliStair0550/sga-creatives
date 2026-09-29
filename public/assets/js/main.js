@@ -101,62 +101,63 @@
     });
   });
 
-  /* ---------------------------------------------------------- services: problem + solution lock together */
-  // Each row gets --p from 0 (just entering at the bottom) to 1 (assembled, a little above the middle).
-  var svcRows = Array.prototype.slice.call(document.querySelectorAll('.svc-row'));
+  /* ---------------------------------------------------------- scroll-driven effects (one loop for all) */
+  // .svc-row             --p 0..1 while the problem/solution boxes slide together; .is-locked when they meet
+  // [data-scroll=fill]    --f 0..1 as a process word travels from the bottom of the screen to above the middle
+  // [data-scroll=parallax] --rv 0..1 reveal on the way in, --py -1..1 drift across the whole passage
+  // Only elements near the viewport are measured (IntersectionObserver). Each frame reads every
+  // position first and writes afterwards, and skips unchanged values, so the phone never has to
+  // recalculate layout in between.
   var calm = window.matchMedia('(prefers-reduced-motion: reduce)');
-  if (svcRows.length && !calm.matches) {
+  var effects = Array.prototype.slice.call(document.querySelectorAll('.svc-row, [data-scroll]'));
+  if (effects.length && !calm.matches) {
+    var active = new Set();
+    var last = new Map();
     var queued = false;
-    var assemble = function () {
+    var clamp01 = function (v) { return Math.min(1, Math.max(0, v)); };
+    var easeOut = function (v) { return 1 - Math.pow(1 - v, 3); };
+    var set = function (el, name, value) {
+      var memo = last.get(el) || {};
+      if (memo[name] === value) return;
+      memo[name] = value; last.set(el, memo);
+      el.style.setProperty(name, value);
+    };
+    var frame = function () {
       queued = false;
       var vh = window.innerHeight;
-      svcRows.forEach(function (row) {
-        var top = row.getBoundingClientRect().top;
-        if (top > vh * 1.2 || top < -vh) return;
-        var p = (vh - top) / (vh * 0.55);
-        p = Math.min(1, Math.max(0, p));
-        p = 1 - Math.pow(1 - p, 3); // ease out: fast gathering, soft landing
-        row.style.setProperty('--p', p.toFixed(3));
-        // the click: fires once when the two boxes meet, resets when they drift apart again
-        if (p > 0.995) row.classList.add('is-locked');
-        else if (p < 0.9) row.classList.remove('is-locked');
-      });
-    };
-    var request = function () { if (!queued) { queued = true; window.requestAnimationFrame(assemble); } };
-    window.addEventListener('scroll', request, { passive: true });
-    window.addEventListener('resize', request);
-    assemble();
-  }
-
-  /* ---------------------------------------------------------- About: portrait reveal + drift, process words fill */
-  // data-scroll="fill":     --f 0..1 as the element travels from the bottom of the screen to above the middle
-  // data-scroll="parallax": --rv 0..1 reveal on the way in, --py -1..1 drift across the whole passage
-  var scrollEls = Array.prototype.slice.call(document.querySelectorAll('[data-scroll]'));
-  if (scrollEls.length && !calm.matches) {
-    var pending = false;
-    var clamp01 = function (v) { return Math.min(1, Math.max(0, v)); };
-    var paint = function () {
-      pending = false;
-      var vh = window.innerHeight;
-      scrollEls.forEach(function (el) {
-        var r = el.getBoundingClientRect();
-        if (r.top > vh * 1.3 || r.bottom < -vh * 0.3) return;
-        if (el.getAttribute('data-scroll') === 'fill') {
-          var f = clamp01((vh * 0.92 - r.top) / (vh * 0.5));
-          el.style.setProperty('--f', f.toFixed(3));
+      var reads = [];
+      active.forEach(function (el) { reads.push([el, el.getBoundingClientRect()]); });
+      reads.forEach(function (pair) {
+        var el = pair[0], r = pair[1];
+        if (el.classList.contains('svc-row')) {
+          var p = easeOut(clamp01((vh - r.top) / (vh * 0.55)));
+          set(el, '--p', p.toFixed(3));
+          if (p > 0.995) el.classList.add('is-locked');       // the click, once, when the boxes meet
+          else if (p < 0.9) el.classList.remove('is-locked');
+        } else if (el.getAttribute('data-scroll') === 'fill') {
+          set(el, '--f', clamp01((vh * 0.92 - r.top) / (vh * 0.5)).toFixed(3));
         } else {
           var t = clamp01((vh - r.top) / (vh + r.height));
-          var rv = clamp01(t / 0.32);
-          rv = 1 - Math.pow(1 - rv, 3);
-          el.style.setProperty('--rv', rv.toFixed(3));
-          el.style.setProperty('--py', (t * 2 - 1).toFixed(3));
+          set(el, '--rv', easeOut(clamp01(t / 0.32)).toFixed(3));
+          set(el, '--py', (t * 2 - 1).toFixed(3));
         }
       });
     };
-    var ask = function () { if (!pending) { pending = true; window.requestAnimationFrame(paint); } };
-    window.addEventListener('scroll', ask, { passive: true });
-    window.addEventListener('resize', ask);
-    paint();
+    var request = function () { if (!queued) { queued = true; window.requestAnimationFrame(frame); } };
+    if ('IntersectionObserver' in window) {
+      var watch = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) active.add(entry.target); else active.delete(entry.target);
+        });
+        request();
+      }, { rootMargin: '30% 0px 30% 0px' });
+      effects.forEach(function (el) { watch.observe(el); });
+    } else {
+      effects.forEach(function (el) { active.add(el); });
+    }
+    window.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', request);
+    request();
   }
 
   /* ---------------------------------------------------------- portfolio: image follows the cursor */

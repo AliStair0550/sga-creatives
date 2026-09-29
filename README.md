@@ -215,30 +215,30 @@ Det kræver, at domænets **nameservere flyttes til Cloudflare**. En CNAME hos S
 - **Sikkerhed:** `_headers` sætter Content-Security-Policy, X-Frame-Options, nosniff, Referrer-Policy og Permissions-Policy. CSP'en indeholder en hash af det lille inline-script i `<head>`, og `build_site.py` opdaterer den automatisk.
 - **Ingen cookies og ingen tracking.** Tilføjes der analytics senere, skal behovet for cookiebanner og privatlivstekst vurderes.
 
-## Udførte tests (lokalt, 29. september 2026)
+## Udførte tests (seneste: mobilgennemgang 29. september 2026)
 
-Testet mod `wrangler pages dev` (Cloudflares lokale Pages-emulator) med Chromium via Playwright og Lighthouse 12:
+Testet mod `wrangler pages dev` med Chromium (Playwright) og Lighthouse 12 (mobilprofil, simuleret throttling):
 
-- Alle 7 sider (forside, 5 cases, 404) ved 360, 390, 768, 1024 og 1440 px: ingen vandret scroll, ingen konsolfejl, ingen fejlede requests, ingen ødelagte billeder, alle billeder har alt-tekst og hver side har præcis én `h1`.
-- Routing: `/work/adidas-kiosk` og `/work/adidas-kiosk/index.html` giver 308 til `/work/adidas-kiosk/`. Ukendte stier giver 404 med 404-siden, og query-parametre giver 200. `_headers` bliver anvendt.
-- Mobilmenu: åbnes med tastatur, fokus flyttes ind i menuen, Tab går rundt i menuen, Escape lukker og returnerer fokus til knappen, og klik på et link lukker menuen.
-- Uden JavaScript: alt indhold synligt, navigation synlig som links, menuknap skjult.
-- `prefers-reduced-motion`: ingen skjulte elementer, ingen animationer.
-- Tastaturrækkefølge på desktop: skip-link, logo, navigation, knapper, cases. Fokusmarkering er synlig.
-- Kontrast (beregnet): laveste tekstkontrast er 6,7:1 (AA), de fleste over 7:1 (AAA).
-- Lighthouse (lokalt, simuleret throttling):
+- Alle 8 sider (forside, Portfolio, 5 cases, 404) ved 360, 390, 768, 1024 og 1440 px: ingen vandret scroll, ingen konsolfejl, ingen fejlede requests, alle billeder har alt-tekst, én `h1` pr. side.
+- Mobilmenu med tastatur (fokusfælde, Escape), visning uden JavaScript og `prefers-reduced-motion`.
+- Lighthouse mobil efter optimeringen:
 
-  | Side | Profil | Performance | Accessibility | Best practices | SEO |
+  | Side | Performance | Accessibility | Best practices | SEO | LCP |
   |---|---|---|---|---|---|
-  | Forside | mobil | 94 | 100 | 100 | 100 |
-  | Forside | desktop | 100 | 100 | 100 | 100 |
-  | Timberland-case | mobil | 99 | 100 | 100 | 100 |
-  | Timberland-case | desktop | 100 | 100 | 100 | 100 |
+  | Forside | 99 | 100 | 100 | 100 | 2,0 s |
+  | Portfolio | 100 | 100 | 100 | 100 | 1,4 s |
+  | Cases | 99-100 | 100 | 100 | 100 | 1,6-2,1 s |
 
-  CLS er 0 på alle fire målinger. Lokale tal afspejler ikke nødvendigvis produktion.
-- Domænefunktionen er testet på en kopi med et testdomæne: canonical, `og:url`, absolut `og:image`, `sitemap.xml` og `robots.txt` genereres korrekt. Projektet selv har tomt domæne.
+Mobiloptimeringer i gennemgangen:
+- Archivo-fonten er skåret til de vægte og bredder, der bruges (92 KB til 35 KB).
+- Billeder findes i 320, 480, 640, 800 og 1200 px med præcise `sizes`.
+- CSS minificeres ved build.
+- Videoens poster er WebP.
+- Entré-animationer skjuler ikke længere det første indhold (LCP).
+- Scroll-effekter kører i ét samlet loop, der kun måler elementer nær skærmen.
+- Hover-effekter er begrænset til enheder med mus, og alle labels er mindst 12 px.
 
-**Ikke testet:** rigtige iOS- og Android-enheder, Safari og Firefox, skærmlæser (VoiceOver/NVDA), produktion på Cloudflare og DNS/viderestilling hos Simply.
+**Ikke testet:** rigtige iOS- og Android-enheder, Safari og Firefox samt skærmlæser.
 
 ## Resterende afklaringer
 

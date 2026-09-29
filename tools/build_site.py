@@ -42,9 +42,25 @@ def e(text: str) -> str:
     return escape(text, quote=True)
 
 
+def minify_css(css: str) -> str:
+    """Conservative minifier: drops comments and collapses whitespace around { } ; , and >.
+    It never touches spaces inside selectors like `.a :focus` or inside media queries."""
+    css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+    css = re.sub(r"\s+", " ", css)
+    css = re.sub(r"\s*([{};,])\s*", r"\1", css)
+    css = css.replace(";}", "}")
+    return css.strip() + "\n"
+
+
+CSS_MIN = minify_css((PUBLIC / "assets" / "css" / "main.css").read_text())
+
+
 def asset_version(path: str) -> str:
-    digest = hashlib.sha256((PUBLIC / path.lstrip("/")).read_bytes()).hexdigest()[:10]
-    return f"{path}?v={digest}"
+    if path == "/assets/css/main.min.css":   # hash what will be written, not what is on disk
+        data = CSS_MIN.encode()
+    else:
+        data = (PUBLIC / path.lstrip("/")).read_bytes()
+    return f"{path}?v={hashlib.sha256(data).hexdigest()[:10]}"
 
 
 def absolute(path: str) -> str:
@@ -177,13 +193,13 @@ def page(*, title: str, description: str, path: str, body: str, body_class: str 
     canonical = f'<link rel="canonical" href="{DOMAIN}{path}">' if DOMAIN and indexable else ""
     og_url = f'<meta property="og:url" content="{DOMAIN}{path}">' if DOMAIN and indexable else ""
     robots = "" if indexable else '<meta name="robots" content="noindex">'
-    css = asset_version("/assets/css/main.css")
+    css = asset_version("/assets/css/main.min.css")
     js = asset_version("/assets/js/main.js")
     return f"""<!doctype html>
 <html lang="en" id="top">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{e(title)}</title>
 <meta name="description" content="{e(description)}">
 {canonical}{robots}
@@ -414,7 +430,7 @@ def home() -> str:
 
 # ---------------------------------------------------------------- case pages
 
-GALLERY_SIZES = {"wide": "100vw", "half": "(min-width: 700px) 50vw, 100vw", "third": "(min-width: 700px) 33vw, 100vw"}
+GALLERY_SIZES = {"wide": "100vw", "half": "(min-width: 700px) 50vw, 100vw", "third": "(min-width: 700px) 33vw, 50vw"}
 
 
 def gallery_item(c: dict, g: dict) -> str:
@@ -424,7 +440,7 @@ def gallery_item(c: dict, g: dict) -> str:
         m = MANIFEST[f"video:{v}"]
         inner = (
             f'<video controls preload="none" playsinline width="{m["width"]}" height="{m["height"]}" '
-            f'poster="/assets/video/{v}-poster.jpg" aria-label="{e(g["label"])}">'
+            f'poster="/assets/video/{v}-poster.webp" aria-label="{e(g["label"])}">'
             f'<source src="/assets/video/{v}.mp4" type="video/mp4">'
             f'<p>Your browser cannot play this video. <a href="/assets/video/{v}.mp4">Download the video (MP4, 1.1 MB)</a>.</p>'
             f'</video>'
@@ -492,7 +508,7 @@ def case_page(i: int, c: dict) -> str:
     <a class="next-inner container" href="/work/{nxt['slug']}/">
       <span class="label">Next project</span>
       <span class="next-title">{e(nxt['title'])} <span class="next-arrow" aria-hidden="true">→</span></span>
-      <span class="next-media">{media(nxt['card_image'], alt_for(nxt, nxt['card_image']), "(min-width: 900px) 24vw, 40vw")}</span>
+      <span class="next-media">{media(nxt['card_image'], alt_for(nxt, nxt['card_image']), "(min-width: 900px) 17rem, 6rem")}</span>
     </a>
   </nav>
 
@@ -530,7 +546,7 @@ def portfolio() -> str:
         <a class="pf-link" href="/work/{c['slug']}/">
           <span class="pf-name">{e(c['title'])}</span>
           <span class="pf-meta"><span>{e(c['category'])}</span><span>{e(c['partners'])}</span></span>
-          <span class="pf-thumb">{media(c['card_image'], alt_for(c, c['card_image']), "(min-width: 900px) 24vw, 22vw")}</span>
+          <span class="pf-thumb">{media(c['card_image'], alt_for(c, c['card_image']), "(min-width: 900px) 22rem, 7rem")}</span>
         </a>
       </li>""" for c in CASES)
     body = f"""
@@ -586,6 +602,7 @@ def main(dry_run: bool = False) -> dict[Path, str]:
     global DRY_RUN
     DRY_RUN = dry_run
     OUTPUTS.clear()
+    write(PUBLIC / "assets" / "css" / "main.min.css", CSS_MIN)
     write(PUBLIC / "index.html", home())
     for i, c in enumerate(CASES):
         write(PUBLIC / "work" / c["slug"] / "index.html", case_page(i, c))

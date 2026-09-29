@@ -8,7 +8,7 @@ Reads originals from assets/images/ and assets/video/ (never modified) and write
     public/assets/img/<name>-<width>.avif|webp  (responsive sizes)
     public/assets/img/<name>-800.jpg             (fallback for old browsers)
     content/media-manifest.json                  (sizes used by build_site.py)
-    public/assets/video/*.mp4 + poster images
+    public/assets/video/*.mp4 + a WebP poster
 
 Requires Pillow (with AVIF/WebP support) and ffmpeg for video.
 """
@@ -25,7 +25,7 @@ SRC_VID = ROOT / "assets" / "video"
 OUT_IMG = ROOT / "public" / "assets" / "img"
 OUT_VID = ROOT / "public" / "assets" / "video"
 
-WIDTHS = [480, 800, 1200]
+WIDTHS = [320, 480, 640, 800, 1200]   # small steps so phones never fetch far more than they show
 
 
 def save_variants(im: Image.Image, name: str, manifest: dict) -> None:
@@ -61,7 +61,7 @@ def main() -> None:
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", "1", "-i", str(src),
                         "-frames:v", "1", str(poster_tmp)], check=True)
         im = Image.open(poster_tmp).convert("RGB")
-        im.save(OUT_VID / f"{src.stem}-poster.jpg", quality=80, optimize=True, progressive=True)
+        im.save(OUT_VID / f"{src.stem}-poster.webp", quality=76, method=6)
         manifest[f"video:{src.stem}"] = {"width": im.width, "height": im.height}
         poster_tmp.unlink()
         print("video", src.name, im.size)
