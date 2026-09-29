@@ -1,0 +1,59 @@
+# SGA creatives: hjemmeside
+
+Statisk hjemmeside for SGA creatives (Sarah Al-farhan). Den forbinder brands med kreative mennesker og leder projekter inden for branding, kampagner og kulturelle oplevelser. Målgruppen er fashion-, footwear-, lifestyle- og kulturbrands.
+
+- Repo: https://github.com/AliStair0550/sga-creatives (offentligt, branch `main`)
+- Hosting: Cloudflare Pages, build output `public/`, ingen build-kommando
+- DNS: Simply. `www` er primær adresse (CNAME til `<projekt>.pages.dev`). Roddomænet viderestilles via Simplys "URL viderestilling".
+- Fuld vejledning til drift, DNS og gendannelse: `README.md`
+
+## Brand
+
+- Retning: **Luxury meets urban culture**. Redaktionelt og magasinagtigt, med rigtige projekter og mennesker.
+- Farver (CSS-variabler i `public/assets/css/main.css`):
+  - Warm Paper `#F3F0E9` er primær baggrund.
+  - Ink `#171918` bruges til tekst, logo og mørke flader.
+  - Oxblood `#542536` bruges til dybde og udvalgte sektioner.
+  - Acid Note `#D8F267` bruges kun til små accenter og altid med mørk tekst.
+- Fonte:
+  - Instrument Serif til overskrifter.
+  - Archivo (variabel, expanded til labels) til brødtekst.
+  - Begge er under OFL og hostes lokalt. Der må højst være to familier.
+- Logo: SVG-stier genereret af `tools/make_brand.py`. Mærket er et serif-S med et acid-punktum. Se `brand/brandguide.html`.
+
+## Arkitektur
+
+```
+content/site.json      domæne, kontaktinfo
+content/cases.json     de fem cases (tekst, roller, credits, billeder, alt-tekster)
+tools/build_site.py    genererer ALLE html-sider + robots, sitemap, manifest, _headers i public/
+tools/optimize_media.py  assets/ (originaler) -> public/assets/img + video (AVIF/WebP/JPEG)
+tools/make_brand.py    logoer, favicons, delingsbillede
+tools/check.py         kvalitetsgate før commit
+public/                det publicerede site (html genereres, css/js redigeres direkte)
+assets/                originalmedier, ændres aldrig
+docs/intern/           brief, CV, kildemateriale, AFKLARINGER.md. Lokalt, gitignored, ALDRIG i Git
+```
+
+## Arbejdsgang
+
+Vi arbejder direkte i mappen og pusher til `main`. Cloudflare publicerer automatisk.
+
+```bash
+python3 tools/build_site.py
+python3 tools/check.py        # skal være grønt
+git add . && git commit -m "Kort beskrivelse på dansk" && git push
+```
+
+Lokal visning: `python3 -m http.server 8000 --directory public`, eller `npx wrangler pages dev public` for at få samme opførsel som Cloudflare (404, `_headers`, trailing slash).
+
+## Faste regler
+
+- **Sitet er på engelsk.** Det gælder tekst, metadata, alt-tekster og fejltekster (`lang="en"`). Dokumentation og commitbeskeder er på dansk.
+- **Ingen lange tankestreger** (— eller –) på sitet eller i `content/`. Brug kolon, komma eller almindelig bindestreg. `check.py` fanger dem.
+- **Rediger aldrig html i `public/` direkte.** Ret i `content/` eller `tools/build_site.py`, og byg. CSS og JS i `public/assets/` redigeres direkte.
+- **Korrekt kreditering:** Sarahs tidligere arbejde vises som hendes arbejde med dokumenteret rolle og arbejdsgiver (Rezet Store, konsulent for Nike), aldrig som SGA-opgaver. Opfind aldrig kunder, credits, resultater, citater, årstal eller virksomhedsoplysninger. Er noget uafklaret, noteres det i `docs/intern/AFKLARINGER.md`.
+- **Repoet er offentligt:** CV, brief og interne noter ligger kun i `docs/intern/`. Ingen hemmeligheder i Git. `check.py` scanner for begge dele.
+- Bevægelse bruger transform og opacity og respekterer `prefers-reduced-motion`. Alt indhold og al kontakt skal virke uden JavaScript.
+- Test ved 360, 390, 768, 1024 og 1440 px før større ændringer. Rapportér kun tests, der faktisk er kørt.
+- Publicering og DNS-ændringer hos Simply og Cloudflare kræver aftale først.

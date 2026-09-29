@@ -1,0 +1,10 @@
+{
+  "_note": "Set domain to the final address without trailing slash, e.g. https://www.example.dk, then run: python3 tools/build_site.py",
+  "domain": "",
+  "name": "SGA creatives",
+  "email": "sarahalfarhan.contact@gmail.com",
+  "phone_display": "+45 60 13 01 39",
+  "phone_href": "+4560130139",
+  "linkedin": "https://www.linkedin.com/in/sarahalfarhan/",
+  "instagram": "https://www.instagram.com/sarahalfarhan/"
+}

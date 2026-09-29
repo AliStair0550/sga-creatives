@@ -1,0 +1,13 @@
+# macOS / editors
+.DS_Store
+
+# Local tooling
+node_modules/
+__pycache__/
+*.pyc
+.wrangler/
+.env
+.env.*
+
+# Private material: brief, CV, source docs and open questions. Never commit (the repo is public).
+docs/intern/
