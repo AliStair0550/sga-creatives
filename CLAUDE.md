@@ -34,6 +34,7 @@ content/cases.json     de fem cases (tekst, roller, credits, billeder, alt-tekst
 tools/build_site.py    genererer ALLE html-sider + robots, sitemap, manifest, _headers i public/
 tools/optimize_media.py  assets/ (originaler) -> public/assets/img + video (AVIF/WebP/JPEG)
 tools/make_brand.py    logoer, favicons, delingsbillede
+tools/retouch_lookbook_hero.py  hero-udgave af lookbook-coveret uden tekst (kræver numpy + opencv); originalen bruges på casesiden
 tools/check.py         kvalitetsgate før commit
 public/                det publicerede site (html genereres, css/js redigeres direkte)
 assets/                originalmedier, ændres aldrig

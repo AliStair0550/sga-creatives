@@ -282,7 +282,7 @@ def home() -> str:
     extra_head = f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>'
 
     hero_imgs = [
-        ("rezet-lookbook-01", "Cover of the Rezet Store Lookbook Autumn Winter 2025: a model in a black track jacket and a long grey skirt.", "hero-img hero-img--side"),
+        ("rezet-lookbook-01-hero", "A model from the Rezet Store Lookbook Autumn Winter 2025 in a black track jacket and a long grey pleated skirt.", "hero-img hero-img--side"),
         ("adidas-ways-to-style-01", "A man in a black puffer jacket and red trousers wearing silver Adistar Control 5 sneakers.", "hero-img hero-img--main"),
         ("timberland-rezet-04", "A guest holds up a Timberland boot at the counter during the Timberland × Rezet event.", "hero-img hero-img--side hero-img--right"),
     ]

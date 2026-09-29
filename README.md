@@ -22,6 +22,7 @@ SGAcreatives/                ← repo-roden (github.com/AliStair0550/sga-creativ
 │   ├── build_site.py        bygger alle HTML-sider i public/ ud fra content/
 │   ├── optimize_media.py    laver AVIF/WebP/JPEG i flere størrelser samt video og poster
 │   ├── make_brand.py        genererer logoer, favicons og delingsbillede
+│   ├── retouch_lookbook_hero.py  hero-udgave af lookbook-coveret uden coverteksten
 │   └── fonts-src/           originale fontfiler og OFL-licenser
 │   └── check.py             kvalitetstjek før hver commit
 ├── brand/                   logofiler (SVG/PNG) og brandguide.html

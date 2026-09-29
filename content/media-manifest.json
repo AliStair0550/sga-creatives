@@ -109,6 +109,16 @@
     ],
     "fallback": 800
   },
+  "rezet-lookbook-01-hero": {
+    "width": 839,
+    "height": 1048,
+    "widths": [
+      480,
+      800,
+      839
+    ],
+    "fallback": 800
+  },
   "rezet-lookbook-01": {
     "width": 839,
     "height": 1048,
