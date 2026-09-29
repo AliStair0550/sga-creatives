@@ -6,7 +6,7 @@ Usage (from the project root):
 
 Glyph outlines are converted to SVG paths, so the logos never depend on
 installed fonts. Requires fontTools and Pillow.
-Fonts (SIL Open Font License): Bodoni Moda and Archivo, in tools/fonts-src/.
+Fonts (SIL Open Font License): Figtree and Archivo, in tools/fonts-src/.
 """
 import tempfile
 from pathlib import Path
@@ -27,13 +27,12 @@ PAPER = "#F3F0E9"
 INK = "#171918"
 ACID = "#D8F267"
 
-BODONI = FONTS / "BodoniModa-VF.ttf"
-BODONI_ITALIC = FONTS / "BodoniModa-Italic-VF.ttf"
-# Logo: bold display cut (sharp contrast). Mark: heavier, low optical size so it holds at 16 px.
-LOGO_AXES = {"wght": 800, "opsz": 28}
-MARK_AXES = {"wght": 900, "opsz": 11}
-SERIF = instantiateVariableFont(TTFont(BODONI), LOGO_AXES)
-SERIF_MARK = instantiateVariableFont(TTFont(BODONI), MARK_AXES)
+FIGTREE = FONTS / "Figtree-VF.ttf"
+# Logo and mark: Figtree ExtraBold, a geometric grotesk in the spirit of Spotify's Circular.
+LOGO_AXES = {"wght": 800}
+MARK_AXES = {"wght": 800}
+SERIF = instantiateVariableFont(TTFont(FIGTREE), LOGO_AXES)       # name kept: the display face
+SERIF_MARK = instantiateVariableFont(TTFont(FIGTREE), MARK_AXES)
 _TMP = Path(tempfile.mkdtemp())
 
 
@@ -98,8 +97,8 @@ def cap_height(font: TTFont, size: float) -> float:
 def logo_svg(fg: str, title: str) -> tuple[str, float, float]:
     """Primary lockup: large serif SGA, small expanded 'creatives' tucked under the A."""
     size = 100
-    # Tight, masthead-like spacing.
-    sga = Text(SERIF, "SGA", size, tracking=-0.015)
+    # Tight, confident spacing.
+    sga = Text(SERIF, "SGA", size, tracking=-0.04)
     lsb, rsb = sga.ink_bounds()
     x0 = -lsb
     baseline = cap_height(SERIF, size) + 2
@@ -133,7 +132,7 @@ def logo_svg(fg: str, title: str) -> tuple[str, float, float]:
 def logo_horizontal_svg(fg: str, title: str) -> tuple[str, float, float]:
     """Horizontal lockup for headers and small spaces: SGA | creatives on one baseline."""
     size = 100
-    sga = Text(SERIF, "SGA", size, tracking=-0.015)
+    sga = Text(SERIF, "SGA", size, tracking=-0.04)
     lsb, rsb = sga.ink_bounds()
     baseline = cap_height(SERIF, size) + 2
     sga_w = sga.width() - lsb - rsb
@@ -160,8 +159,8 @@ def logo_horizontal_svg(fg: str, title: str) -> tuple[str, float, float]:
     return svg, width, height
 
 
-MARK_SIZE = 62      # serif S, in units of a 64-unit square
-MARK_STROKE = 1.2   # extra weight on the hairlines so the S survives 16 px
+MARK_SIZE = 58      # S, in units of a 64-unit square
+MARK_STROKE = 0     # Figtree ExtraBold needs no extra weight at 16 px
 MARK_DOT = 11
 
 
@@ -198,7 +197,7 @@ def raster_mark(px: int, radius_ratio: float = 0.0) -> Image.Image:
     d = ImageDraw.Draw(im)
     d.rounded_rectangle([0, 0, n - 1, n - 1], radius=int(n * radius_ratio), fill=INK)
     unit = n / 64
-    font = static_font(BODONI, MARK_AXES, round(MARK_SIZE * unit))
+    font = static_font(FIGTREE, MARK_AXES, round(MARK_SIZE * unit))
     x, baseline, dx, dot = mark_geometry()
     d.text((x * unit, baseline * unit), "S", font=font, fill=PAPER, anchor="ls",
            stroke_width=round(MARK_STROKE / 2 * unit), stroke_fill=PAPER)
@@ -217,7 +216,7 @@ def og_image(path: Path) -> None:
     top = int((ph - H) * 0.42)
     im.paste(photo.crop((0, top, pw, top + H)), (W - pw, 0))
     d = ImageDraw.Draw(im)
-    serif = static_font(BODONI, LOGO_AXES, 150)
+    serif = static_font(FIGTREE, LOGO_AXES, 150)
     grot = static_font(FONTS / "Archivo-VF.ttf", {"wght": 560, "wdth": 125}, 26)
     d.text((68, 236), "SGA", font=serif, fill=PAPER, anchor="ls")
     d.rectangle([72, 262, 72 + 150, 263], fill=PAPER)

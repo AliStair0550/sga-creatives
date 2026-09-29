@@ -19,12 +19,12 @@ Statisk hjemmeside for SGA creatives (Sarah Al-farhan). Den forbinder brands med
   - Bordeaux/Oxblood er udgået.
   - **Hver case har sin egen tone** (`tone` i `content/cases.json`): Kiosk sort, Lookbook oliven, Ways to Style grafit, Timberland dyb petrol og Nike lys. Nye cases får deres egen dybe tone med mindst AA-kontrast.
 - Fonte:
-  - **Bodoni Moda** (fed 700, optisk størrelse låst til 30 for kraftige hårstreger) til logo og overskrifter.
+  - **Figtree** (fed 700 til 800, stram spatiering) til logo og overskrifter. Det er en geometrisk grotesk i stil med Spotifys Circular. Vægtkontrast (700 mod 400) bruges i stedet for kursiv.
   - **Archivo** til brødtekst og spærrede versaler til labels.
-  - Bindestreger i overskrifter hentes fra Archivo (Bodonis bindestreg er en usynlig hårstreg).
   - Begge er under OFL og hostes lokalt. Der må højst være to familier.
-- Logo: SVG-stier genereret af `tools/make_brand.py`. Mærket er et fedt Bodoni-S med et acid-punktum. Se `brand/brandguide.html`.
+- Logo: SVG-stier genereret af `tools/make_brand.py`. Mærket er et fedt Figtree-S med et acid-punktum. Se `brand/brandguide.html`.
 - Ingen rullende tekst eller karuseller. Bevægelse er rolig: hero-indgang, reveals og let billedzoom.
+- Minimal tekst: heroen har kun overskriften og en linje med ydelser, ingen knapper. Ingen numre på cases.
 
 ## Arkitektur
 

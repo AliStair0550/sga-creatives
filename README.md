@@ -207,7 +207,7 @@ Det kræver, at domænets **nameservere flyttes til Cloudflare**. En CNAME hos S
 
 ## Tekniske valg
 
-- **Fonte:** Bodoni Moda (fed, til logo og overskrifter) og Archivo (brødtekst og labels). Begge er under SIL OFL 1.1 og hostes lokalt, uden kald til Google. Bindestreger i overskrifter hentes fra Archivo, fordi Bodonis bindestreg er for tynd til skærm.
+- **Fonte:** Figtree (fed, geometrisk, til logo og overskrifter) og Archivo (brødtekst og labels). Begge er under SIL OFL 1.1 og hostes lokalt, uden kald til Google.
 - **Billeder:** AVIF og WebP i 480/800/fuld bredde med `srcset`, JPEG-fallback, faste dimensioner (ingen layout-skift) og lazy loading under heroen.
 - **Video:** Kun Nike-casen, med poster, kontroller og `preload="none"`. Ingen autoplay og ingen lyd uden klik.
 - **Bevægelse:** Kort hero-indgang, reveals ved scroll, let billedskalering og glidende menu. Alt slås fra ved `prefers-reduced-motion`. Uden JavaScript er alt indhold synligt, og navigationen vises som almindelige links.

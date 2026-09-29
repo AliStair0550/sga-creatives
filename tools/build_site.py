@@ -176,7 +176,7 @@ def page(*, title: str, description: str, path: str, body: str, body_class: str 
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<link rel="preload" href="/assets/fonts/BodoniModa-VF.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/Figtree-VF.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/Archivo-VF.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{css}">
 <script>{HEAD_SCRIPT}</script>
@@ -231,7 +231,6 @@ def alt_for(c: dict, name: str) -> str:
 
 def universe(i: int, c: dict) -> str:
     """One case on the home page: a full-width panel in the case's own tone."""
-    num = f"{i + 1:02d}"
     flip = " is-flipped" if i % 2 else ""
     return f"""
   <article class="universe tone-{c['tone']['mode']}{flip}" style="{tone_style(c)}">
@@ -239,7 +238,6 @@ def universe(i: int, c: dict) -> str:
       <div class="universe-main" data-reveal>{media(c['card_image'], alt_for(c, c['card_image']), "(min-width: 900px) 50vw, 100vw")}</div>
       <div class="universe-second" data-reveal>{media(c['card_image_2'], alt_for(c, c['card_image_2']), "(min-width: 900px) 22vw, 45vw")}</div>
       <div class="universe-text" data-reveal>
-        <p class="universe-num">{num}</p>
         <p class="label">{e(c['category'])}</p>
         <h3 class="universe-title"><a href="/work/{c['slug']}/">{e(c['title'])}</a></h3>
         <p class="universe-partners">{e(c['partners'])}</p>
@@ -284,9 +282,9 @@ def home() -> str:
     extra_head = f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>'
 
     hero_imgs = [
-        ("adidas-kiosk-04", "Three people seen from behind on a city street, wearing Rezet Store × adidas Originals Kiosk T-shirts.", "hero-img hero-img--side"),
+        ("rezet-lookbook-01", "Cover of the Rezet Store Lookbook Autumn Winter 2025: a model in a black track jacket and a long grey skirt.", "hero-img hero-img--side"),
         ("adidas-ways-to-style-01", "A man in a black puffer jacket and red trousers wearing silver Adistar Control 5 sneakers.", "hero-img hero-img--main"),
-        ("timberland-rezet-03", "A guest in a camouflage hoodie and trousers with Timberland boots at the Timberland × Rezet evening event.", "hero-img hero-img--side"),
+        ("timberland-rezet-04", "A guest holds up a Timberland boot at the counter during the Timberland × Rezet event.", "hero-img hero-img--side hero-img--right"),
     ]
     hero_media = "".join(
         f'<div class="{cls}">{picture(n, a, "(min-width: 900px) 34vw, 100vw", eager=(k == 1), priority=(k == 1))}</div>'
@@ -301,20 +299,17 @@ def home() -> str:
       <span class="line"><span>meet <em>culture.</em></span></span>
     </h1>
     <div class="hero-foot">
-      <p class="hero-lead">SGA creatives connects brands with creative people and leads projects across branding, campaigns and cultural experiences.</p>
-      <div class="hero-actions">
-        <a class="btn btn--light" href="#work">Explore the work</a>
-        <a class="btn btn--ghost" href="#contact">Let’s talk</a>
-      </div>
+      <ul class="hero-services" aria-label="What SGA creatives does">
+        <li>Brand strategy</li><li>Campaigns</li><li>Experiences</li><li>Creative connections</li>
+      </ul>
     </div>
   </div>
 </section>
 
 <section id="work" class="work" aria-labelledby="work-title">
   <header class="work-head container" data-reveal>
-    <p class="label">Selected work <span class="num">({len(CASES):02d})</span></p>
+    <p class="label">Selected work</p>
     <h2 id="work-title" class="work-title">Selected projects from <span class="nowrap">Sarah Al-farhan’s</span> work across brands, campaigns and cultural experiences.</h2>
-    <p class="work-note">Created in Sarah’s previous roles. Each case lists her role.</p>
   </header>
   {universes}
 </section>
@@ -398,7 +393,6 @@ def gallery_item(c: dict, g: dict) -> str:
 
 def case_page(i: int, c: dict) -> str:
     n = len(CASES)
-    num = f"{i + 1:02d}"
     nxt = CASES[(i + 1) % n]
     facts = "".join(f'<div><dt>{e(k)}</dt><dd>{e(v)}</dd></div>' for k, v in c["facts"])
     done = "".join(f"<li>{e(x)}</li>" for x in c["done"])
@@ -419,7 +413,6 @@ def case_page(i: int, c: dict) -> str:
     <div class="case-cover-text">
       <nav class="case-crumbs" aria-label="Breadcrumb">
         <a href="/#work"><span aria-hidden="true">←</span> All work</a>
-        <span class="num" aria-label="Case {i + 1} of {n}">{num} / {n:02d}</span>
       </nav>
       <div>
         <p class="label">{e(c['category'])}</p>
@@ -454,7 +447,7 @@ def case_page(i: int, c: dict) -> str:
 
   <nav class="next-case tone-{nxt['tone']['mode']}" style="{tone_style(nxt)}" aria-label="Next project">
     <a class="next-inner container" href="/work/{nxt['slug']}/">
-      <span class="label">Next project <span class="num">{(i + 1) % n + 1:02d}</span></span>
+      <span class="label">Next project</span>
       <span class="next-title">{e(nxt['title'])} <span class="next-arrow" aria-hidden="true">→</span></span>
       <span class="next-media">{media(nxt['card_image'], alt_for(nxt, nxt['card_image']), "(min-width: 900px) 24vw, 40vw")}</span>
     </a>
@@ -484,7 +477,7 @@ def case_page(i: int, c: dict) -> str:
 
 
 def not_found() -> str:
-    links = "".join(f'<li><a href="/work/{c["slug"]}/"><span class="num">{i + 1:02d}</span> {e(c["title"])}</a></li>'
+    links = "".join(f'<li><a href="/work/{c["slug"]}/">{e(c["title"])}</a></li>'
                     for i, c in enumerate(CASES))
     body = f"""
 <section class="notfound container" aria-labelledby="nf-title">
