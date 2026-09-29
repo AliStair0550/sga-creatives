@@ -23,7 +23,7 @@ Statisk hjemmeside for SGA creatives (Sarah Al-farhan). Den forbinder brands med
   - **Figtree** (fed 700 til 800, stram spatiering) til logo og overskrifter. Det er en geometrisk grotesk i stil med Spotifys Circular. Vægtkontrast (700 mod 400) bruges i stedet for kursiv.
   - **Archivo** til brødtekst og spærrede versaler til labels.
   - Begge er under OFL og hostes lokalt. Der må højst være to familier.
-- Logo: SVG-stier genereret af `tools/make_brand.py`. Mærket er et fedt Figtree-S med et acid-punktum. Se `brand/brandguide.html`.
+- Logo: SVG-stier genereret af `tools/make_brand.py`. Mærket (favicon, app-ikon) er et skråt S af to kroge, der griber ind i hinanden: lys foroven, klar rød (#D2202A) forneden, på mørk flade. Den klare røde bruges kun i mærket, fordi #5E0B10 ikke kan ses i 16 px på mørkt. Se `brand/brandguide.html`.
 - Ingen rullende tekst eller karuseller. Bevægelse er rolig: hero-indgang, reveals og let billedzoom.
 - Minimal tekst: heroen har kun overskriften, ingen knapper og ingen ydelseslinje. Ingen numre på cases og ingen intro over casene.
 - Forsidens rækkefølge: hero, services (problem → løsning), work (case-universer), about med process, contact.

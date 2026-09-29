@@ -26,6 +26,7 @@ PUBLIC = ROOT / "public"
 PAPER = "#F3F0E9"
 INK = "#171918"
 ACID = "#D8F267"
+MARK_RED = "#D2202A"   # the lower hook: a clear red that still reads at 16 px on ink (the site red #5E0B10 is too dark there)
 
 FIGTREE = FONTS / "Figtree-VF.ttf"
 # Logo and mark: Figtree ExtraBold, a geometric grotesk in the spirit of Spotify's Circular.
@@ -161,7 +162,7 @@ def logo_horizontal_svg(fg: str, title: str) -> tuple[str, float, float]:
 
 # ---------------------------------------------------------------- the mark: a creative S
 # Two hooks that lock into each other (the same idea as the services boxes): the upper hook in
-# paper, the lower in acid, slanted forward. Drawn on a 64-unit grid, stroke 10.
+# paper, the lower in red, slanted forward. Drawn on a 64-unit grid, stroke 10.
 MARK_SKEW = 0.2126          # tan(12deg), forward slant
 MARK_SHIFT = 7              # re-centres the slanted S
 UPPER = "M46 16H26a8.5 8.5 0 0 0 0 17h8"
@@ -174,7 +175,7 @@ def mark_svg(bg: str = INK, radius: float = 0) -> str:
         'role="img" aria-labelledby="t"><title id="t">SGA creatives</title>'
         f'<rect width="64" height="64" rx="{radius}" fill="{bg}"/>'
         f'<g transform="skewX(-12) translate({MARK_SHIFT} 0)" fill="none" stroke-width="10">'
-        f'<path d="{UPPER}" stroke="{PAPER}"/><path d="{LOWER}" stroke="{ACID}"/></g>'
+        f'<path d="{UPPER}" stroke="{PAPER}"/><path d="{LOWER}" stroke="{MARK_RED}"/></g>'
         "</svg>"
     )
 
@@ -210,7 +211,7 @@ def raster_mark(px: int, radius_ratio: float = 0.0) -> Image.Image:
     d.rounded_rectangle([0, 0, n - 1, n - 1], radius=int(n * radius_ratio), fill=INK)
     # output (x, y) samples input (x - shift + skew*y, y): the inverse of skewX(-12) translate(7 0)
     affine = (1, MARK_SKEW, -MARK_SHIFT * unit, 0, 1, 0)
-    for upper, colour in ((True, PAPER), (False, ACID)):
+    for upper, colour in ((True, PAPER), (False, MARK_RED)):
         mask = _hook_mask(n, unit, upper).transform((n, n), Image.AFFINE, affine, resample=Image.BICUBIC)
         im.paste(Image.new("RGBA", (n, n), colour), (0, 0), mask)
     return im.resize((px, px), Image.LANCZOS)
