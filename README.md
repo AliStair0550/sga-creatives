@@ -204,9 +204,24 @@ Kontrollér også MX og TXT bagefter, og send en testmail til og fra domænet.
 
 Det kræver, at domænets **nameservere flyttes til Cloudflare**. En CNAME hos Simply er ikke nok. Så skal alle records (inklusive mail) genskabes i Cloudflare DNS, før nameserverne skiftes. Det er et andet setup og aftales særskilt.
 
-## Plan: flyt domænet helt til Cloudflare (AFVENTER aftale med Sarah)
+## Beslutning: domæne og DNS bliver hos Simply (29.9.2026)
 
-> Intet af dette er udført. Følg først guiden, når det er aftalt. Planen gælder, hvis Sarah bliver på sin Gmail og ikke skal have mail på domænet. Vil hun have hello@sgacreatives.com via Simply Mail, skal domænet blive hos Simply.
+Det anbefalede setup er det nuværende:
+- **Domæne og DNS hos Simply.** Simply viderestiller også roddomænet til www.
+- **Hjemmesiden på Cloudflare Pages.**
+- Sarah bruger sin Gmail. Besparelsen ved at flytte til Cloudflare er kun ca. 65-85 kr./år (se nedenfor).
+
+### Hvis Sarah senere vil have egen mail (fx hello@sgacreatives.com)
+
+1. Køb **Simply Basic Mail** til sgacreatives.com i Simplys kontrolpanel (tjekket 29.9.2026: 2,95 kr./md. første år, derefter 45,95 kr./md. inkl. moms; 5 postkasser, ubegrænsede aliasser).
+2. Opret postkassen, fx `hello@`. Simply opretter selv MX, SPF, DKIM og DMARC. Lad `www`-CNAME og URL-viderestillingen stå uændret, for de påvirkes ikke af mail.
+3. Sæt mailen op i Gmail-appen, Apple Mail eller Outlook med Simplys IMAP/SMTP (`smtp.simply.com`, port 587). Brug ikke Gmails "Send mail as", som Google fjerner i januar 2027.
+4. Skift adressen på sitet: `"email"` i `content/site.json`, kør `python3 tools/build_site.py` og `python3 tools/check.py`, og push. Adressen opdateres så i kontaktknappen, "Get in touch", footeren og de strukturerede data.
+5. Send en testmail til og fra en ekstern adresse, og tjek, at den ikke lander i spam.
+
+### Alternativ, ikke planlagt: flyt domænet helt til Cloudflare
+
+> Ikke valgt. Guiden gemmes til reference, hvis det skulle blive aktuelt. Den forudsætter, at der ikke er mail på domænet. Er Simply Mail købt, skal MX-, SPF-, DKIM- og DMARC-records fra Simply oprettes i Cloudflare i stedet for "null MX"- og `-all`-records nedenfor.
 
 **Status 29.9.2026:**
 - sgacreatives.com (.com, altså ikke Punktum dk) er registreret 18.8.2026 via Simply, med Key-Systems som registrator.

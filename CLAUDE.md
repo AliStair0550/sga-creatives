@@ -6,6 +6,7 @@ Statisk hjemmeside for SGA creatives (Sarah Al-farhan). Den forbinder brands med
 - Hosting: Cloudflare Pages, build output `public/`, ingen build-kommando
 - Domæne: **https://www.sgacreatives.com** (primær). DNS hos Simply: `www` er CNAME til `sga-creatives.pages.dev`. Roddomænet `sgacreatives.com` skal viderestilles via Simplys "URL viderestilling".
 - Pages-adresse: https://sga-creatives.pages.dev
+- Beslutning 29.9.2026: domæne og DNS bliver hos Simply. Egen mail købes senere som Simply Basic Mail (se README "Hvis Sarah senere vil have egen mail"). Flytning til Cloudflare er ikke planlagt.
 - Fuld vejledning til drift, DNS og gendannelse: `README.md`
 
 ## Brand
