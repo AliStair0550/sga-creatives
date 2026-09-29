@@ -347,72 +347,82 @@ main:focus { outline: none; }
   font-size: var(--step-4); line-height: 0.95; letter-spacing: -0.04em;
 }
 
-/* services (paper): "service -> what it does", the two halves come together on scroll */
+/* services (paper): problem + solution, two boxes that slide together and lock with the SGA key.
+   main.js sets --p (0 to 1) per row while it scrolls into view and adds .is-locked when they meet.
+   Without JS or with reduced motion --p stays 1: the boxes simply sit locked together. */
 .services { padding-top: var(--space-2xl); }
-.svc { border-top: 1px solid var(--line-strong); }
+.svc { display: grid; gap: clamp(1.25rem, 0.8rem + 1.6vw, 2.5rem); }
 .svc-row {
-  position: relative; isolation: isolate;
-  display: grid; gap: 0.6rem; align-items: center;
-  padding-block: clamp(1.4rem, 1rem + 1.6vw, 2.6rem);
-  border-bottom: 1px solid var(--line-strong);
+  --p: 1; --tilt: 1;
+  --key: clamp(3.4rem, 2.6rem + 2.4vw, 5rem);   /* diameter of the SGA key */
+  display: grid; grid-template-columns: 1fr;
 }
-.svc-row::before {  /* full-bleed dark band on hover, so the type keeps its alignment and gets air */
-  content: ""; position: absolute; inset: -1px calc(-1 * var(--page-pad)); z-index: -1; background: var(--ink);
-  transform: scaleY(0); transform-origin: bottom; transition: transform 0.6s var(--ease);
+.svc-box {
+  position: relative; display: grid; align-content: center; gap: 0.6rem;
+  min-height: clamp(9rem, 6rem + 9vw, 15rem);
+  padding: clamp(1.5rem, 1rem + 2vw, 3rem);
 }
+.svc-box .label { color: inherit; opacity: 0.72; }
+.svc-problem {
+  background: var(--paper-deep); color: var(--ink);
+  /* the notch the key locks into (bottom edge on mobile, right edge on desktop) */
+  -webkit-mask: radial-gradient(circle calc(var(--key) / 2 + 1px) at 50% 100%, transparent 98%, #000 100%);
+          mask: radial-gradient(circle calc(var(--key) / 2 + 1px) at 50% 100%, transparent 98%, #000 100%);
+  padding-bottom: calc(var(--key) / 2 + clamp(1.5rem, 1rem + 2vw, 3rem));
+}
+.svc-problem-text {
+  max-width: 18ch;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(1.5rem, 1rem + 2vw, 2.8rem); line-height: 1.02; letter-spacing: -0.04em;
+}
+.svc-solution { background: var(--ink); color: var(--paper); padding-top: calc(var(--key) / 2 + clamp(1.5rem, 1rem + 2vw, 3rem)); }
 .svc-title {
   font-family: var(--font-display); font-weight: 800;
-  font-size: clamp(1.9rem, 1rem + 3.4vw, 4.4rem); line-height: 0.98; letter-spacing: -0.045em;
-  transition: color 0.4s var(--ease), transform 1.1s var(--ease), opacity 1s var(--ease);
+  font-size: clamp(1.6rem, 1rem + 2.3vw, 3.2rem); line-height: 1; letter-spacing: -0.045em;
 }
-.svc-answer {
-  max-width: 28ch;
-  font-family: var(--font-display); font-weight: 400;
-  font-size: var(--step-2); line-height: 1.2; letter-spacing: -0.02em; color: var(--muted);
-  transition: color 0.4s var(--ease), transform 1.1s var(--ease) 0.08s, opacity 1s var(--ease) 0.08s;
-}
-.svc-arrow {
-  position: relative; display: block; height: 2px; width: 3.5rem; background: currentColor;
-  transform-origin: left; transition: transform 0.9s var(--ease) 0.2s, width 0.5s var(--ease);
-}
-.svc-arrow::after {
-  content: ""; position: absolute; right: -1px; top: 50%; width: 0.75rem; height: 0.75rem;
-  border-top: 2px solid currentColor; border-right: 2px solid currentColor;
-  transform: translateY(-50%) rotate(45deg);
-}
-@media (min-width: 900px) {
-  .svc-row { grid-template-columns: minmax(0, 1.25fr) 7rem minmax(0, 1fr); gap: var(--gutter); }
-  .svc-arrow { width: 100%; }
-}
-@media (hover: hover) {
-  .svc-row:hover::before { transform: scaleY(1); }
-  .svc-row:hover .svc-title, .svc-row:hover .svc-answer { color: var(--paper); }
-  .svc-row:hover .svc-arrow { color: var(--acid); }
-}
-/* Scroll-driven assembly (main.js sets --p from 0 to 1 as a row travels up the screen).
-   Words start spread out and slanted, then gather into the line; the answer arrives from the
-   right (they never cross), the slant alternates per row (--tilt) and the arrow draws last. Without JS or with
-   reduced motion --p stays 1, so everything simply sits in place. */
-.svc-row { --p: 1; --tilt: 1; }
-.svc-title .w { display: inline-block; }
 .svc-title .amp { font-weight: 400; }
-@media (prefers-reduced-motion: no-preference) {
-  .svc-title .w {
-    transform: translate3d(calc((1 - var(--p)) * var(--o) * -1vw), 0, 0) skewX(calc((1 - var(--p)) * var(--tilt) * 16deg));
-    opacity: calc(0.12 + var(--p) * 0.88);
-    will-change: transform;
-  }
-  .svc-answer {
-    transform: translate3d(calc((1 - var(--p)) * 34vw), 0, 0);
-    opacity: calc(var(--p) * 1.4 - 0.4);
-    transition: color 0.4s var(--ease);
-  }
-  .svc-arrow {
-    transform: scaleX(clamp(0, calc((var(--p) - 0.55) * 2.3), 1));
-    opacity: clamp(0, calc((var(--p) - 0.55) * 4), 1);
-    transition: width 0.5s var(--ease);
-  }
+.svc-answer { max-width: 30ch; color: var(--paper-muted); font-size: var(--step-1); line-height: 1.4; }
+.svc-key {
+  position: absolute; z-index: 2; left: 50%; top: calc(var(--key) / -2);
+  width: var(--key); height: var(--key); margin-left: calc(var(--key) / -2);
+  display: grid; place-items: center; border-radius: 50%;
+  background: var(--ink); color: var(--paper);
+  font-family: var(--font-display); font-weight: 800; font-size: calc(var(--key) * 0.5); line-height: 1; letter-spacing: -0.04em;
 }
+.svc-key i { position: absolute; width: 0.2em; height: 0.2em; right: 26%; bottom: 29%; background: var(--acid); }
+@media (min-width: 800px) {
+  .svc-row { grid-template-columns: 1fr 1fr; }
+  .svc-problem {
+    -webkit-mask: radial-gradient(circle calc(var(--key) / 2 + 1px) at 100% 50%, transparent 98%, #000 100%);
+            mask: radial-gradient(circle calc(var(--key) / 2 + 1px) at 100% 50%, transparent 98%, #000 100%);
+    padding-bottom: clamp(1.5rem, 1rem + 2vw, 3rem);
+    padding-right: calc(var(--key) / 2 + clamp(1.5rem, 1rem + 2vw, 3rem));
+  }
+  .svc-solution { padding-top: clamp(1.5rem, 1rem + 2vw, 3rem); padding-left: calc(var(--key) / 2 + clamp(1.5rem, 1rem + 2vw, 3rem)); }
+  .svc-key { left: calc(var(--key) / -2); top: 50%; margin-left: 0; margin-top: calc(var(--key) / -2); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* the two halves travel in from opposite sides, slightly rotated, and meet in the middle */
+  .svc-problem {
+    transform: translate3d(calc((1 - var(--p)) * -30vw), 0, 0) rotate(calc((1 - var(--p)) * var(--tilt) * -4deg));
+    opacity: calc(0.25 + var(--p) * 0.75);
+  }
+  .svc-solution {
+    transform: translate3d(calc((1 - var(--p)) * 30vw), 0, 0) rotate(calc((1 - var(--p)) * var(--tilt) * 4deg));
+    opacity: calc(0.25 + var(--p) * 0.75);
+  }
+  .svc-key { transform: rotate(calc((1 - var(--p)) * -180deg)); }
+  /* the click: key pops, the acid dot flashes, both boxes give a small jolt */
+  .svc-row.is-locked .svc-key { animation: key-click 0.55s var(--ease); }
+  .svc-row.is-locked .svc-key i { animation: key-flash 0.9s var(--ease); }
+  .svc-row.is-locked .svc-problem { animation: jolt-left 0.45s var(--ease); }
+  .svc-row.is-locked .svc-solution { animation: jolt-right 0.45s var(--ease); }
+}
+@keyframes key-click { 0% { transform: scale(1); } 35% { transform: scale(1.22); } 100% { transform: scale(1); } }
+@keyframes key-flash { 0%, 100% { box-shadow: 0 0 0 0 rgba(216, 242, 103, 0); } 30% { box-shadow: 0 0 0 0.35em rgba(216, 242, 103, 0.55); } }
+@keyframes jolt-left { 0% { transform: none; } 30% { transform: translateX(-0.4rem); } 100% { transform: none; } }
+@keyframes jolt-right { 0% { transform: none; } 30% { transform: translateX(0.4rem); } 100% { transform: none; } }
 
 /* headline words rise one by one when the section comes into view */
 .rise .rw { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.08em; margin-bottom: -0.08em; }
@@ -479,7 +489,31 @@ main:focus { outline: none; }
   font-family: var(--font-display); font-weight: var(--display-weight);
   font-size: var(--step-5); line-height: 0.9; letter-spacing: -0.045em; max-width: 12ch;
 }
-.contact-intro { color: var(--muted); font-size: var(--step-1); margin-bottom: var(--space-l); }
+/* what to talk about: four bold words that spring in one by one, then get a highlighter stroke */
+.contact-topics {
+  display: flex; flex-wrap: wrap; gap: 0.15em 0.55em; margin-bottom: var(--space-xl);
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(1.9rem, 1rem + 3.6vw, 4.6rem); line-height: 1.05; letter-spacing: -0.045em;
+}
+.contact-topics li { position: relative; display: inline-block; isolation: isolate; }
+.contact-topics li::before {
+  content: ""; position: absolute; z-index: -1; left: -0.06em; right: -0.06em; bottom: 0.08em; height: 0.34em;
+  background: var(--acid);
+}
+@media (prefers-reduced-motion: no-preference) {
+  html.js .contact-topics[data-reveal] { opacity: 1; transform: none; }
+  html.js .contact-topics[data-reveal] li {
+    opacity: 0; transform: translateY(110%) rotate(calc(9deg - var(--i) * 5deg)) scale(0.85);
+    transition: transform 0.95s cubic-bezier(0.2, 1.5, 0.35, 1), opacity 0.5s var(--ease);
+    transition-delay: calc(var(--i) * 140ms);
+  }
+  html.js .contact-topics[data-reveal] li::before {
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.6s var(--ease); transition-delay: calc(0.55s + var(--i) * 140ms);
+  }
+  html.js .contact-topics[data-reveal].is-in li { opacity: 1; transform: none; }
+  html.js .contact-topics[data-reveal].is-in li::before { transform: none; }
+}
 .contact-email {
   display: inline-block;
   font-family: var(--font-display); font-weight: 500;

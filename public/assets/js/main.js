@@ -101,7 +101,7 @@
     });
   });
 
-  /* ---------------------------------------------------------- services: scroll-driven assembly */
+  /* ---------------------------------------------------------- services: problem + solution lock together */
   // Each row gets --p from 0 (just entering at the bottom) to 1 (assembled, a little above the middle).
   var svcRows = Array.prototype.slice.call(document.querySelectorAll('.svc-row'));
   var calm = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -117,6 +117,9 @@
         p = Math.min(1, Math.max(0, p));
         p = 1 - Math.pow(1 - p, 3); // ease out: fast gathering, soft landing
         row.style.setProperty('--p', p.toFixed(3));
+        // the click: fires once when the two boxes meet, resets when they drift apart again
+        if (p > 0.995) row.classList.add('is-locked');
+        else if (p < 0.9) row.classList.remove('is-locked');
       });
     };
     var request = function () { if (!queued) { queued = true; window.requestAnimationFrame(assemble); } };

@@ -22,9 +22,9 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/Figtree-VF.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/Archivo-VF.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/main.css?v=e75c41a5e0">
+<link rel="stylesheet" href="/assets/css/main.css?v=5df16a84b9">
 <script>document.documentElement.classList.add('js');setTimeout(function(){if(!window.sgaReady)document.documentElement.classList.remove('js')},2500);</script>
-<script src="/assets/js/main.js?v=63b115318e" defer></script>
+<script src="/assets/js/main.js?v=a41b4703de" defer></script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "SGA creatives", "description": "SGA creatives connects brands with creative people and leads projects across branding, campaigns and cultural experiences.", "email": "sarahalfarhan.contact@gmail.com", "telephone": "+45 60 13 01 39", "founder": {"@type": "Person", "name": "Sarah Al-farhan", "jobTitle": "Brand and Creative Consultant", "sameAs": ["https://www.linkedin.com/in/sarahalfarhan/", "https://www.instagram.com/sarahalfarhan/"]}, "url": "https://www.sgacreatives.com/", "logo": "https://www.sgacreatives.com/assets/brand/icon-512.png"}</script>
 </head>
 <body class="page-home">
@@ -65,24 +65,52 @@
     </header>
     <ol class="svc">
       <li class="svc-row" style="--tilt:1">
-        <h3 class="svc-title"><span class="w" style="--o:51">Brand</span> <span class="w" style="--o:42">strategy</span> <span class="w amp" style="--o:33">&amp;</span> <span class="w" style="--o:24">creative</span> <span class="w" style="--o:15">direction</span></h3>
-        <span class="svc-arrow" aria-hidden="true"></span>
-        <p class="svc-answer">Makes the brand clear, distinctive and relevant.</p>
+        <div class="svc-box svc-problem">
+          <p class="label">Problem</p>
+          <p class="svc-problem-text">The brand feels unclear or out of step.</p>
+        </div>
+        <div class="svc-box svc-solution">
+          <span class="svc-key" aria-hidden="true">S<i></i></span>
+          <p class="label">Solution</p>
+          <h3 class="svc-title">Brand strategy <span class="amp">&amp;</span> creative direction</h3>
+          <p class="svc-answer">Makes the brand clear, distinctive and relevant.</p>
+        </div>
       </li>
       <li class="svc-row" style="--tilt:-1">
-        <h3 class="svc-title"><span class="w" style="--o:42">Campaigns</span> <span class="w amp" style="--o:33">&amp;</span> <span class="w" style="--o:24">creative</span> <span class="w" style="--o:15">production</span></h3>
-        <span class="svc-arrow" aria-hidden="true"></span>
-        <p class="svc-answer">Turns ideas into campaigns, editorials and content.</p>
+        <div class="svc-box svc-problem">
+          <p class="label">Problem</p>
+          <p class="svc-problem-text">Great ideas never leave the deck.</p>
+        </div>
+        <div class="svc-box svc-solution">
+          <span class="svc-key" aria-hidden="true">S<i></i></span>
+          <p class="label">Solution</p>
+          <h3 class="svc-title">Campaigns <span class="amp">&amp;</span> creative production</h3>
+          <p class="svc-answer">Turns ideas into campaigns, editorials and content.</p>
+        </div>
       </li>
       <li class="svc-row" style="--tilt:1">
-        <h3 class="svc-title"><span class="w" style="--o:33">Experiences</span> <span class="w amp" style="--o:24">&amp;</span> <span class="w" style="--o:15">activations</span></h3>
-        <span class="svc-arrow" aria-hidden="true"></span>
-        <p class="svc-answer">Creates events and launches people show up for.</p>
+        <div class="svc-box svc-problem">
+          <p class="label">Problem</p>
+          <p class="svc-problem-text">Launches no one remembers.</p>
+        </div>
+        <div class="svc-box svc-solution">
+          <span class="svc-key" aria-hidden="true">S<i></i></span>
+          <p class="label">Solution</p>
+          <h3 class="svc-title">Experiences <span class="amp">&amp;</span> activations</h3>
+          <p class="svc-answer">Creates events and launches people show up for.</p>
+        </div>
       </li>
       <li class="svc-row" style="--tilt:-1">
-        <h3 class="svc-title"><span class="w" style="--o:51">Creative</span> <span class="w" style="--o:42">connections</span> <span class="w amp" style="--o:33">&amp;</span> <span class="w" style="--o:24">project</span> <span class="w" style="--o:15">management</span></h3>
-        <span class="svc-arrow" aria-hidden="true"></span>
-        <p class="svc-answer">Brings the right people together and keeps it on track.</p>
+        <div class="svc-box svc-problem">
+          <p class="label">Problem</p>
+          <p class="svc-problem-text">Too many moving parts, not the right people.</p>
+        </div>
+        <div class="svc-box svc-solution">
+          <span class="svc-key" aria-hidden="true">S<i></i></span>
+          <p class="label">Solution</p>
+          <h3 class="svc-title">Creative connections <span class="amp">&amp;</span> project management</h3>
+          <p class="svc-answer">Brings the right people together and keeps it on track.</p>
+        </div>
       </li>
     </ol>
   </div>
@@ -186,7 +214,9 @@
 <section id="contact" class="section contact tone-light" aria-labelledby="contact-title">
   <div class="container">
     <h2 id="contact-title" class="contact-title" data-reveal>Let’s make <em>something happen.</em></h2>
-    <p class="contact-intro">Branding, campaigns, events and collaborations.</p>
+    <ul class="contact-topics" data-reveal>
+      <li style="--i:0">Branding</li><li style="--i:1">Campaigns</li><li style="--i:2">Events</li><li style="--i:3">Collaborations</li>
+    </ul>
     <a class="contact-email" href="mailto:sarahalfarhan.contact@gmail.com">sarahalfarhan.contact@gmail.com</a>
     <ul class="contact-links">
       <li><a href="tel:+4560130139">+45 60 13 01 39</a></li>

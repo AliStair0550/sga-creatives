@@ -195,12 +195,13 @@ def page(*, title: str, description: str, path: str, body: str, body_class: str 
 
 # ---------------------------------------------------------------- home page
 
-# (service, what it does). Shown as "service → answer" rows that come together on scroll.
+# (problem, service, what it does). Each row is two boxes that slide together on scroll:
+# the problem on the left, the solution on the right, locked together by the SGA key.
 SERVICES = [
-    ("Brand strategy & creative direction", "Makes the brand clear, distinctive and relevant."),
-    ("Campaigns & creative production", "Turns ideas into campaigns, editorials and content."),
-    ("Experiences & activations", "Creates events and launches people show up for."),
-    ("Creative connections & project management", "Brings the right people together and keeps it on track."),
+    ("The brand feels unclear or out of step.", "Brand strategy & creative direction", "Makes the brand clear, distinctive and relevant."),
+    ("Great ideas never leave the deck.", "Campaigns & creative production", "Turns ideas into campaigns, editorials and content."),
+    ("Launches no one remembers.", "Experiences & activations", "Creates events and launches people show up for."),
+    ("Too many moving parts, not the right people.", "Creative connections & project management", "Brings the right people together and keeps it on track."),
 ]
 
 PROCESS = [
@@ -247,18 +248,6 @@ def universe(i: int, c: dict) -> str:
   </article>"""
 
 
-def split_words(text: str) -> str:
-    """Wrap each word so the services rows can assemble word by word (see main.js).
-    --o is how far a word travels: the first word travels furthest."""
-    words = text.split(" ")
-    n = len(words)
-    out = []
-    for k, w in enumerate(words):
-        cls = "w amp" if w == "&" else "w"
-        out.append(f'<span class="{cls}" style="--o:{(n - k) * 9 + 6}">{e(w)}</span>')
-    return " ".join(out)
-
-
 def rise_words(html_text: str) -> str:
     """Wrap words in a headline so they can rise one by one when revealed."""
     parts = re.split(r"(<em>.*?</em>)", html_text)
@@ -281,10 +270,17 @@ def home() -> str:
     universes = "".join(universe(i, c) for i, c in enumerate(CASES))
     services = "".join(f"""
       <li class="svc-row" style="--tilt:{1 if i % 2 == 0 else -1}">
-        <h3 class="svc-title">{split_words(t)}</h3>
-        <span class="svc-arrow" aria-hidden="true"></span>
-        <p class="svc-answer">{e(d)}</p>
-      </li>""" for i, (t, d) in enumerate(SERVICES))
+        <div class="svc-box svc-problem">
+          <p class="label">Problem</p>
+          <p class="svc-problem-text">{e(prob)}</p>
+        </div>
+        <div class="svc-box svc-solution">
+          <span class="svc-key" aria-hidden="true">S<i></i></span>
+          <p class="label">Solution</p>
+          <h3 class="svc-title">{e(t).replace(" &amp; ", ' <span class="amp">&amp;</span> ')}</h3>
+          <p class="svc-answer">{e(d)}</p>
+        </div>
+      </li>""" for i, (prob, t, d) in enumerate(SERVICES))
     process = "".join(f"""
         <li><span class="step-word">{t}</span><span class="step-note">{e(d)}</span></li>"""
                       for t, d in PROCESS)
@@ -371,7 +367,9 @@ def home() -> str:
 <section id="contact" class="section contact tone-light" aria-labelledby="contact-title">
   <div class="container">
     <h2 id="contact-title" class="contact-title" data-reveal>Let’s make <em>something happen.</em></h2>
-    <p class="contact-intro">Branding, campaigns, events and collaborations.</p>
+    <ul class="contact-topics" data-reveal>
+      <li style="--i:0">Branding</li><li style="--i:1">Campaigns</li><li style="--i:2">Events</li><li style="--i:3">Collaborations</li>
+    </ul>
     <a class="contact-email" href="mailto:{SITE['email']}">{SITE['email']}</a>
     <ul class="contact-links">
       <li><a href="tel:{SITE['phone_href']}">{SITE['phone_display']}</a></li>
