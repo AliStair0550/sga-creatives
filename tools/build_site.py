@@ -109,7 +109,6 @@ def header(tone: str = "dark") -> str:
     </button>
     <nav id="site-nav" class="site-nav" aria-label="Main">
       <ul class="nav-list nav-list--left">{left}</ul>
-      <ul class="nav-list nav-list--right"><li><a class="nav-cta" href="/#contact">Contact</a></li></ul>
       <div class="nav-extra">
         <a href="mailto:{SITE['email']}">{SITE['email']}</a>
         <a href="tel:{SITE['phone_href']}">{SITE['phone_display']}</a>
@@ -196,11 +195,12 @@ def page(*, title: str, description: str, path: str, body: str, body_class: str 
 
 # ---------------------------------------------------------------- home page
 
+# (service, what it does). Shown as "service → answer" rows that come together on scroll.
 SERVICES = [
-    ("Brand strategy & creative direction", "Positioning, concepts, storytelling, visual direction."),
-    ("Campaigns & creative production", "Campaigns, editorials, content, creative partners."),
-    ("Experiences & activations", "Events, launches, brand experiences."),
-    ("Creative connections & project management", "The right people, budgets, timelines, delivery."),
+    ("Brand strategy & creative direction", "Makes the brand clear, distinctive and relevant."),
+    ("Campaigns & creative production", "Turns ideas into campaigns, editorials and content."),
+    ("Experiences & activations", "Creates events and launches people show up for."),
+    ("Creative connections & project management", "Brings the right people together and keeps it on track."),
 ]
 
 PROCESS = [
@@ -250,11 +250,11 @@ def universe(i: int, c: dict) -> str:
 def home() -> str:
     universes = "".join(universe(i, c) for i, c in enumerate(CASES))
     services = "".join(f"""
-      <li class="service" data-reveal>
-        <span class="num">{i + 1:02d}</span>
-        <h3>{e(t)}</h3>
-        <p>{e(d)}</p>
-      </li>""" for i, (t, d) in enumerate(SERVICES))
+      <li class="svc-row" data-reveal>
+        <h3 class="svc-title">{e(t).replace(" &amp; ", " <span>&amp;</span> ")}</h3>
+        <span class="svc-arrow" aria-hidden="true"></span>
+        <p class="svc-answer">{e(d)}</p>
+      </li>""" for t, d in SERVICES)
     process = "".join(f"""
         <li><span class="step-word">{t}</span><span class="step-note">{e(d)}</span></li>"""
                       for t, d in PROCESS)
@@ -298,29 +298,15 @@ def home() -> str:
       <span class="line"><span>Where brands</span></span>
       <span class="line"><span>meet <em>culture.</em></span></span>
     </h1>
-    <div class="hero-foot">
-      <ul class="hero-services" aria-label="What SGA creatives does">
-        <li>Brand strategy</li><li>Campaigns</li><li>Experiences</li><li>Creative connections</li>
-      </ul>
-    </div>
   </div>
-</section>
-
-<section id="work" class="work" aria-labelledby="work-title">
-  <header class="work-head container" data-reveal>
-    <p class="label">Selected work</p>
-    <h2 id="work-title" class="work-title">Selected projects from <span class="nowrap">Sarah Al-farhan’s</span> work across brands, campaigns and cultural experiences.</h2>
-  </header>
-  {universes}
 </section>
 
 <section id="services" class="section services tone-light" aria-labelledby="services-title">
   <div class="container">
     <header class="section-head" data-reveal>
-      <p class="label">Services</p>
       <h2 id="services-title" class="section-title">For fashion, footwear, lifestyle <em>and culture.</em></h2>
     </header>
-    <ol class="service-list">{services}
+    <ol class="svc">{services}
     </ol>
     <div class="process" data-reveal>
       <p class="label">Process</p>
@@ -328,6 +314,11 @@ def home() -> str:
       </ol>
     </div>
   </div>
+</section>
+
+<section id="work" class="work" aria-labelledby="work-title">
+  <h2 id="work-title" class="sr-only">Selected work</h2>
+  {universes}
 </section>
 
 <section id="about" class="section about" aria-labelledby="about-title">

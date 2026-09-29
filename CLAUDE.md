@@ -24,7 +24,9 @@ Statisk hjemmeside for SGA creatives (Sarah Al-farhan). Den forbinder brands med
   - Begge er under OFL og hostes lokalt. Der må højst være to familier.
 - Logo: SVG-stier genereret af `tools/make_brand.py`. Mærket er et fedt Figtree-S med et acid-punktum. Se `brand/brandguide.html`.
 - Ingen rullende tekst eller karuseller. Bevægelse er rolig: hero-indgang, reveals og let billedzoom.
-- Minimal tekst: heroen har kun overskriften og en linje med ydelser, ingen knapper. Ingen numre på cases.
+- Minimal tekst: heroen har kun overskriften, ingen knapper og ingen ydelseslinje. Ingen numre på cases og ingen intro over casene.
+- Forsidens rækkefølge: hero, services ("service → hvad den gør", rækkerne samles ved scroll), work (case-universer), about, contact.
+- Topmenu: logo til venstre, Work, Services og About til højre. Ingen Contact-knap (kontakt findes nederst og i footeren).
 
 ## Arkitektur
 
