@@ -204,6 +204,62 @@ Kontrollér også MX og TXT bagefter, og send en testmail til og fra domænet.
 
 Det kræver, at domænets **nameservere flyttes til Cloudflare**. En CNAME hos Simply er ikke nok. Så skal alle records (inklusive mail) genskabes i Cloudflare DNS, før nameserverne skiftes. Det er et andet setup og aftales særskilt.
 
+## Plan: flyt domænet helt til Cloudflare (AFVENTER aftale med Sarah)
+
+> Intet af dette er udført. Følg først guiden, når det er aftalt. Planen gælder, hvis Sarah bliver på sin Gmail og ikke skal have mail på domænet. Vil hun have hello@sgacreatives.com via Simply Mail, skal domænet blive hos Simply.
+
+**Status 29.9.2026:**
+- sgacreatives.com (.com, altså ikke Punktum dk) er registreret 18.8.2026 via Simply, med Key-Systems som registrator.
+- Domænet er betalt til 18.8.2027.
+- Nyregistrerede .com-domæner har 60 dages transferlås, så **registreringen kan tidligst flyttes omkring 17.10.2026**.
+- DNS-records i dag:
+
+| Type | Navn | Værdi | Formål |
+|---|---|---|---|
+| A | `@` | 94.231.103.100 (dnsforward.simply.com) | Simplys viderestilling til www. Skal **ikke** genskabes. |
+| CNAME | `www` | sga-creatives.pages.dev | Hjemmesiden |
+
+Der er ingen MX-, TXT- eller CAA-records.
+
+**Pris (tjekket 29.9.2026):**
+- Simply fornyer .com til 154,69 kr./år inkl. moms ([simply.com/dk/com-domain](https://www.simply.com/dk/com-domain/)).
+- Cloudflare Registrar tager kostpris, ca. 10,5 USD/år ekskl. moms, dvs. ca. 70-90 kr. afhængigt af kurs og moms.
+- Besparelsen er altså ca. 65-85 kr./år.
+
+### Trin A: DNS til Cloudflare (kan gøres når som helst)
+
+1. **Cloudflare → Add a domain →** `sgacreatives.com`, Free-plan. Slet eventuelle records, Cloudflare selv har fundet.
+2. **Opret records** i Cloudflare DNS, *før* nameserverne skiftes:
+
+   | Type | Navn | Værdi | Proxy | Formål |
+   |---|---|---|---|---|
+   | CNAME | `www` | `sga-creatives.pages.dev` | Proxied | Hjemmesiden. Pages overtager den automatisk. |
+   | AAAA | `@` | `100::` | Proxied | Pladsholder, så roddomænet kan viderestilles af Cloudflare |
+   | MX | `@` | `.` (prioritet 0) | – | "Null MX": domænet modtager ikke mail |
+   | TXT | `@` | `v=spf1 -all` | – | Domænet sender aldrig mail |
+   | TXT | `_dmarc` | `v=DMARC1; p=reject; sp=reject; adkim=s; aspf=s` | – | Afvis falske mails i SGA's navn |
+
+3. **Viderestilling af roddomænet:** Rules → Redirect Rules → Create rule:
+   - *Hostname equals* `sgacreatives.com`
+   - Dynamic redirect: `concat("https://www.sgacreatives.com", http.request.uri.path)`
+   - 301, **Preserve query string** slået til.
+4. **Hos Simply:** Domænet → **Navneservere** → skift til de to nameservere, Cloudflare viser (fx `xxx.ns.cloudflare.com`). Skiftet slår igennem inden for minutter til et døgn. Cloudflare sender en mail, når zonen er aktiv.
+5. **Kontrollér** med testene under "Test efter lancering" ovenfor:
+   - `https://sgacreatives.com/work/?x=1` skal give 301 til `https://www.sgacreatives.com/work/?x=1`.
+   - www skal give 200 med gyldigt certifikat.
+6. Simplys URL-viderestilling bruges ikke længere og kan slettes.
+
+**Fortryd:** Sæt nameserverne tilbage til `ns1/ns2/ns3.simply.com` hos Simply. Records og viderestilling hos Simply ligger der stadig.
+
+### Trin B: Registreringen til Cloudflare (fra ca. 17.10.2026)
+
+1. Hos Simply: slå **transferlåsen fra** for domænet og hent **overførselskoden** (EPP/auth-kode).
+2. Cloudflare → **Domain Registration → Transfer Domains** → vælg sgacreatives.com → indtast koden → betal ét års fornyelse. Domænet forlænges til august 2028.
+3. Godkend overførslen i den mail, der kommer. Overførslen tager op til 5 dage. Hjemmesiden kører uændret imens.
+4. Når Cloudflare viser domænet som overført: **opsig Simply** og slå automatisk fornyelse fra dér.
+
+Cloudflare Registrar kræver, at domænet bruger Cloudflare DNS (trin A), og betales med kort i USD.
+
 ## Gendannelse
 
 - **Fejl i en ny version:** Cloudflare, derefter projektet, **Deployments**, vælg en tidligere deployment og **Rollback to this deployment**. Det sker med det samme.
