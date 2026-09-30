@@ -125,6 +125,8 @@ main:focus { outline: none; }
   line-height: 1.5;
 }
 .nowrap { white-space: nowrap; }
+.br-desktop { display: none; }
+@media (min-width: 900px) { .br-desktop { display: inline; } }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .display {
   font-family: var(--font-display);

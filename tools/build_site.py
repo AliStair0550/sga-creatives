@@ -361,6 +361,9 @@ def rise_words(html_text: str) -> str:
         tag, inner = (m.group(1), m.group(2)) if m else (None, part)
         spans = []
         for w in inner.split():
+            if w == "<br>":            # a forced line break (desktop only, see .br-desktop)
+                spans.append('<br class="br-desktop">')
+                continue
             spans.append(f'<span class="rw"><span style="--i:{i}">{w}</span></span>')
             i += 1
         chunk = " ".join(spans)
@@ -414,7 +417,7 @@ def home() -> str:
 <section id="services" class="section services tone-light" aria-labelledby="services-title">
   <div class="container">
     <header class="section-head" data-reveal>
-      <h2 id="services-title" class="section-title rise is-light">{rise_words("For fashion, footwear &amp; <strong>lifestyle.</strong>")}</h2>
+      <h2 id="services-title" class="section-title rise is-light">{rise_words("For fashion, footwear <br> &amp; <strong>lifestyle.</strong>")}</h2>
     </header>
     <ol class="svc">{services}
     </ol>
