@@ -607,6 +607,8 @@ main:focus { outline: none; }
   font-size: var(--step-3); line-height: 1; letter-spacing: -0.045em; max-width: 10ch;
 }
 .footer-col ul { display: grid; gap: 0.1rem; }
+/* the menu sits two by two: Portfolio  About / Services  Contact (columns fill first, so reading order stays) */
+.footer-top nav.footer-col ul { grid-template-rows: repeat(2, auto); grid-auto-flow: column; column-gap: clamp(1.5rem, 1rem + 2vw, 3rem); justify-content: start; }
 .footer-col a {
   display: inline-flex; align-items: center; min-height: 36px; text-decoration: none; overflow-wrap: anywhere;
   font-family: var(--font-display); font-weight: 600; font-size: var(--step-1); letter-spacing: -0.02em; color: var(--paper);
