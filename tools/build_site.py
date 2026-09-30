@@ -179,7 +179,6 @@ def footer() -> str:
     <a class="footer-wordmark" href="/" aria-label="SGA creatives, home" data-reveal>{inline_logo()}</a>
     <div class="footer-bottom">
       <p class="footer-legal"><span class="footer-mark">{inline_mark()}</span>© <span data-year>{YEAR}</span> SGA creatives</p>
-      <a href="#top" class="back-to-top">Back to top</a>
     </div>
   </div>
 </footer>"""

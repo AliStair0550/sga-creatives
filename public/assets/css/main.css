@@ -635,13 +635,6 @@ main:focus { outline: none; }
 .footer-legal { display: inline-flex; align-items: center; gap: 0.75rem; }
 .footer-mark svg { width: 1.9rem; height: 1.9rem; border-radius: 0.45rem; transition: transform 0.8s cubic-bezier(0.2, 1.4, 0.35, 1); }
 .footer-legal:hover .footer-mark svg { transform: rotate(360deg); }
-.back-to-top {
-  display: inline-flex; align-items: center; min-height: 44px; padding: 0 1.2rem; margin-block: -0.5rem;
-  border: 1px solid rgba(243, 240, 233, 0.35); border-radius: 999px; text-decoration: none; color: var(--paper);
-  font-size: 0.75rem; font-weight: 560; font-stretch: 118%; letter-spacing: 0.2em; text-transform: uppercase;
-  transition: background-color 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
-}
-.back-to-top:hover { background: var(--acid); color: var(--ink); border-color: var(--acid); }
 @media (min-width: 700px) { .footer-top { grid-template-columns: repeat(2, minmax(0, 1fr)); } .footer-claim { grid-column: 1 / -1; } }
 @media (min-width: 1100px) { .footer-top { grid-template-columns: 2fr 1fr 1.2fr; } .footer-claim { grid-column: auto; } }
 
