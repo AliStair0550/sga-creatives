@@ -201,14 +201,14 @@ main:focus { outline: none; }
 .cap-company { color: var(--muted); }
 
 /* ------------------------------------------------------------ home: hero */
-/* The headline high on the left; the lookbook image beside it, a little lower and a little right
+/* The headline high on the left; the Timberland × Rezet image beside it, a little lower and a little right
    of the middle. On phones it fills exactly one screen (the first stop of the swipe feed). */
 
 .hero {
   display: grid; align-content: start; gap: var(--space-l);
   padding-top: calc(var(--header-h) + var(--space-l)); padding-bottom: var(--space-2xl);
 }
-.hero-title { color: var(--red); font-size: var(--t-l); line-height: 1.02; letter-spacing: var(--track-l); }
+.hero-title { font-size: var(--t-l); line-height: 1.02; letter-spacing: var(--track-l); }
 .hero-media { justify-self: end; width: min(62vw, 24rem); margin-right: 6vw; overflow: hidden; background: var(--ph); }
 .hero-media img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
 @media (min-width: 900px) {
