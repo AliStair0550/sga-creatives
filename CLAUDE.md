@@ -9,6 +9,15 @@ Statisk hjemmeside for SGA creatives (Sarah Al-farhan). Den forbinder brands med
 - Beslutning 29.9.2026: domæne og DNS bliver hos Simply. Egen mail købes senere som Simply Basic Mail (se README "Hvis Sarah senere vil have egen mail"). Flytning til Cloudflare er ikke planlagt.
 - Fuld vejledning til drift, DNS og gendannelse: `README.md`
 
+## Redesign på branch `redesign-hvid` (oktober 2026)
+
+Denne branch erstatter det mørke udtryk. Hvor reglerne nedenfor strider mod dette afsnit, gælder dette afsnit.
+
+- **Hvidt først:** baggrund #FFFFFF, Ink #171918 til tekst, `--red` til små markeringer. Cases har ingen egne toner længere (`tone` i `cases.json` bruges ikke).
+- **Logo:** wordmark `sga.creatives` i Oswald Regular, genereret som SVG-stier af `tools/make_brand.py` (`sga-creatives-wordmark-*.svg`). Oswald indlæses ikke på sitet, så der stadig kun er to fontfamilier. Favicon er uændret indtil videre.
+- **Topmenu:** wordmark til venstre, Home, Services, Projects og en Contact-knap (CTA) til højre. Footeren har ingen logo eller S-mærke.
+- **Sider:** `/` (intro, ét projekt ad gangen centreret med firma og projekttitel under, About og My process), `/services/` (problem/løsning-par med "What it covers" og relaterede projekter; midlertidig tekst), `/work/` (Projects: to forskudte kolonner), `/contact/` (kontaktord, alle kontaktoplysninger skrevet ud og About), casesider i `/work/<slug>/`.
+
 ## Brand
 
 - Retning: **Luxury meets urban culture**. Redaktionelt, premium og magasinagtigt. Færre ord, flere billeder.

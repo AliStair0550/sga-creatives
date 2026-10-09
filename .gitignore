@@ -14,3 +14,6 @@ docs/intern/
 
 # share image tool scratch
 tools/share/.tmp/
+
+# browser test screenshots
+.playwright-mcp/

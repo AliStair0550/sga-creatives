@@ -67,14 +67,6 @@ def absolute(path: str) -> str:
     return f"{DOMAIN}{path}" if DOMAIN else path
 
 
-def inline_mark() -> str:
-    """The S mark (paper + acid on ink), inline and decorative."""
-    svg = (PUBLIC / "assets" / "brand" / "sga-creatives-mark.svg").read_text()
-    svg = re.sub(r'<title id="t">.*?</title>', "", svg)
-    svg = svg.replace(' role="img" aria-labelledby="t"', ' aria-hidden="true" focusable="false"')
-    return re.sub(r' width="\d+" height="\d+"', "", svg, count=1)
-
-
 # 24px line icons for the contact buttons (stroke = currentColor)
 ICONS = {
     "mail": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/>',
@@ -89,9 +81,9 @@ def icon(name: str) -> str:
             f'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">{ICONS[name]}</svg>')
 
 
-def inline_logo(kind: str = "horizontal") -> str:
-    name = "sga-creatives-logo-horizontal-dark.svg" if kind == "horizontal" else "sga-creatives-logo-dark.svg"
-    svg = (PUBLIC / "assets" / "brand" / name).read_text()
+def inline_logo() -> str:
+    """The wordmark sga.creatives (made by tools/make_brand.py), inline and in currentColor."""
+    svg = (PUBLIC / "assets" / "brand" / "sga-creatives-wordmark-dark.svg").read_text()
     svg = re.sub(r'<title id="t">.*?</title>', "", svg)
     svg = svg.replace(' role="img" aria-labelledby="t"', ' aria-hidden="true" focusable="false"')
     svg = re.sub(r' width="\d+" height="\d+"', "", svg, count=1)
@@ -116,8 +108,8 @@ def picture(name: str, alt: str, sizes: str, cls: str = "", eager: bool = False,
     )
 
 
-NAV_LEFT = [("Portfolio", "/work/"), ("About", "/#about")]                 # top menu
-NAV = [("Portfolio", "/work/"), ("Services", "/#services"), ("About", "/#about"), ("Contact", "/#contact")]  # footer
+# Top menu and footer. The last item (Contact) is the call to action at the far right of the header.
+NAV = [("Home", "/"), ("Services", "/services/"), ("Projects", "/work/"), ("Contact", "/contact/")]
 
 
 def media(name: str, alt: str, sizes: str, *, cls: str = "", eager: bool = False,
@@ -134,14 +126,19 @@ def media(name: str, alt: str, sizes: str, *, cls: str = "", eager: bool = False
             f'<span class="ph-mark">S<i></i></span><span class="ph-num">{num}</span></div>')
 
 
-def header(tone: str = "dark", path: str = "/") -> str:
-    def item(label, href):
-        current = ' aria-current="page"' if href == "/work/" and path.startswith("/work/") else ""
-        return f'<li><a href="{href}"{current}>{label}</a></li>'
-    left = "".join(item(label, href) for label, href in NAV_LEFT)
+def is_current(href: str, path: str) -> bool:
+    return path == "/" if href == "/" else path.startswith(href)
+
+
+def header(path: str = "/") -> str:
+    def item(i, label, href):
+        current = ' aria-current="page"' if is_current(href, path) else ""
+        cta = ' class="nav-cta"' if i == len(NAV) - 1 else ""
+        return f'<li><a href="{href}"{cta}{current}>{label}</a></li>'
+    items = "".join(item(i, label, href) for i, (label, href) in enumerate(NAV))
     return f"""
 <a class="skip-link" href="#main">Skip to content</a>
-<header class="site-header" data-header data-tone="{tone}">
+<header class="site-header" data-header>
   <div class="header-inner">
     <a class="brand" href="/" aria-label="SGA creatives, home">{inline_logo()}</a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>
@@ -149,7 +146,7 @@ def header(tone: str = "dark", path: str = "/") -> str:
       <span class="nav-toggle-icon" aria-hidden="true"><span></span><span></span></span>
     </button>
     <nav id="site-nav" class="site-nav" aria-label="Main">
-      <ul class="nav-list nav-list--left">{left}</ul>
+      <ul class="nav-list">{items}</ul>
       <div class="nav-extra">
         <a href="mailto:{SITE['email']}">{SITE['email']}</a>
         <a href="tel:{SITE['phone_href']}">{SITE['phone_display']}</a>
@@ -176,9 +173,8 @@ def footer() -> str:
         </ul>
       </div>
     </div>
-    <a class="footer-wordmark" href="/" aria-label="SGA creatives, home" data-reveal>{inline_logo()}</a>
     <div class="footer-bottom">
-      <p class="footer-legal"><span class="footer-mark">{inline_mark()}</span>© <span data-year>{YEAR}</span> SGA creatives</p>
+      <p class="footer-legal">© <span data-year>{YEAR}</span> SGA creatives</p>
     </div>
   </div>
 </footer>"""
@@ -186,7 +182,7 @@ def footer() -> str:
 
 def page(*, title: str, description: str, path: str, body: str, body_class: str = "",
          og_type: str = "website", og_image: str = OG_IMAGE, og_image_alt: str = "SGA creatives: Where brands meet culture.",
-         extra_head: str = "", indexable: bool = True, header_tone: str = "dark", jsonld: list | None = None) -> str:
+         extra_head: str = "", indexable: bool = True, jsonld: list | None = None) -> str:
     canonical = f'<link rel="canonical" href="{DOMAIN}{path}">' if DOMAIN and indexable else ""
     og_url = f'<meta property="og:url" content="{DOMAIN}{path}">' if DOMAIN and indexable else ""
     robots = "" if indexable else '<meta name="robots" content="noindex">'
@@ -200,7 +196,7 @@ def page(*, title: str, description: str, path: str, body: str, body_class: str 
 <title>{e(title)}</title>
 <meta name="description" content="{e(description)}">
 {canonical}{robots}
-<meta name="theme-color" content="#0E0F0F">
+<meta name="theme-color" content="#FFFFFF">
 <meta property="og:site_name" content="SGA creatives">
 <meta property="og:type" content="{og_type}">
 <meta property="og:title" content="{e(title)}">
@@ -231,7 +227,7 @@ def page(*, title: str, description: str, path: str, body: str, body_class: str 
 {extra_head}
 </head>
 <body class="{body_class}">
-{header(header_tone, path)}
+{header(path)}
 <main id="main" tabindex="-1">
 {body}
 </main>
@@ -293,15 +289,27 @@ def case_ld(c: dict) -> dict:
     return ld
 
 
-# ---------------------------------------------------------------- home page
+# ---------------------------------------------------------------- shared content
 
-# (service, problem, solution). Each row is two boxes that slide together on scroll and lock:
-# the problem on the left, the solution on the right. The service name is a hidden heading
-# for screen readers and search engines. Keep the lines short and roughly equal in length.
+# Services: the problem and the solution are two boxes that slide together on scroll and lock
+# (main.js). Scope comes from Sarah's brief; projects link to cases that show the service.
+# Placeholder copy until Sarah sends her own service texts.
 SERVICES = [
-    ("Campaigns & creative production", "When your campaigns don’t connect with people.", "We turn cultural insight into campaigns that land."),
-    ("Events & experiences", "When your events lack real connection.", "We create experiences that bring people together."),
-    ("Connections & project management", "When your projects lose direction and momentum.", "We bring the right people in and keep it moving."),
+    {"name": "Campaigns & creative production",
+     "problem": "When your campaigns don’t connect with people.",
+     "solution": "We turn cultural insight into campaigns that land.",
+     "scope": ["Campaigns", "Editorials", "Content", "Creative partners"],
+     "projects": ["adidas-ways-to-style", "rezet-lookbook"]},
+    {"name": "Events & experiences",
+     "problem": "When your events lack real connection.",
+     "solution": "We create experiences that bring people together.",
+     "scope": ["Events", "Launches", "Activations", "Brand experiences"],
+     "projects": ["adidas-kiosk", "timberland-rezet", "nike-event-consulting"]},
+    {"name": "Connections & project management",
+     "problem": "When your projects lose direction and momentum.",
+     "solution": "We bring the right people in and keep it moving.",
+     "scope": ["The right people", "Coordination", "Budgets", "Timelines", "Delivery"],
+     "projects": []},
 ]
 
 # "My process": four giant words that fill in as you scroll, each with a line in Sarah's own voice.
@@ -319,9 +327,9 @@ EXPERIENCE = [   # (company, role), most recent first; no years on the site
     ("Bestseller A/S · NAME IT", "Social Media and PR Manager"),
 ]
 
-
-def tone_style(c: dict) -> str:
-    return f'--tone:{c["tone"]["bg"]}'
+INTRO = "SGA creatives connects brands with creative people and leads projects across branding, campaigns and cultural experiences."
+ABOUT_LEAD = "I connect brands, people and culture through creative vision and practical experience. I bring the right partners together and manage teams, budgets and every detail from concept to execution."
+CASE_BY_SLUG = {c["slug"]: c for c in CASES}
 
 
 def alt_for(c: dict, name: str) -> str:
@@ -331,136 +339,84 @@ def alt_for(c: dict, name: str) -> str:
     return c["lead"]["alt"] if c["lead"]["image"] == name else ""
 
 
-def universe(i: int, c: dict) -> str:
-    """One case on the home page: a full-width panel in the case's own tone."""
-    flip = " is-flipped" if i % 2 else ""
-    return f"""
-  <article class="universe tone-{c['tone']['mode']}{flip}" style="{tone_style(c)}">
-    <div class="universe-inner container">
-      <div class="universe-main" data-reveal>{media(c['card_image'], alt_for(c, c['card_image']), "(min-width: 900px) 50vw, 100vw")}</div>
-      <div class="universe-second" data-reveal>{media(c['card_image_2'], alt_for(c, c['card_image_2']), "(min-width: 900px) 22vw, 45vw")}</div>
-      <div class="universe-text" data-reveal>
-        <p class="label">{e(c['category'])}</p>
-        <h3 class="universe-title"><a href="/work/{c['slug']}/">{e(c['title'])}</a></h3>
-        <p class="universe-partners">{e(c['partners'])}</p>
-        <p class="universe-link" aria-hidden="true">View case <span>→</span></p>
-      </div>
-    </div>
-  </article>"""
+def caption(c: dict, tag: str = "span") -> str:
+    """Company on top (quiet), project title below: the caption under every project image."""
+    return (f'<{tag} class="cap"><span class="cap-company">{e(c["partners"])}</span>'
+            f'<span class="cap-title">{e(c["title"])}</span></{tag}>')
 
 
-def rise_words(html_text: str) -> str:
-    """Wrap words in a headline so they can rise one by one when revealed."""
-    parts = re.split(r"(<(?:em|strong)>.*?</(?:em|strong)>)", html_text)
-    out, i = [], 0
-    for part in parts:
-        if not part.strip():
-            continue
-        m = re.match(r"<(em|strong)>(.*)</\1>$", part)
-        tag, inner = (m.group(1), m.group(2)) if m else (None, part)
-        spans = []
-        for w in inner.split():
-            if w == "<br>":            # a forced line break (desktop only, see .br-desktop)
-                spans.append('<br class="br-desktop">')
-                continue
-            spans.append(f'<span class="rw"><span style="--i:{i}">{w}</span></span>')
-            i += 1
-        chunk = " ".join(spans)
-        out.append(f"<{tag}>{chunk}</{tag}>" if tag else chunk)
-    return " ".join(out)
+def contact_rows() -> str:
+    rows = [
+        ("mail", "Email", f"mailto:{SITE['email']}", SITE["email"], ""),
+        ("phone", "Phone", f"tel:{SITE['phone_href']}", SITE["phone_display"], ""),
+        ("linkedin", "LinkedIn", SITE["linkedin"], "Sarah Al-farhan", ' rel="noopener"'),
+        ("instagram", "Instagram", SITE["instagram"], "@sarahalfarhan", ' rel="noopener"'),
+    ]
+    return "".join(f"""
+        <li><a class="reach-row" href="{href}"{rel}><span class="reach-icon">{icon(ic)}</span><span class="reach-kind">{label}</span><span class="reach-value">{e(value)}</span></a></li>"""
+                   for ic, label, href, value, rel in rows)
 
 
-def home() -> str:
-    universes = "".join(universe(i, c) for i, c in enumerate(CASES))
-    services = "".join(f"""
-      <li class="svc-row" style="--tilt:{1 if i % 2 == 0 else -1}">
-        <h3 class="sr-only">{e(t)}</h3>
-        <div class="svc-box svc-problem"><p class="svc-line">{e(prob)}</p></div>
-        <div class="svc-box svc-solution">
-          <span class="svc-key" aria-hidden="true"></span>
-          <p class="svc-line">{e(sol)}</p>
-        </div>
-      </li>""" for i, (t, prob, sol) in enumerate(SERVICES))
-    process = "".join(f"""
-        <li class="step" data-scroll="fill"><span class="step-word">{t}</span><span class="step-note">{e(d)}</span></li>"""
-                      for t, d in PROCESS)
+def about_block(heading_tag: str = "h2", *, portrait: bool = True, parallax: bool = True) -> str:
     experience = "".join(f"""
           <li><span class="xp-company">{e(co)}</span><span class="xp-role">{e(role)}</span></li>"""
                          for co, role in EXPERIENCE)
+    scroll = ' data-scroll="parallax"' if parallax else ""
+    photo = (f'<div class="about-portrait"{scroll}>{media("sarah-al-farhan-01", "Sarah Al-farhan on set in a photo studio, working on a laptop.", "(min-width: 900px) 40vw, 100vw", label="Sarah")}</div>'
+             if portrait else "")
+    return f"""
+  <div class="container about-grid">
+    {photo}
+    <div class="about-body" data-reveal>
+      <{heading_tag} id="about-title" class="about-name">Sarah <em>Al-farhan</em></{heading_tag}>
+      <p class="about-role">Brand &amp; Creative Manager</p>
+      <p class="about-stat"><span class="stat-figure">13+</span><span class="stat-text">years across fashion, footwear, branding, marketing, community and culture.</span></p>
+      <p class="about-lead">{ABOUT_LEAD}</p>
+      <ul class="xp-list">{experience}
+      </ul>
+    </div>
+  </div>"""
+
+
+# ---------------------------------------------------------------- home page
+
+def home() -> str:
+    """White space, one project at a time in the middle of the page, a small caption under each
+    (company, then project title). Then Sarah and her process."""
+    projects = "".join(f"""
+    <li class="show-item" data-reveal>
+      <a class="show-link" href="/work/{c['slug']}/">
+        <div class="show-media">{media(c['card_image'], alt_for(c, c['card_image']), "(min-width: 900px) 34vw, 78vw", eager=(i == 0), priority=(i == 0))}</div>
+        {caption(c)}
+      </a>
+    </li>""" for i, c in enumerate(CASES))
+    process = "".join(f"""
+        <li class="step" data-scroll="fill"><span class="step-word">{t}</span><span class="step-note">{e(d)}</span></li>"""
+                      for t, d in PROCESS)
 
     website = {"@type": "WebSite", "@id": _id("website"), "url": DOMAIN + "/", "name": "SGA creatives",
                "inLanguage": "en", "publisher": {"@id": _id("org")}}
 
-    hero_imgs = [
-        ("rezet-lookbook-01-hero", "A model from the Rezet Store Lookbook Autumn Winter 2025 in a black track jacket and a long grey pleated skirt.", "hero-img hero-img--side"),
-        ("adidas-ways-to-style-01", "A man in a black puffer jacket and red trousers wearing silver Adistar Control 5 sneakers.", "hero-img hero-img--main"),
-        ("timberland-rezet-04", "A guest holds up a Timberland boot at the counter during the Timberland × Rezet event.", "hero-img hero-img--side hero-img--right"),
-    ]
-    # Only the right image (Timberland) shows on phones, so it is the one fetched first; the other two
-    # are lazy, which also means phones never download them (they are display:none there).
-    hero_media = "".join(
-        f'<div class="{cls}">{picture(n, a, "(min-width: 900px) 34vw, 100vw", eager=(k == 2), priority=(k == 2))}</div>'
-        for k, (n, a, cls) in enumerate(hero_imgs))
-
     body = f"""
-<section class="hero" aria-labelledby="hero-title">
-  <div class="hero-media">{hero_media}</div>
-  <div class="hero-content container">
-    <h1 id="hero-title" class="hero-title">
-      <span class="line"><span>Where brands</span></span>
-      <span class="line"><span>meet <em>culture.</em></span></span>
-    </h1>
-  </div>
+<section class="intro container" aria-labelledby="intro-title">
+  <h1 id="intro-title" class="intro-title"><span class="line"><span>Where brands</span></span> <span class="line"><span><em>meet culture.</em></span></span></h1>
+  <p class="intro-text">{INTRO}</p>
 </section>
 
-<section id="services" class="section services tone-light" aria-labelledby="services-title">
+<section class="showcase container" aria-labelledby="work-title">
+  <h2 id="work-title" class="sr-only">Selected projects</h2>
+  <ol class="show-list">{projects}
+  </ol>
+  <p class="more-link" data-reveal><a href="/work/">All projects</a></p>
+</section>
+
+<section id="about" class="section about" aria-labelledby="about-title">{about_block()}
   <div class="container">
-    <header class="section-head" data-reveal>
-      <h2 id="services-title" class="section-title rise is-light">{rise_words("For fashion, footwear <br> &amp; <strong>lifestyle.</strong>")}</h2>
-    </header>
-    <ol class="svc">{services}
-    </ol>
-  </div>
-</section>
-
-<section id="work" class="work" aria-labelledby="work-title">
-  <h2 id="work-title" class="sr-only">Selected work</h2>
-  {universes}
-</section>
-
-<section id="about" class="section about" aria-labelledby="about-title">
-  <div class="container about-grid">
-    <div class="about-portrait" data-scroll="parallax">{media("sarah-al-farhan-01", "Sarah Al-farhan on set in a photo studio, working on a laptop.", "(min-width: 900px) 40vw, 100vw", label="Sarah")}</div>
-    <div class="about-body" data-reveal>
-      <h2 id="about-title" class="about-name">Sarah <em>Al-farhan</em></h2>
-      <p class="about-role">Brand &amp; Creative Manager</p>
-      <p class="about-stat"><span class="stat-figure">13+</span><span class="stat-text">years across fashion, footwear, branding, marketing, community and culture.</span></p>
-      <p class="about-lead">I connect brands, people and culture through creative vision and practical experience. I bring the right partners together and manage teams, budgets and every detail from concept to execution.</p>
-      <ul class="xp-list">{experience}
-      </ul>
-    </div>
-  </div>
-  <div class="container">
-    <div class="process about-process">
+    <div class="process">
       <h3 class="process-title">My <em>process</em></h3>
       <ol class="process-list">{process}
       </ol>
     </div>
-  </div>
-</section>
-
-<section id="contact" class="section contact tone-light" aria-labelledby="contact-title">
-  <div class="container">
-    <h2 id="contact-title" class="contact-title" data-reveal>Let’s make <em>something happen.</em></h2>
-    <ul class="contact-topics" data-reveal>
-      <li style="--i:0">Branding</li><li style="--i:1">Campaigns</li><li style="--i:2">Events</li><li style="--i:3">Collaborations</li>
-    </ul>
-    <ul class="contact-icons" data-reveal>
-      <li style="--i:0"><a class="icon-btn" href="mailto:{SITE['email']}">{icon("mail")}<span class="icon-label">Email</span><span class="sr-only"> Sarah at {SITE['email']}</span></a></li>
-      <li style="--i:1"><a class="icon-btn" href="tel:{SITE['phone_href']}">{icon("phone")}<span class="icon-label">Call</span><span class="sr-only"> Sarah on {SITE['phone_display']}</span></a></li>
-      <li style="--i:2"><a class="icon-btn" href="{SITE['linkedin']}" rel="noopener">{icon("linkedin")}<span class="icon-label">LinkedIn</span><span class="sr-only">: Sarah Al-farhan</span></a></li>
-      <li style="--i:3"><a class="icon-btn" href="{SITE['instagram']}" rel="noopener">{icon("instagram")}<span class="icon-label">Instagram</span><span class="sr-only">: @sarahalfarhan</span></a></li>
-    </ul>
   </div>
 </section>
 """
@@ -472,6 +428,89 @@ def home() -> str:
         body_class="page-home",
         og_image_alt="SGA creatives: Where brands meet culture. Portraits from the Rezet Lookbook, adidas Ways to Style and Timberland × Rezet.",
         jsonld=graph(org_ld(), person_ld(), website),
+    )
+
+
+# ---------------------------------------------------------------- services page
+
+def services_page() -> str:
+    blocks = []
+    for i, s in enumerate(SERVICES):
+        scope = "".join(f"<li>{e(x)}</li>" for x in s["scope"])
+        related = ""
+        if s["projects"]:
+            links = "".join(f'<li><a href="/work/{slug}/">{e(CASE_BY_SLUG[slug]["title"])}</a></li>' for slug in s["projects"])
+            related = f'\n      <div class="svc-related"><h3 class="label">Projects</h3><ul>{links}</ul></div>'
+        blocks.append(f"""
+    <article class="svc-item" aria-labelledby="svc-{i}">
+      <h2 id="svc-{i}" class="svc-name" data-reveal>{e(s['name'])}</h2>
+      <div class="svc-row" style="--tilt:{1 if i % 2 == 0 else -1}">
+        <div class="svc-box svc-problem"><p class="svc-line">{e(s['problem'])}</p></div>
+        <div class="svc-box svc-solution">
+          <span class="svc-key" aria-hidden="true"></span>
+          <p class="svc-line">{e(s['solution'])}</p>
+        </div>
+      </div>
+      <div class="svc-detail" data-reveal>
+        <div><h3 class="label">What it covers</h3><ul class="svc-scope">{scope}</ul></div>{related}
+      </div>
+    </article>""")
+    body = f"""
+<section class="page-head container" aria-labelledby="page-title">
+  <h1 id="page-title" class="page-title">Services</h1>
+  <p class="page-lead">For fashion, footwear &amp; <strong>lifestyle.</strong></p>
+</section>
+
+<section class="services container" aria-label="What SGA creatives does">{"".join(blocks)}
+</section>
+
+<section class="page-cta container" aria-labelledby="cta-title">
+  <h2 id="cta-title" class="cta-title">Have a project <em>in mind?</em></h2>
+  <a class="btn" href="/contact/">Get in touch</a>
+</section>
+"""
+    return page(
+        title="Services | SGA creatives",
+        description="Campaigns and creative production, events and experiences, connections and project management for fashion, footwear and lifestyle brands.",
+        path="/services/",
+        body=body,
+        body_class="page-services",
+        jsonld=graph(
+            {"@type": "WebPage", "@id": f"{DOMAIN}/services/#page", "url": f"{DOMAIN}/services/", "name": "Services",
+             "isPartOf": {"@id": _id("website")}, "about": {"@id": _id("org")}},
+            breadcrumbs_ld([("Home", "/"), ("Services", "/services/")]),
+        ),
+    )
+
+
+# ---------------------------------------------------------------- contact page
+
+def contact_page() -> str:
+    body = f"""
+<section class="contact container" aria-labelledby="page-title">
+  <h1 id="page-title" class="contact-title">Let’s make <em>something happen.</em></h1>
+  <ul class="contact-topics" data-reveal>
+    <li style="--i:0">Branding</li><li style="--i:1">Campaigns</li><li style="--i:2">Events</li><li style="--i:3">Collaborations</li>
+  </ul>
+  <ul class="reach-list" data-reveal>{contact_rows()}
+  </ul>
+</section>
+
+<section class="section about about--contact" aria-labelledby="about-title">{about_block(parallax=False)}
+</section>
+"""
+    return page(
+        title="Contact | SGA creatives",
+        description="Get in touch with Sarah Al-farhan, Brand & Creative Manager at SGA creatives, about branding, campaigns, events and collaborations.",
+        path="/contact/",
+        body=body,
+        body_class="page-contact",
+        jsonld=graph(
+            {"@type": "ContactPage", "@id": f"{DOMAIN}/contact/#page", "url": f"{DOMAIN}/contact/", "name": "Contact",
+             "isPartOf": {"@id": _id("website")}, "about": {"@id": _id("sarah")}},
+            person_ld(),
+            breadcrumbs_ld([("Home", "/"), ("Contact", "/contact/")]),
+        ),
     )
 
 
@@ -511,29 +550,26 @@ def case_page(i: int, c: dict) -> str:
                        for p in c["programme"])
         programme = f'\n    <ol class="programme" data-reveal>{rows}\n    </ol>'
     provenance = e(c["provenance"]).replace("Sarah Al-farhan", '<span class="nowrap">Sarah Al-farhan</span>')
-    mode = c["tone"]["mode"]
 
     body = f"""
-<article class="case tone-{mode}" style="{tone_style(c)}">
-  <header class="case-cover">
-    <div class="case-cover-text">
-      <nav class="case-crumbs" aria-label="Breadcrumb">
-        <a href="/work/"><span aria-hidden="true">←</span> Portfolio</a>
-      </nav>
-      <div>
-        <p class="label">{e(c['category'])}</p>
-        <h1 class="case-title">{e(c['title'])}</h1>
-        <p class="case-subtitle">{e(c['subtitle'])}</p>
-      </div>
+<article class="case">
+  <header class="case-cover container">
+    <nav class="case-crumbs" aria-label="Breadcrumb">
+      <a href="/work/"><span aria-hidden="true">←</span> Projects</a>
+    </nav>
+    <div class="case-head">
+      <p class="cap-company">{e(c['partners'])}</p>
+      <h1 class="case-title">{e(c['title'])}</h1>
+      <p class="case-subtitle">{e(c['subtitle'])}</p>
     </div>
     <figure class="case-cover-media">
-      {media(c['lead']['image'], c['lead']['alt'], "(min-width: 900px) 50vw, 100vw", eager=True, priority=True)}
+      {media(c['lead']['image'], c['lead']['alt'], "(min-width: 900px) 40vw, 86vw", eager=True, priority=True)}
     </figure>
   </header>
 
   <section class="case-intro container" aria-label="About the project">
     <p class="case-lead" data-reveal>{e(c['intro'])}</p>
-    <dl class="facts" data-reveal>{facts}</dl>{programme}
+    <dl class="facts" data-reveal><div><dt>Category</dt><dd>{e(c['category'])}</dd></div>{facts}</dl>{programme}
   </section>
 
   <section class="case-gallery" aria-label="Images from the project">{gallery}
@@ -551,18 +587,18 @@ def case_page(i: int, c: dict) -> str:
     </div>
   </section>
 
-  <nav class="next-case tone-{nxt['tone']['mode']}" style="{tone_style(nxt)}" aria-label="Next project">
-    <a class="next-inner container" href="/work/{nxt['slug']}/">
+  <nav class="next-case container" aria-label="Next project">
+    <a class="next-inner" href="/work/{nxt['slug']}/">
+      <span class="next-media">{media(nxt['card_image'], alt_for(nxt, nxt['card_image']), "(min-width: 900px) 14rem, 9rem")}</span>
       <span class="label">Next project</span>
-      <span class="next-title">{e(nxt['title'])} <span class="next-arrow" aria-hidden="true">→</span></span>
-      <span class="next-media">{media(nxt['card_image'], alt_for(nxt, nxt['card_image']), "(min-width: 900px) 17rem, 6rem")}</span>
+      {caption(nxt)}
     </a>
   </nav>
 
-  <section class="case-cta container" aria-labelledby="cta-title">
+  <section class="page-cta container" aria-labelledby="cta-title">
     <h2 id="cta-title" class="cta-title">Have a project <em>in mind?</em></h2>
     <details class="reach">
-      <summary class="btn btn--light reach-toggle"><span>Get in touch</span><span class="reach-plus" aria-hidden="true"></span></summary>
+      <summary class="btn reach-toggle"><span>Get in touch</span><span class="reach-plus" aria-hidden="true"></span></summary>
       <div class="reach-options">
         <a class="reach-option" href="mailto:{SITE['email']}">{icon("mail")}<span>Email</span><span class="sr-only"> Sarah at {SITE['email']}</span></a>
         <a class="reach-option" href="tel:{SITE['phone_href']}">{icon("phone")}<span>Call</span><span class="sr-only"> Sarah on {SITE['phone_display']}</span></a>
@@ -576,62 +612,63 @@ def case_page(i: int, c: dict) -> str:
         description=c["meta_description"],
         path=f"/work/{c['slug']}/",
         body=body,
-        body_class=f"page-case tone-page-{mode}",
+        body_class="page-case",
         og_type="article",
         og_image=f"/assets/og/{c['slug']}.jpg",
         og_image_alt=f"{c['title']}, {c['subtitle']}. A project in the SGA creatives portfolio.",
-        jsonld=graph(case_ld(c), breadcrumbs_ld([("Home", "/"), ("Portfolio", "/work/"), (c["title"], f"/work/{c['slug']}/")])),
-        header_tone=mode,
+        jsonld=graph(case_ld(c), breadcrumbs_ld([("Home", "/"), ("Projects", "/work/"), (c["title"], f"/work/{c['slug']}/")])),
     )
 
 
+# ---------------------------------------------------------------- projects (/work/)
+
 def portfolio() -> str:
-    """/work/: a bold index of all projects. Hovering a row fills it with the case tone and
-    lets the project image follow the cursor (main.js); on touch screens a thumbnail shows."""
-    rows = "".join(f"""
-      <li class="pf-item" style="{tone_style(c)}">
-        <a class="pf-link" href="/work/{c['slug']}/">
-          <span class="pf-name">{e(c['title'])}</span>
-          <span class="pf-meta"><span>{e(c['category'])}</span><span>{e(c['partners'])}</span></span>
-          <span class="pf-thumb">{media(c['card_image'], alt_for(c, c['card_image']), "(min-width: 900px) 22rem, 7rem")}</span>
-        </a>
-      </li>""" for c in CASES)
+    """/work/: every project in a calm two-column grid, same caption as on the home page."""
+    items = "".join(f"""
+    <li class="pf-item" data-reveal>
+      <a class="show-link" href="/work/{c['slug']}/">
+        <div class="pf-media">{media(c['card_image'], alt_for(c, c['card_image']), "(min-width: 900px) 40vw, 92vw", eager=(i < 2))}</div>
+        {caption(c)}
+        <span class="pf-category">{e(c['category'])}</span>
+      </a>
+    </li>""" for i, c in enumerate(CASES))
     body = f"""
-<section class="pf container" aria-labelledby="pf-title">
-  <h1 id="pf-title" class="pf-heading rise"><span class="rw"><span style="--i:0">Portfolio</span></span></h1>
-  <ol class="pf-list" data-pf>{rows}
+<section class="page-head container" aria-labelledby="page-title">
+  <h1 id="page-title" class="page-title">Projects</h1>
+</section>
+<section class="pf container" aria-label="All projects">
+  <ol class="pf-grid">{items}
   </ol>
 </section>
 """
     return page(
-        title="Portfolio | SGA creatives",
+        title="Projects | SGA creatives",
         description="Selected projects from Sarah Al-farhan’s work across brands, campaigns and cultural experiences: adidas, Rezet Store, Timberland and Nike.",
         path="/work/",
         body=body,
         body_class="page-portfolio",
         og_image="/assets/og/portfolio.jpg",
-        og_image_alt="SGA creatives portfolio: adidas, Rezet Store, Timberland and Nike.",
+        og_image_alt="SGA creatives projects: adidas, Rezet Store, Timberland and Nike.",
         jsonld=graph(
-            {"@type": "CollectionPage", "@id": f"{DOMAIN}/work/#page", "url": f"{DOMAIN}/work/", "name": "Portfolio",
+            {"@type": "CollectionPage", "@id": f"{DOMAIN}/work/#page", "url": f"{DOMAIN}/work/", "name": "Projects",
              "isPartOf": {"@id": _id("website")}, "about": {"@id": _id("sarah")},
              "mainEntity": {"@type": "ItemList", "itemListElement": [
                  {"@type": "ListItem", "position": i + 1, "url": f"{DOMAIN}/work/{c['slug']}/", "name": c["title"]}
                  for i, c in enumerate(CASES)]}},
-            breadcrumbs_ld([("Home", "/"), ("Portfolio", "/work/")]),
+            breadcrumbs_ld([("Home", "/"), ("Projects", "/work/")]),
         ),
     )
 
 
 def not_found() -> str:
-    links = "".join(f'<li><a href="/work/{c["slug"]}/">{e(c["title"])}</a></li>'
-                    for i, c in enumerate(CASES))
+    links = "".join(f'<li><a href="/work/{c["slug"]}/">{e(c["title"])}</a></li>' for c in CASES)
     body = f"""
 <section class="notfound container" aria-labelledby="nf-title">
   <p class="label">Error 404</p>
   <h1 id="nf-title" class="notfound-title">This page <em>has moved on.</em></h1>
-  <div class="hero-actions">
-    <a class="btn btn--light" href="/">Front page</a>
-    <a class="btn btn--ghost" href="/#contact">Contact</a>
+  <div class="nf-actions">
+    <a class="btn" href="/">Home</a>
+    <a class="btn btn--ghost" href="/contact/">Contact</a>
   </div>
   <ul class="nf-links">{links}</ul>
 </section>
@@ -664,13 +701,15 @@ def main(dry_run: bool = False) -> dict[Path, str]:
     for i, c in enumerate(CASES):
         write(PUBLIC / "work" / c["slug"] / "index.html", case_page(i, c))
     write(PUBLIC / "work" / "index.html", portfolio())
+    write(PUBLIC / "services" / "index.html", services_page())
+    write(PUBLIC / "contact" / "index.html", contact_page())
     write(PUBLIC / "404.html", not_found())
 
     robots = "User-agent: *\nAllow: /\n"
     sitemap = PUBLIC / "sitemap.xml"
     if DOMAIN:
         robots += f"\nSitemap: {DOMAIN}/sitemap.xml\n"
-        urls = ["/", "/work/"] + [f"/work/{c['slug']}/" for c in CASES]
+        urls = ["/", "/services/", "/work/", "/contact/"] + [f"/work/{c['slug']}/" for c in CASES]
         sitemap_xml = ('<?xml version="1.0" encoding="UTF-8"?>\n'
                        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
                        + "".join(f"  <url><loc>{DOMAIN}{u}</loc></url>\n" for u in urls)
@@ -685,8 +724,8 @@ def main(dry_run: bool = False) -> dict[Path, str]:
         "short_name": "SGA",
         "start_url": "/",
         "display": "browser",
-        "background_color": "#F3F0E9",
-        "theme_color": "#171918",
+        "background_color": "#FFFFFF",
+        "theme_color": "#FFFFFF",
         "icons": [
             {"src": "/assets/brand/icon-192.png", "sizes": "192x192", "type": "image/png"},
             {"src": "/assets/brand/icon-512.png", "sizes": "512x512", "type": "image/png"},

@@ -6,7 +6,7 @@ Usage (from the project root):
 
 Glyph outlines are converted to SVG paths, so the logos never depend on
 installed fonts. Requires fontTools and Pillow.
-Fonts (SIL Open Font License): Figtree and Archivo, in tools/fonts-src/.
+Fonts (SIL Open Font License): Figtree, Archivo and Oswald (wordmark only), in tools/fonts-src/.
 """
 import tempfile
 from pathlib import Path
@@ -44,6 +44,9 @@ def static_font(src: Path, axes: dict, size: int) -> ImageFont.FreeTypeFont:
         instantiateVariableFont(TTFont(src), axes).save(out)
     return ImageFont.truetype(str(out), size)
 _vf = TTFont(FONTS / "Archivo-VF.ttf")
+# The wordmark "sga.creatives": Oswald Regular, a condensed grotesk. Only its outlines ship (as SVG
+# paths), so the site still loads just two font families.
+WORDMARK = instantiateVariableFont(TTFont(FONTS / "Oswald-VF.ttf"), {"wght": 400})
 GROTESK = instantiateVariableFont(_vf, {"wght": 560, "wdth": 125})
 
 
@@ -160,6 +163,26 @@ def logo_horizontal_svg(fg: str, title: str) -> tuple[str, float, float]:
     return svg, width, height
 
 
+def wordmark_svg(fg: str, title: str) -> tuple[str, float, float]:
+    """The wordmark used in the site header: sga.creatives, lowercase, on one line."""
+    size = 100
+    wm = Text(WORDMARK, "sga.creatives", size)
+    lsb, rsb = wm.ink_bounds()
+    bp = BoundsPen(wm.gs)
+    for g in set(wm.glyphs):
+        wm.gs[g].draw(bp)
+    _, y_min, _, y_max = bp.bounds   # font units, y up: descender of the g to the top of the t
+    baseline = y_max * wm.scale
+    width = wm.width() - lsb - rsb
+    height = (y_max - y_min) * wm.scale
+    svg = (
+        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width:.2f} {height:.2f}" '
+        f'width="{width:.0f}" height="{height:.0f}" role="img" aria-labelledby="t">'
+        f'<title id="t">{title}</title><g fill="{fg}"><path d="{wm.path(-lsb, baseline)}"/></g></svg>'
+    )
+    return svg, width, height
+
+
 # ---------------------------------------------------------------- the mark: a creative S
 # Two hooks that lock into each other (the same idea as the services boxes): the upper hook in
 # paper, the lower in red, slanted forward. Drawn on a 64-unit grid, stroke 10.
@@ -225,6 +248,8 @@ def main() -> None:
     light, _, _ = logo_svg(PAPER, "SGA creatives")
     hdark, _, _ = logo_horizontal_svg(INK, "SGA creatives")
     hlight, _, _ = logo_horizontal_svg(PAPER, "SGA creatives")
+    wdark, _, _ = wordmark_svg(INK, "SGA creatives")
+    wlight, _, _ = wordmark_svg(PAPER, "SGA creatives")
     mark = mark_svg()
     mark_round = mark_svg(radius=12)
 
@@ -233,6 +258,8 @@ def main() -> None:
         "sga-creatives-logo-light.svg": light,  # paper logo for dark backgrounds
         "sga-creatives-logo-horizontal-dark.svg": hdark,
         "sga-creatives-logo-horizontal-light.svg": hlight,
+        "sga-creatives-wordmark-dark.svg": wdark,    # the header wordmark: sga.creatives
+        "sga-creatives-wordmark-light.svg": wlight,
         "sga-creatives-mark.svg": mark,
     }
     for name, svg in files.items():
