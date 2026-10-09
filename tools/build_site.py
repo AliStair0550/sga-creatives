@@ -319,7 +319,7 @@ EXPERIENCE = [   # (company, role), most recent first; no years on the site
     ("Bestseller A/S · NAME IT", "Social Media and PR Manager"),
 ]
 
-INTRO = "We connect brands with creative people and lead projects across branding, campaigns and cultural experiences."
+INTRO = "We connect brands with creative people across campaigns and cultural experiences."
 ABOUT_LEAD = "I connect brands, people and culture through creative vision and practical experience. I bring the right partners together and manage teams, budgets and every detail from concept to execution."
 CASE_BY_SLUG = {c["slug"]: c for c in CASES}
 # the two hero images on the home page: (case, image). The first is in front, the second smaller behind it
@@ -410,8 +410,10 @@ def home() -> str:
   </ol>
 </section>
 
-<section class="statement container" aria-label="What SGA creatives does">
-  <p class="statement-text" data-reveal>{INTRO}</p>
+<section class="statement" aria-label="What SGA creatives does">
+  <div class="container statement-inner">
+    <p class="statement-text" data-reveal>{INTRO}</p>
+  </div>
 </section>
 """
     return page(

@@ -252,8 +252,10 @@ main:focus { outline: none; }
 }
 
 /* the promise, on its own after the projects */
-.statement { display: grid; justify-items: center; gap: var(--space-m); text-align: center; padding-block: var(--space-xl) var(--space-2xl); }
-.statement::before { content: ""; width: 100%; height: 1px; margin-bottom: var(--space-l); background: var(--line-strong); }   /* a section of its own */
+/* a section of its own: lines above and below, edge to edge */
+.statement { border-block: 1px solid var(--line-strong); }
+.page-home .site-footer { border-top: 0; }   /* the statement's lower line is the edge of the footer */
+.statement-inner { display: grid; justify-items: center; text-align: center; padding-block: var(--space-xl); }
 .statement-text { max-width: 30ch; font-size: var(--t-m); line-height: 1.12; letter-spacing: var(--track-m); }
 
 /* Phones and tablets: one project per screen, like a vertical video feed. main.js adds
