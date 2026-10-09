@@ -11,15 +11,15 @@ Statisk hjemmeside for SGA creatives (Sarah Al-farhan). Den forbinder brands med
 
 ## Brand og udtryk (hvidt redesign, live fra oktober 2026)
 
-Det mørke udtryk fra september 2026 er udgået. Det ligger i Git-historikken før commit `2f0f14d`.
+Det mørke udtryk fra september 2026 er udgået og fjernet fra repoet (gamle logoer, S-mærket, Figtree, Archivo, case-toner). Det kan kun findes i Git-historikken til og med commit `2f0f14d`.
 
 - Retning: hvid luft, ét projekt ad gangen og rolig typografi i stil med renellmedrano.com. Hero og topmenu er bygget i stil med groove-intl.com. Færre ord, flere billeder.
-- **Farver** (CSS-variabler i `public/assets/css/main.css`): hvid `#FFFFFF` er baggrunden overalt, Ink `#111111` er tekst, grå `--muted` `#737373` er sekundær tekst, og deep red `#5E0B10` (`--red`) bruges kun til små markeringer: aktiv side og hover i menuen, ::selection og kontaktordenes understregning. Cases har ingen egne farvetoner (`tone` i `cases.json` bruges ikke).
+- **Farver** (CSS-variabler i `public/assets/css/main.css`): hvid `#FFFFFF` er baggrunden overalt, Ink `#111111` er tekst, grå `--muted` `#737373` er sekundær tekst, og deep red `#5E0B10` (`--red`) bruges kun til små markeringer: aktiv side og hover i menuen, ::selection og kontaktordenes understregning. Cases har ingen egne farvetoner.
 - **Typografi:** én skrift, **Inter** (OFL) i medium 500 med kun tre størrelser: `--t-s` 13 px (menu, billedtekster, detaljer), `--t-m` 20 til 26 px (tekst) og `--t-l` 32 til 56 px (sidetitler, procesord). Hero-overskriften har sin egen, større størrelse. Stram linjeafstand, ingen spærrede versaler og ingen vægtkontrast. Hierarkiet skabes af luft og placering. Webfilen laves af `tools/make_webfont.py`. Inter er valgt for nu; en mere særpræget skrift kan overvejes senere.
 - **Logo:** wordmark `sga.creatives` i Oswald Regular som SVG-stier fra `tools/make_brand.py` (`sga-creatives-wordmark-*.svg`, med lidt luft i viewBox, så kantbogstaverne ikke klippes). Oswald indlæses ikke på sitet.
-- **Favicon og app-ikoner:** "sga" fra wordmarket i hvidt på sort (`icon_svg()` og `raster_icon()` i `make_brand.py`). Det gamle S-mærke findes kun i `brand/` til brandguiden.
+- **Favicon og app-ikoner:** "sga" fra wordmarket i hvidt på sort (`icon_svg()` og `raster_icon()` i `make_brand.py`). Se `brand/brandguide.html`.
 - **Topmenu:** wordmark til venstre, Services, Projects, About me og Contact som ren tekst til højre. Der er ingen Home: logoet er vejen hjem og fører altid til toppen af forsiden (`[data-home]` i `main.js`). Den aktive side og hover er røde. Ingen knap og ingen kant. På mobil er der en burgermenu.
-- **Footer:** claimen "Where brands meet culture.", wordmarket under den (også et link til toppen af forsiden) og kontaktoplysningerne. Ingen sidelinks.
+- **Footer:** wordmarket (også et link til toppen af forsiden) med claimen "Where brands meet culture." under, og kontaktoplysningerne. Ingen sidelinks.
 - **Forsiden**, i denne rækkefølge:
   - Hero: kun "Where brands / meet culture." stort i sort, rykket ind mod midten. Ved siden af, lidt nede og til højre for midten, to billeder i lag (`HERO_FRONT` og `HERO_BACK` i `build_site.py`): Timberland × Rezet (`timberland-rezet-04`) forrest og adidas Ways to Style (`adidas-ways-to-style-01`, de røde bukser) mindre, højere og til højre bagved. Det bageste glider ud bagfra ved indlæsning og driver hurtigere opad ved scroll.
   - Projekterne ét ad gangen midt på siden med firma over projekttitel under billedet. Nike først (`HOME_ORDER`), derefter rækkefølgen i `cases.json`. Rezet Lookbook vises med coveret uden tekst (`rezet-lookbook-01-hero`, alt-tekst i `card_alt`), og Timberland med `timberland-rezet-03`, så det ikke gentager hero-billedet.
@@ -30,7 +30,7 @@ Det mørke udtryk fra september 2026 er udgået. Det ligger i Git-historikken f�
 - **About me** (`/about/`): portræt (afdækkes nedefra og driver let ved scroll), navn, titel "Brand & Creative Manager", 13+ år, erfaring og "My process": fire ord, der fyldes fra grå til sort ved scroll, med en linje i Sarahs stemme. Ingen CTA nederst.
 - **Contact** (`/contact/`): "Let’s make something happen.", Branding, Campaigns, Events og Collaborations med tynd rød understregning, alle kontaktoplysninger skrevet ud med ikon og en kort tekst med link til About me.
 - **Casesider** (`/work/<slug>/`): firma, titel og undertitel centreret over coveret, intro, fakta, galleri, Sarahs arbejde og credits, "Next project" og en "Get in touch"-knap (details/summary), der folder ud til Email og Call.
-- **Billeder, der mangler:** galleribilleder, der ikke findes endnu, vises ikke (`visible_gallery()` i `build_site.py`), og rækkerne udjævnes, så intet står halvtomt. `check.py` lister dem.
+- **Billeder, der mangler:** galleribilleder, der ikke findes endnu, vises ikke (`visible_gallery()` i `build_site.py`), og rækkerne udjævnes, så intet står halvtomt. `check.py` lister dem. Mangler et kortbillede eller portrættet, vises en neutral grå flade.
 - **Delingsbilleder** (`public/assets/og/`) er i den hvide stil. Lav dem igen med `cd tools/share && node make_share_images.mjs`, når hero, cases eller billeder ændres.
 - **Bevægelse** er rolig: indgang i heroen, reveals ved scroll og let billedzoom. Ingen rullende tekst eller karuseller (swipe-feeden på mobil er almindelig scroll med snap).
 - **Uden JavaScript** er alt synligt, og på mobil ligger headeren i sidens flow, så den ombrudte menu aldrig dækker første overskrift.

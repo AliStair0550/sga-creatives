@@ -439,7 +439,7 @@ main:focus { outline: none; }
 
 .site-footer { border-top: 1px solid var(--line); padding-block: var(--space-xl) var(--space-m); }
 .footer-top { display: grid; gap: var(--space-l) var(--gutter); padding-bottom: var(--space-xl); }
-.footer-brand { display: grid; justify-items: start; gap: var(--space-m); }
+.footer-brand { display: grid; justify-items: start; gap: var(--space-s); }   /* the wordmark, the claim under it */
 .footer-claim { font-size: var(--t-m); line-height: 1.12; letter-spacing: var(--track-m); max-width: 12ch; }
 .footer-logo { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); }
 .footer-logo svg { height: 1.6rem; width: auto; }
@@ -457,15 +457,9 @@ main:focus { outline: none; }
 }
 @media (min-width: 700px) { .footer-top { grid-template-columns: repeat(12, minmax(0, 1fr)); } .footer-brand { grid-column: 1 / span 6; } .footer-contact { grid-column: 8 / -1; } }
 
-/* ------------------------------------------------------------ placeholders */
+/* ------------------------------------------------------------ missing image */
 
-.ph {
-  position: relative; display: grid; place-items: center; width: 100%; aspect-ratio: 4 / 5;
-  background: var(--ph); outline: 1px solid var(--line); outline-offset: -1px;
-}
-.ph-mark { position: relative; font-size: var(--t-l); line-height: 1; color: var(--line-strong); }
-.ph-mark i { position: absolute; right: -0.28em; bottom: 0.08em; width: 0.16em; height: 0.16em; background: var(--line-strong); }
-.ph-num { position: absolute; left: 0.9rem; bottom: 0.7rem; color: var(--muted); }
+.ph { width: 100%; aspect-ratio: 4 / 5; background: var(--ph); }   /* safety net if a card image is missing */
 
 /* ------------------------------------------------------------ case pages */
 

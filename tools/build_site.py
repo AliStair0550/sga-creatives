@@ -5,7 +5,8 @@ Usage (from the project root):
     python3 tools/build_site.py
 
 Inputs:  content/site.json, content/cases.json, content/media-manifest.json
-Outputs: public/index.html, public/work/<slug>/index.html, public/404.html,
+Outputs: public/index.html, public/services/, public/work/ (Projects), public/work/<slug>/,
+         public/about/, public/contact/, public/404.html,
          public/robots.txt, public/site.webmanifest, public/_headers,
          public/sitemap.xml (only when a domain is set in content/site.json)
 
@@ -87,7 +88,7 @@ def inline_logo() -> str:
     svg = re.sub(r'<title id="t">.*?</title>', "", svg)
     svg = svg.replace(' role="img" aria-labelledby="t"', ' aria-hidden="true" focusable="false"')
     svg = re.sub(r' width="\d+" height="\d+"', "", svg, count=1)
-    return svg.replace('fill="#171918"', 'fill="currentColor"')
+    return re.sub(r'fill="#[0-9A-Fa-f]{6}"', 'fill="currentColor"', svg)
 
 
 def picture(name: str, alt: str, sizes: str, cls: str = "", eager: bool = False,
@@ -113,17 +114,12 @@ NAV = [("Services", "/services/"), ("Projects", "/work/"), ("About me", "/about/
 
 
 def media(name: str, alt: str, sizes: str, *, cls: str = "", eager: bool = False,
-          priority: bool = False, label: str = "") -> str:
-    """A picture when the image exists, otherwise an elegant placeholder frame.
-
-    Placeholders are filled by dropping assets/images/<name>.jpg in place and running
-    tools/optimize_media.py + tools/build_site.py (remember the alt text in content/).
-    """
+          priority: bool = False) -> str:
+    """A picture when the image exists, otherwise a quiet grey frame of the same shape (a safety
+    net: gallery images that have not arrived are left out altogether, see visible_gallery)."""
     if name in MANIFEST:
         return picture(name, alt, sizes, cls=cls, eager=eager, priority=priority)
-    num = e(label or name.rsplit("-", 1)[-1])
-    return (f'<div class="ph {cls}" aria-hidden="true" data-placeholder="{e(name)}">'
-            f'<span class="ph-mark">S<i></i></span><span class="ph-num">{num}</span></div>')
+    return f'<div class="ph {cls}" aria-hidden="true" data-placeholder="{e(name)}"></div>'
 
 
 def is_current(href: str, path: str) -> bool:
@@ -161,8 +157,8 @@ def footer() -> str:
   <div class="container">
     <div class="footer-top">
       <div class="footer-brand">
-        <p class="footer-claim">Where brands meet culture.</p>
         <a class="footer-logo" href="/" aria-label="SGA creatives, home" data-home>{inline_logo()}</a>
+        <p class="footer-claim">Where brands meet culture.</p>
       </div>
       <div class="footer-col footer-contact">
         <ul>
@@ -361,7 +357,7 @@ def about_block() -> str:
     experience = "".join(f"""
           <li><span class="xp-company">{e(co)}</span><span class="xp-role">{e(role)}</span></li>"""
                          for co, role in EXPERIENCE)
-    photo = f'<div class="about-portrait" data-scroll="parallax">{media("sarah-al-farhan-01", "Sarah Al-farhan on set in a photo studio, working on a laptop.", "(min-width: 900px) 40vw, 100vw", label="Sarah")}</div>'
+    photo = f'<div class="about-portrait" data-scroll="parallax">{media("sarah-al-farhan-01", "Sarah Al-farhan on set in a photo studio, working on a laptop.", "(min-width: 900px) 40vw, 100vw")}</div>'
     return f"""
   <div class="container about-grid">
     {photo}

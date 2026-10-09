@@ -185,23 +185,6 @@
     feed.forEach(function (el) { band.observe(el); });
   }
 
-  /* ---------------------------------------------------------- portfolio: image follows the cursor */
-  var pf = document.querySelector('[data-pf]');
-  if (pf) {
-    var framed = false, mx = 0, my = 0;
-    pf.addEventListener('mousemove', function (event) {
-      mx = event.clientX; my = event.clientY;
-      if (!framed) {
-        framed = true;
-        window.requestAnimationFrame(function () {
-          framed = false;
-          pf.style.setProperty('--mx', mx + 'px');
-          pf.style.setProperty('--my', my + 'px');
-        });
-      }
-    });
-  }
-
   /* ---------------------------------------------------------- "Get in touch": close on Escape or click outside */
   Array.prototype.forEach.call(document.querySelectorAll('details.reach'), function (reach) {
     document.addEventListener('click', function (event) {

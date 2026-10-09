@@ -87,7 +87,7 @@ for page in sorted(PUBLIC.rglob("*.html")):
         if " alt=" not in img:
             fail(f"a11y: {rel(page)} has an <img> without alt: {img[:80]}")
 
-# 4b. images that have arrived must have alt text; count remaining placeholders
+# 4b. images that have arrived must have alt text; list the ones still missing (left out of the site)
 placeholders = []
 for c in build_site.CASES:
     for g in c["gallery"]:
@@ -139,4 +139,4 @@ if failures:
 size_mb = sum(p.stat().st_size for p in files) / 1e6
 print(f"check.py: all checks passed ({len(outputs)} generated files current, {len(files)} files / {size_mb:.1f} MB in public/)")
 if placeholders:
-    print(f"          {len(placeholders)} image placeholders waiting for photos: {', '.join(placeholders)}")
+    print(f"          {len(placeholders)} gallery images still missing (not shown on the site): {', '.join(placeholders)}")

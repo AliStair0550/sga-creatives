@@ -26,9 +26,9 @@ SGAcreatives/                ← repo-roden (github.com/AliStair0550/sga-creativ
 │   ├── make_webfont.py      skærer Inter til en lille webfil (public/assets/fonts/Inter-VF.woff2)
 │   ├── retouch_lookbook_hero.py  hero-udgave af lookbook-coveret uden coverteksten
 │   ├── share/               delingsbilleder (Open Graph) til hver side: `cd tools/share && npm install && npm run build`
-│   └── fonts-src/           originale fontfiler og OFL-licenser
+│   └── fonts-src/           Inter og Oswald (originaler) med OFL-licenser
 │   └── check.py             kvalitetstjek før hver commit
-├── brand/                   logofiler (SVG/PNG) og brandguide.html
+├── brand/                   wordmark, app-ikon og brandguide.html
 ├── assets/                  ORIGINALMEDIER: ændres aldrig og publiceres ikke
 └── docs/intern/             brief, CV, kildemateriale og afklaringer (lokalt, IKKE i Git)
 ```
@@ -122,7 +122,7 @@ Galleriet i hver case (`gallery` i `content/cases.json`) kan indeholde billeder,
    ```
 3. Kopiér en eksisterende case i `content/cases.json`, og udfyld felterne:
    - `slug` bliver URL'en (`/work/<slug>/`).
-   - `card_image` er casens billede på forsiden og på Projects. Ligger det ikke i galleriet, skrives alt-teksten i `card_alt`. (`card_image_2` og `tone` stammer fra det tidligere mørke design og bruges ikke.)
+   - `card_image` er casens billede på forsiden og på Projects. Ligger det ikke i galleriet, skrives alt-teksten i `card_alt`.
    - `provenance` fortæller, i hvilken rolle Sarah lavede projektet.
    - `intro`, `facts`, `done` (Sarahs arbejde som korte punkter) og `credits` er casesidens tekst. Hold den kort.
    - `gallery`: se "Billeder, der mangler" ovenfor.
@@ -308,31 +308,6 @@ Testet mod `python3 -m http.server` med Chrome (Playwright) og Lighthouse:
 - Lighthouse (forside og About me på mobil, en caseside på desktop): 100 i accessibility, best practices og SEO.
 - Simuleret 4G og 4x langsommere CPU: første indhold på 0,4 til 0,6 s, LCP 0,57 til 0,67 s på forside, Projects og About me, og ingen layout-skift.
 - Mobilmenu (fokus, Escape), tastaturrækkefølge, swipe-feeden på mobil ned og op, logoet til toppen fra alle positioner og visning uden JavaScript.
-
-**Ikke testet:** rigtige iOS- og Android-enheder, Safari og Firefox samt skærmlæser.
-
-### Tidligere: mobilgennemgang 29. september 2026 (det mørke design)
-
-Testet mod `wrangler pages dev` med Chromium (Playwright) og Lighthouse 12 (mobilprofil, simuleret throttling):
-
-- Alle 8 sider (forside, Portfolio, 5 cases, 404) ved 360, 390, 768, 1024 og 1440 px: ingen vandret scroll, ingen konsolfejl, ingen fejlede requests, alle billeder har alt-tekst, én `h1` pr. side.
-- Mobilmenu med tastatur (fokusfælde, Escape), visning uden JavaScript og `prefers-reduced-motion`.
-- Lighthouse mobil efter optimeringen:
-
-  | Side | Performance | Accessibility | Best practices | SEO | LCP |
-  |---|---|---|---|---|---|
-  | Forside | 99 | 100 | 100 | 100 | 2,0 s |
-  | Portfolio | 100 | 100 | 100 | 100 | 1,4 s |
-  | Cases | 99-100 | 100 | 100 | 100 | 1,6-2,1 s |
-
-Mobiloptimeringer i gennemgangen:
-- Archivo-fonten er skåret til de vægte og bredder, der bruges (92 KB til 35 KB).
-- Billeder findes i 320, 480, 640, 800 og 1200 px med præcise `sizes`.
-- CSS minificeres ved build.
-- Videoens poster er WebP.
-- Entré-animationer skjuler ikke længere det første indhold (LCP).
-- Scroll-effekter kører i ét samlet loop, der kun måler elementer nær skærmen.
-- Hover-effekter er begrænset til enheder med mus, og alle labels er mindst 12 px.
 
 **Ikke testet:** rigtige iOS- og Android-enheder, Safari og Firefox samt skærmlæser.
 

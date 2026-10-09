@@ -5,131 +5,91 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SGA creatives: brandguide</title>
 <style>
-  @font-face { font-family: "Figtree"; src: url("../public/assets/fonts/Figtree-VF.woff2") format("woff2"); font-weight: 400 800; }
-  @font-face { font-family: "Archivo"; src: url("../public/assets/fonts/Archivo-VF.woff2") format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; }
-  :root { --night:#0E0F0F; --paper:#F3F0E9; --ink:#171918; --acid:#D8F267; --line:rgba(243,240,233,.18); }
+  @font-face { font-family: "Inter"; src: url("../public/assets/fonts/Inter-VF.woff2") format("woff2"); font-weight: 400 600; }
+  :root { --ink: #111111; --white: #FFFFFF; --muted: #737373; --red: #5E0B10; --line: rgba(17,17,17,.12); --ph: #F4F4F2;
+          --t-s: 0.8125rem; --t-m: clamp(1.25rem, 1.05rem + 0.8vw, 1.625rem); --t-l: clamp(2rem, 1.3rem + 2.8vw, 3.5rem); }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--night); color: var(--paper); font: 400 16px/1.6 "Archivo", Arial, sans-serif; }
+  body { margin: 0; background: var(--white); color: var(--ink); font: 500 var(--t-s)/1.3 "Inter", Helvetica, Arial, sans-serif; letter-spacing: .01em; font-feature-settings: "cv11", "ss01"; }
   main { max-width: 1080px; margin: 0 auto; padding: 56px 20px 96px; }
-  h1, h2, .serif { font-family: "Figtree", sans-serif; font-weight: 700; line-height: .98; margin: 0; letter-spacing: -0.04em; }
-  h1 { font-size: clamp(3rem, 9vw, 6.5rem); }
-  h2 { font-size: clamp(2rem, 5vw, 3.4rem); margin-bottom: 20px; }
-  em { font-style: normal; font-weight: 400; }
-  section { padding: 40px 0; border-top: 1px solid var(--line); margin-top: 40px; }
-  .label { font-size: .7rem; font-weight: 520; font-stretch: 125%; letter-spacing: .2em; text-transform: uppercase; color: rgba(243,240,233,.72); }
+  h1, h2, p, ul, figure { margin: 0; }
+  h1 { font-size: var(--t-l); line-height: 1.02; letter-spacing: -0.03em; font-weight: 500; }
+  h2 { font-size: var(--t-m); line-height: 1.12; letter-spacing: -0.015em; font-weight: 500; margin-bottom: 20px; }
+  .lead { font-size: var(--t-m); line-height: 1.15; letter-spacing: -0.015em; color: var(--muted); max-width: 34ch; margin-top: 12px; }
+  section { padding-top: 40px; margin-top: 48px; border-top: 1px solid var(--line); }
   p, li { max-width: 68ch; }
+  ul { padding-left: 1.1em; display: grid; gap: 6px; }
+  .muted { color: var(--muted); }
   .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-  .tile { padding: 28px; min-height: 170px; display: grid; place-items: center; border: 1px solid var(--line); }
-  .light { background: var(--paper); color: var(--ink); }
-  .sw { padding: 16px; min-height: 140px; display: flex; flex-direction: column; justify-content: flex-end; border: 1px solid var(--line); }
-  .sw b { font-family: "Figtree", sans-serif; font-weight: 700; font-size: 1.6rem; }
-  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
-  td, th { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
-  .small { font-size: .85rem; color: rgba(243,240,233,.72); }
-  .row { display: flex; gap: 24px; align-items: end; flex-wrap: wrap; }
-  code { font-size: .88em; }
+  .tile { padding: 32px; min-height: 180px; display: grid; place-items: center; border: 1px solid var(--line); }
+  .tile.dark { background: var(--ink); border-color: var(--ink); }
+  .tile img { max-width: 100%; height: auto; }
+  .sw { padding: 16px; min-height: 140px; display: flex; flex-direction: column; justify-content: flex-end; gap: 2px; border: 1px solid var(--line); }
+  .sizes > div { display: grid; grid-template-columns: 9rem 1fr; gap: 16px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .icons { display: flex; gap: 24px; align-items: end; flex-wrap: wrap; }
+  .icons figure { display: grid; gap: 8px; justify-items: start; }
+  code { font-size: .95em; }
 </style>
 </head>
 <body>
 <main>
-  <p class="label">SGA creatives · brandguide v3 · september 2026</p>
-  <h1>Luxury meets <em>urban culture.</em></h1>
-  <p style="font-size:1.2rem;margin-top:24px">Mørkt, fedt og redaktionelt. En fed, geometrisk grotesk og masser af luft møder gadekulturens rigtige mennesker og projekter. Færre ord, flere billeder: billederne bærer udtrykket, og typografien rammer dem ind.</p>
+  <h1>SGA creatives</h1>
+  <p class="lead">Brandguide for det hvide udtryk, live fra oktober 2026. Hvid luft, ét projekt ad gangen og rolig typografi.</p>
 
   <section>
-    <p class="label">01 · Logo</p>
-    <h2>SGA <em>+ creatives</em></h2>
-    <p>Logoet er typografisk: <strong>SGA</strong> i Figtree ExtraBold med stram spatiering og <strong>creatives</strong> mindre i Archivo Expanded. En tynd linje forbinder de to niveauer. Alle logofiler er konverteret til stier og virker uden installerede fonte.</p>
-    <div class="grid" style="margin-top:24px">
-      <div class="tile"><img src="sga-creatives-logo-light.svg" alt="Primært logo, lyst" width="200"></div>
-      <div class="tile light"><img src="sga-creatives-logo-dark.svg" alt="Primært logo, mørkt" width="200"></div>
-      <div class="tile"><img src="sga-creatives-logo-horizontal-light.svg" alt="Vandret logo, lyst" width="240"></div>
-      <div class="tile light"><img src="sga-creatives-logo-horizontal-dark.svg" alt="Vandret logo, mørkt" width="240"></div>
-    </div>
-    <table style="margin-top:24px">
-      <tr><th>Fil</th><th>Brug</th></tr>
-      <tr><td><code>sga-creatives-logo-light.svg</code></td><td>Primært, stablet logo på mørke flader og billeder (standard).</td></tr>
-      <tr><td><code>sga-creatives-logo-dark.svg</code></td><td>Primært logo på Warm Paper og hvidt.</td></tr>
-      <tr><td><code>sga-creatives-logo-horizontal-*.svg</code></td><td>Header, e-mailsignatur, smalle formater.</td></tr>
-      <tr><td><code>sga-creatives-mark.svg</code> / <code>-512.png</code></td><td>Kompakt mærke: profilbilleder, favicon, app-ikon.</td></tr>
-    </table>
-    <p class="small" style="margin-top:16px"><strong>Frizone:</strong> mindst halvdelen af S’ets højde rundt om logoet. <strong>Minimum:</strong> stablet logo 64 px bredt, vandret logo 110 px bredt, mærket 16 px. <strong>Undgå</strong> at strække, rotere, farvelægge i Acid Note eller placere logoet på urolige billedområder uden mørk toning.</p>
-  </section>
-
-  <section>
-    <p class="label">02 · Mærke og favicon</p>
-    <h2>Det kreative <em>S.</em></h2>
-    <p>Mærket er et skråt S af to kroge, der griber ind i hinanden, ligesom problem og løsning i services. Den øverste krog er Warm Paper, den nederste klar rød (#D2202A), på Ink. Den klare røde bruges kun i mærket, fordi den dybe røde (#5E0B10) ikke kan ses i 16 px på mørk bund. Mærket står skarpt ved 16 og 32 px.</p>
-    <div class="row" style="margin-top:20px">
-      <img src="sga-creatives-mark.svg" alt="Mærke 16 px" width="16" height="16">
-      <img src="sga-creatives-mark.svg" alt="Mærke 32 px" width="32" height="32">
-      <img src="sga-creatives-mark.svg" alt="Mærke 64 px" width="64" height="64">
-      <img src="sga-creatives-mark.svg" alt="Mærke 128 px" width="128" height="128">
-    </div>
-  </section>
-
-  <section>
-    <p class="label">03 · Farver</p>
-    <h2>Mørkt først, <em>lyst bagefter.</em></h2>
+    <h2>Wordmark</h2>
     <div class="grid">
-      <div class="sw" style="background:var(--night)"><b>Night</b><span>#0E0F0F</span><span class="small">Grundbaggrund</span></div>
-      <div class="sw light"><b>Warm Paper</b><span>#F3F0E9</span><span class="small" style="color:#4A4C4A">Lys verden, tekst på mørkt</span></div>
-      <div class="sw" style="background:var(--ink)"><b>Ink</b><span>#171918</span><span class="small">Tekst på lyst</span></div>
-      <div class="sw" style="background:var(--acid);color:var(--ink)"><b>Acid Note</b><span>#D8F267</span><span style="font-size:.85rem">Kun små accenter, altid med mørk tekst</span></div>
+      <div class="tile"><img src="sga-creatives-wordmark-dark.svg" alt="sga.creatives i sort" width="320"></div>
+      <div class="tile dark"><img src="sga-creatives-wordmark-light.svg" alt="sga.creatives i hvidt" width="320"></div>
     </div>
-    <p style="margin-top:28px"><strong>Case-toner.</strong> Hver case er sit eget univers med en dyb farve hentet fra billederne:</p>
-    <div class="grid" style="margin-top:12px">
-      <div class="sw" style="background:#0C0C0C"><b>Kiosk</b><span>#0C0C0C</span></div>
-      <div class="sw" style="background:#0F2926"><b>Lookbook</b><span>#0F2926</span></div>
-      <div class="sw" style="background:#0C0C0C"><b>Ways to Style</b><span>#0C0C0C</span></div>
-      <div class="sw" style="background:#0F2926"><b>Timberland</b><span>#0F2926</span></div>
-      <div class="sw" style="background:#5E0B10"><b>Nike</b><span>#5E0B10</span></div>
-    </div>
-    <table style="margin-top:24px">
-      <tr><th>Kombination</th><th>Kontrast</th></tr>
-      <tr><td>Warm Paper på Night</td><td>16,9 : 1 (AAA)</td></tr>
-      <tr><td>Warm Paper 72 % på Night</td><td>9,0 : 1 (AAA)</td></tr>
-      <tr><td>Warm Paper 72 % på petrol (Lookbook, Timberland)</td><td>7,6 : 1 (AAA)</td></tr>
-      <tr><td>Warm Paper på Nike-rød</td><td>12,1 : 1 (AAA)</td></tr>
-      <tr><td>Ink på Warm Paper</td><td>15,5 : 1 (AAA)</td></tr>
-      <tr><td>Warm Paper 72 % på Nike-rød</td><td>6,7 : 1 (AA)</td></tr>
-    </table>
-    <p class="small" style="margin-top:12px">Bordeaux/Oxblood fra version 1 er udgået.</p>
-  </section>
-
-  <section>
-    <p class="label">04 · Typografi</p>
-    <h2>Fed og <em>geometrisk.</em></h2>
-    <div class="grid">
-      <div>
-        <p class="serif" style="font-size:3.2rem">Where brands meet <em>culture.</em></p>
-        <p class="small"><strong>Figtree</strong>, vægt 700 til 800 med stram spatiering (-0,04 em). Bruges til logo, overskrifter og casetitler. Vægtkontrast (700 mod 400) erstatter kursiv, fx "Where brands <em>meet culture.</em>"</p>
-      </div>
-      <div>
-        <p class="label" style="margin:0 0 12px;color:var(--paper)">Label · Archivo Expanded</p>
-        <p style="margin:0">Brødtekst i Archivo, en neutral og læsbar grotesk. Den brede version bruges i spærrede versaler til labels, knapper og navigation.</p>
-        
-      </div>
-    </div>
-    <p class="small" style="margin-top:16px">Begge fonte er under SIL Open Font License 1.1, som tillader webbrug og selvhosting.</p>
-  </section>
-
-  <section>
-    <p class="label">05 · Billeder, layout og bevægelse</p>
-    <h2>Færre ord, <em>flere looks.</em></h2>
-    <ul>
-      <li>Brug autentiske projektbilleder med mennesker, rum og detaljer. Ingen stockfotos.</li>
-      <li>Store billeder i fuld bredde, halve og tredjedele, med smalle mellemrum. Filmrammerne fra Timberland × Rezet er en del af udtrykket.</li>
-      <li>Manglende billeder vises som pladsholdere med S-mærket, indtil de nye fotos lægges ind.</li>
-      <li>Headeren er gennemsigtig over billederne, har logoet i midten og tynde linjer.</li>
-      <li>Ingen rullende tekst. Bevægelse er rolig: en langsom hero-indgang, diskrete reveals og let billedzoom. Alt slås fra ved <em>reduced motion</em>.</li>
+    <ul style="margin-top:20px">
+      <li><b>sga.creatives</b> i små bogstaver, sat i Oswald Regular (OFL) og leveret som SVG-stier fra <code>tools/make_brand.py</code>. Oswald indlæses ikke på sitet.</li>
+      <li>Sort på hvidt er standard. Den hvide version er til mørke flader.</li>
+      <li>I headeren til venstre og i footeren over claimen. Logoet fører altid til toppen af forsiden.</li>
+      <li>Hold luft omkring det, og stræk, farv eller beskær det aldrig.</li>
     </ul>
   </section>
 
   <section>
-    <p class="label">06 · Tone of voice</p>
-    <h2>Kort, direkte, <em>kulturelt skarp.</em></h2>
-    <p>Websitet er på engelsk. Skriv få ord, og beskriv hvad der faktisk skete. Sarahs tidligere projekter præsenteres altid som hendes arbejde med den dokumenterede rolle og arbejdsgiver, aldrig som SGA’s opgaver. Ingen lange tankestreger.</p>
+    <h2>Ikon</h2>
+    <div class="icons">
+      <figure><img src="sga-creatives-icon-512.png" alt="App-ikon: sga i hvidt på sort" width="180" height="180"><figcaption class="muted">App-ikon, 180 px</figcaption></figure>
+      <figure><img src="sga-creatives-icon.svg" alt="" width="64" height="64"><figcaption class="muted">64 px</figcaption></figure>
+      <figure><img src="sga-creatives-icon.svg" alt="" width="32" height="32"><figcaption class="muted">32 px</figcaption></figure>
+      <figure><img src="sga-creatives-icon.svg" alt="" width="16" height="16"><figcaption class="muted">16 px</figcaption></figure>
+    </div>
+    <p style="margin-top:20px">"sga" fra wordmarket, en anelse federe (Oswald 500), så det står i 16 px. Hvidt på sort med afrundede hjørner. Bruges som favicon, iPhone-ikon og app-ikon.</p>
+  </section>
+
+  <section>
+    <h2>Farver</h2>
+    <div class="grid">
+      <div class="sw" style="background:#FFFFFF"><b>White</b><span>#FFFFFF</span><span class="muted">Baggrund overalt</span></div>
+      <div class="sw" style="background:#111111;color:#fff;border-color:#111"><b>Ink</b><span>#111111</span><span style="color:rgba(255,255,255,.7)">Tekst, ikon</span></div>
+      <div class="sw"><b style="color:#737373">Grey</b><span>#737373</span><span class="muted">Sekundær tekst (4,7:1 på hvidt)</span></div>
+      <div class="sw" style="background:#5E0B10;color:#fff;border-color:#5E0B10"><b>Deep red</b><span>#5E0B10</span><span style="color:rgba(255,255,255,.75)">Kun små markeringer</span></div>
+    </div>
+    <p style="margin-top:20px">Rød bruges kun til den aktive side og hover i menuen, markering af tekst og kontaktordenes understregning. Billederne bærer farven.</p>
+  </section>
+
+  <section>
+    <h2>Typografi</h2>
+    <p>Én skrift: <b>Inter</b> (OFL) i medium 500 med tre størrelser. Ingen spærrede versaler og ingen fed/let-kontrast. Hierarkiet kommer fra luft og placering, i stil med renellmedrano.com.</p>
+    <div class="sizes" style="margin-top:16px">
+      <div><span class="muted">Large, 32 til 56 px</span><span style="font-size:var(--t-l);line-height:1.02;letter-spacing:-0.03em">Where brands meet culture.</span></div>
+      <div><span class="muted">Text, 20 til 26 px</span><span style="font-size:var(--t-m);line-height:1.12;letter-spacing:-0.015em">We connect brands with creative people across campaigns and cultural experiences.</span></div>
+      <div><span class="muted">Small, 13 px</span><span>Menu, billedtekster, fakta og detaljer</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Principper</h2>
+    <ul>
+      <li>Hvid luft. Ét projekt ad gangen, centreret, med firma over projekttitel under billedet.</li>
+      <li>Færre ord, flere billeder. Fjern hellere end tilføj: ingen tags, ingen ekstra links, ingen dekoration.</li>
+      <li>Rolig bevægelse: indgang, reveals ved scroll og let billedzoom. På mobil snapper projekterne ét pr. swipe.</li>
+      <li>Ingen lange tankestreger. Sitet er på engelsk.</li>
+      <li>Sarahs tidligere arbejde krediteres med rolle og arbejdsgiver, aldrig som SGA-opgaver.</li>
+    </ul>
   </section>
 </main>
 </body>
