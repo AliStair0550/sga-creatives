@@ -27,7 +27,7 @@ CASES = json.loads((ROOT / "content" / "cases.json").read_text())
 MANIFEST = json.loads((ROOT / "content" / "media-manifest.json").read_text())
 DOMAIN = SITE.get("domain", "").rstrip("/")
 YEAR = date.today().year
-OG_IMAGE = "/assets/og/home.jpg"   # share images are made by tools/make_share_images.mjs
+OG_IMAGE = "/assets/og/home.jpg"   # share images are made by tools/share/make_share_images.mjs
 
 # Runs before first paint: flags JS support (for reveal animations) and removes
 # the flag again if main.js never loads, so content can never stay hidden.
@@ -422,7 +422,7 @@ def home() -> str:
         path="/",
         body=body,
         body_class="page-home",
-        og_image_alt="SGA creatives: Where brands meet culture. Portraits from the Rezet Lookbook, adidas Ways to Style and Timberland × Rezet.",
+        og_image_alt="SGA creatives: Where brands meet culture. Photos from Timberland × Rezet and adidas Ways to Style.",
         jsonld=graph(org_ld(), person_ld(), website),
     )
 
@@ -561,13 +561,31 @@ def gallery_item(c: dict, g: dict) -> str:
     return f'\n      <figure class="g-item g-{layout}" data-reveal>{inner}</figure>'
 
 
+def visible_gallery(c: dict) -> list[dict]:
+    """The gallery as shown: images that have not arrived yet are left out (tools/check.py still
+    lists them), and the layouts are evened out, so no row is left half empty: a lone half or
+    third goes wide, two thirds become two halves."""
+    items = [g for g in c["gallery"] if "video" in g or g.get("image") in MANIFEST]
+    out, i = [], 0
+    while i < len(items):
+        layout = items[i].get("layout", "half")
+        size = {"wide": 1, "half": 2, "third": 3}[layout]
+        run = [items[i]]
+        while len(run) < size and i + len(run) < len(items) and items[i + len(run)].get("layout", "half") == layout:
+            run.append(items[i + len(run)])
+        fixed = {1: "wide", 2: "half", 3: "third"}[len(run)] if layout != "wide" else "wide"
+        out += [{**g, "layout": fixed} for g in run]
+        i += len(run)
+    return out
+
+
 def case_page(i: int, c: dict) -> str:
     n = len(CASES)
     nxt = CASES[(i + 1) % n]
     facts = "".join(f'<div><dt>{e(k)}</dt><dd>{e(v)}</dd></div>' for k, v in c["facts"])
     done = "".join(f"<li>{e(x)}</li>" for x in c["done"])
     credits = "".join(f'<div><dt>{e(k)}</dt><dd>{e(v)}</dd></div>' for k, v in c["credits"])
-    gallery = "".join(gallery_item(c, g) for g in c["gallery"])
+    gallery = "".join(gallery_item(c, g) for g in visible_gallery(c))
     programme = ""
     if c.get("programme"):
         rows = "".join(f"""
@@ -650,9 +668,9 @@ def case_page(i: int, c: dict) -> str:
 def portfolio() -> str:
     """/work/: every project in a calm two-column grid, same caption as on the home page."""
     items = "".join(f"""
-    <li class="pf-item" data-reveal>
+    <li class="pf-item"{' data-reveal' if i >= 2 else ''}>
       <a class="show-link" href="/work/{c['slug']}/">
-        <div class="pf-media">{media(c['card_image'], alt_for(c, c['card_image']), "(min-width: 900px) 40vw, 92vw", eager=(i < 2))}</div>
+        <div class="pf-media">{media(c['card_image'], alt_for(c, c['card_image']), "(min-width: 900px) 40vw, 92vw", eager=(i < 2), priority=(i == 0))}</div>
         {caption(c)}
         <span class="pf-category">{e(c['category'])}</span>
       </a>

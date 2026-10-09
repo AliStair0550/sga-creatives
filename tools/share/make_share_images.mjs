@@ -4,7 +4,8 @@
 //   node make_share_images.mjs           (uses the installed Google Chrome, or CHROME_PATH)
 //
 // Writes public/assets/og/home.jpg, portfolio.jpg and <case-slug>.jpg from content/cases.json,
-// using the site's own fonts, colours and original photos. Run tools/build_site.py afterwards.
+// in the white site style (Inter, the sga.creatives wordmark) with the original photos.
+// Run tools/build_site.py afterwards.
 import { chromium } from 'playwright-core';
 import { readFileSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
@@ -17,7 +18,7 @@ const TMP = join(here, '.tmp');
 const cases = JSON.parse(readFileSync(join(ROOT, 'content', 'cases.json'), 'utf8'));
 const file = (p) => 'file://' + join(ROOT, p);
 const img = (name) => file(`assets/images/${name}.jpg`);
-const logo = readFileSync(join(ROOT, 'public/assets/brand/sga-creatives-logo-horizontal-light.svg'), 'utf8')
+const logo = readFileSync(join(ROOT, 'public/assets/brand/sga-creatives-wordmark-dark.svg'), 'utf8')
   .replace(/<title[^>]*>.*?<\/title>/, '');
 const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 // prefer a text-free hero version of a photo when one exists (e.g. the lookbook cover)
@@ -26,73 +27,68 @@ const clean = (name) => existsSync(join(ROOT, `assets/images/${name}-hero.jpg`))
 // short linking words stay glued to both neighbours, so "Ways to Style" never splits
 const title = (t) => esc(t).replace(/ (to|&amp;) /g, '&nbsp;$1&nbsp;');
 
+// The white site: Inter in medium weight, ink on white, quiet grey for secondary text.
 const base = `
 <style>
-  @font-face { font-family: Figtree; src: url(${file('public/assets/fonts/Figtree-VF.woff2')}); font-weight: 400 800; }
-  @font-face { font-family: Archivo; src: url(${file('public/assets/fonts/Archivo-VF.woff2')}); font-weight: 400 600; font-stretch: 100% 125%; }
+  @font-face { font-family: Inter; src: url(${file('public/assets/fonts/Inter-VF.woff2')}); font-weight: 400 600; }
   * { box-sizing: border-box; margin: 0; }
   html, body { width: 1200px; height: 630px; overflow: hidden; }
-  body { background: #0E0F0F; color: #F3F0E9; font-family: Archivo, sans-serif; position: relative; }
-  .logo { position: absolute; left: 56px; top: 50px; height: 34px; z-index: 3; }
+  body { background: #FFFFFF; color: #111111; font-family: Inter, sans-serif; font-weight: 500; font-feature-settings: "cv11", "ss01"; position: relative; }
+  .logo { position: absolute; left: 56px; top: 48px; z-index: 3; }
   .logo svg { height: 34px; width: auto; display: block; }
-  .label { font-family: Archivo; font-stretch: 125%; font-weight: 560; font-size: 17px; letter-spacing: .22em; text-transform: uppercase; color: rgba(243,240,233,.72); }
-  .display { font-family: Figtree; font-weight: 800; letter-spacing: -0.045em; line-height: .95; }
-  .display span { font-weight: 400; }
-  .url { position: absolute; left: 56px; bottom: 48px; z-index: 3; font-family: Archivo; font-stretch: 118%; font-weight: 560; font-size: 16px; letter-spacing: .2em; text-transform: uppercase; color: rgba(243,240,233,.72); }
+  .muted { color: #737373; }
+  .big { letter-spacing: -0.035em; line-height: 1; }
+  .url { position: absolute; left: 56px; bottom: 48px; z-index: 3; font-size: 20px; color: #737373; }
+  .ph { background-size: cover; background-position: center; }
 </style>`;
 
 const pages = [];
 
-// home: the hero triptych with the headline, like the site's first screen
+// home: the site's first screen: the headline, and two photos in layers beside it
 pages.push(['home', `${base}
 <style>
-  .strip { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
-  .strip div { background-size: cover; background-position: center; }
-  .shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,10,10,.92) 0%, rgba(10,10,10,.5) 45%, rgba(10,10,10,.1) 75%), linear-gradient(to bottom, rgba(10,10,10,.55), rgba(10,10,10,0) 30%); }
-  h1 { position: absolute; left: 56px; bottom: 96px; font-size: 104px; z-index: 3; }
+  h1 { position: absolute; left: 56px; top: 200px; font-size: 80px; }
+  .back { position: absolute; right: 72px; top: 56px; width: 236px; height: 295px; }
+  .front { position: absolute; right: 236px; top: 150px; width: 316px; height: 395px; z-index: 2; }
 </style>
-<div class="strip">
-  <div style="background-image:url(${img('rezet-lookbook-01-hero')});background-position:36% 40%"></div>
-  <div style="background-image:url(${img('adidas-ways-to-style-01')});background-position:50% 35%"></div>
-  <div style="background-image:url(${img('timberland-rezet-04')});background-position:74% 45%"></div>
-</div>
-<div class="shade"></div>
 <div class="logo">${logo}</div>
-<h1 class="display">Where brands<br><span>meet culture.</span></h1>
+<h1 class="big">Where brands<br>meet culture.</h1>
+<div class="ph back" style="background-image:url(${img('adidas-ways-to-style-01')});background-position:50% 30%"></div>
+<div class="ph front" style="background-image:url(${img('timberland-rezet-04')})"></div>
 <p class="url">sgacreatives.com</p>`]);
 
-// portfolio: the five projects as a tonal row
+// projects: the title and the five projects in a row, each with its caption
 pages.push(['portfolio', `${base}
 <style>
-  h1 { position: absolute; left: 56px; top: 150px; font-size: 128px; }
-  .row { position: absolute; left: 56px; right: 56px; bottom: 56px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
-  .row div { height: 250px; background-size: cover; background-position: center; outline: 8px solid var(--t); outline-offset: -8px; }
-  .url { top: 62px; bottom: auto; left: auto; right: 56px; }
+  h1 { position: absolute; left: 56px; top: 118px; font-size: 64px; }
+  .row { position: absolute; left: 56px; right: 56px; bottom: 56px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
+  .row figure { margin: 0; }
+  .row .ph { height: 270px; }
+  .row figcaption { margin-top: 12px; font-size: 16px; line-height: 1.25; text-align: center; }
+  .url { top: 56px; bottom: auto; left: auto; right: 56px; }
 </style>
 <div class="logo">${logo}</div>
 <p class="url">sgacreatives.com</p>
-<h1 class="display">Portfolio</h1>
-<div class="row">${cases.map(c => `<div style="--t:${c.tone.bg};background-image:url(${img(clean(c.card_image))})"></div>`).join('')}</div>`]);
+<h1 class="big">Projects</h1>
+<div class="row">${cases.map(c => `<figure><div class="ph" style="background-image:url(${img(clean(c.card_image))})"></div><figcaption><span class="muted">${esc(c.partners.split(',')[0])}</span><br>${esc(c.title)}</figcaption></figure>`).join('')}</div>`]);
 
-// one per case: the case's own tone, title and cover photo
+// one per case: like the case page: company, title and subtitle, the cover photo on white
 for (const c of cases) {
   const long = c.title.length > 16;
   pages.push([c.slug, `${base}
 <style>
-  body { background: ${c.tone.bg}; }
-  .photo { position: absolute; right: 0; top: 0; width: 504px; height: 630px; background: url(${img(clean(c.lead.image))}) center / cover; }
-  .photo::after { content: ""; position: absolute; inset: 0 auto 0 0; width: 120px; background: linear-gradient(to right, ${c.tone.bg}, transparent); }
-  .text { position: absolute; left: 56px; bottom: 104px; width: 600px; }
-  .text .label { margin-bottom: 22px; }
-  h1 { font-size: ${long ? 84 : 104}px; }
-  .sub { margin-top: 18px; font-family: Figtree; font-weight: 400; font-size: 34px; letter-spacing: -0.02em; color: rgba(243,240,233,.78); }
+  .photo { position: absolute; right: 96px; top: 56px; width: 415px; height: 518px; }
+  .text { position: absolute; left: 56px; bottom: 112px; width: 560px; }
+  .company { font-size: 24px; margin-bottom: 18px; }
+  h1 { font-size: ${long ? 68 : 80}px; }
+  .sub { margin-top: 16px; font-size: 32px; letter-spacing: -0.02em; }
 </style>
-<div class="photo"></div>
+<div class="ph photo" style="background-image:url(${img(clean(c.lead.image))})"></div>
 <div class="logo">${logo}</div>
 <div class="text">
-  <p class="label">${esc(c.category)}</p>
-  <h1 class="display">${title(c.title)}</h1>
-  <p class="sub">${esc(c.subtitle)}</p>
+  <p class="company muted">${esc(c.partners)}</p>
+  <h1 class="big">${title(c.title)}</h1>
+  <p class="sub muted">${esc(c.subtitle)}</p>
 </div>
 <p class="url">sgacreatives.com</p>`]);
 }
