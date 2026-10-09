@@ -322,7 +322,9 @@ EXPERIENCE = [   # (company, role), most recent first; no years on the site
 INTRO = "We connect brands with creative people and lead projects across branding, campaigns and cultural experiences."
 ABOUT_LEAD = "I connect brands, people and culture through creative vision and practical experience. I bring the right partners together and manage teams, budgets and every detail from concept to execution."
 CASE_BY_SLUG = {c["slug"]: c for c in CASES}
-HERO_CASE = CASE_BY_SLUG["timberland-rezet"]   # the hero image on the home page is this case's card image
+# the two hero images on the home page: (case, image). The first is in front, the second smaller behind it
+HERO_FRONT = (CASE_BY_SLUG["timberland-rezet"], "timberland-rezet-04")
+HERO_BACK = (CASE_BY_SLUG["adidas-ways-to-style"], "adidas-ways-to-style-01")
 # the home page opens with Nike; the rest keep the order of content/cases.json
 HOME_ORDER = [CASE_BY_SLUG["nike-event-consulting"]] + [c for c in CASES if c["slug"] != "nike-event-consulting"]
 
@@ -377,7 +379,8 @@ def about_block() -> str:
 # ---------------------------------------------------------------- home page
 
 def home() -> str:
-    """The headline with the Timberland × Rezet image beside it, a little lower and right of the middle.
+    """The headline with two images beside it, a little lower and right of the middle: Timberland × Rezet
+    in front, adidas Ways to Style smaller, higher and behind it (it slides out on load and drifts on scroll).
     Then one project at a time in the middle of the page with a small caption under each
     (company, then project title); on phones they snap one per screen as you swipe (main.js
     turns the snapping on only while the feed is in view). Then the promise, on its own."""
@@ -395,7 +398,10 @@ def home() -> str:
     body = f"""
 <section class="hero container" aria-labelledby="hero-title">
   <h1 id="hero-title" class="hero-title">Where brands <br>meet culture.</h1>
-  <div class="hero-media">{picture(HERO_CASE["card_image"], alt_for(HERO_CASE, HERO_CASE["card_image"]), "(min-width: 900px) 30vw, 62vw", eager=True, priority=True)}</div>
+  <div class="hero-stack">
+    <div class="hero-back" data-scroll="parallax"><div class="hero-back-inner">{picture(HERO_BACK[1], alt_for(*HERO_BACK), "(min-width: 900px) 18vw, 44vw", eager=True)}</div></div>
+    <div class="hero-media">{picture(HERO_FRONT[1], alt_for(*HERO_FRONT), "(min-width: 900px) 24vw, 62vw", eager=True, priority=True)}</div>
+  </div>
 </section>
 
 <section class="showcase container" aria-labelledby="work-title">
