@@ -102,15 +102,13 @@
   });
 
   /* ---------------------------------------------------------- scroll-driven effects (one loop for all) */
-  // .svc-row             --p 0..1 while the problem/solution boxes slide together; .is-locked when they meet
   // [data-scroll=fill]    --f 0..1 as a process word travels from the bottom of the screen to above the middle
   // [data-scroll=parallax] --rv 0..1 reveal on the way in, --py -1..1 drift across the whole passage
   // Only elements near the viewport are measured (IntersectionObserver). Each frame reads every
   // position first and writes afterwards, and skips unchanged values, so the phone never has to
   // recalculate layout in between.
   var calm = window.matchMedia('(prefers-reduced-motion: reduce)');
-  var stacked = window.matchMedia('(max-width: 959px)');   // services boxes stacked: no scrubbing there
-  var effects = Array.prototype.slice.call(document.querySelectorAll('.svc-row, [data-scroll]'));
+  var effects = Array.prototype.slice.call(document.querySelectorAll('[data-scroll]'));
   if (effects.length && !calm.matches) {
     var active = new Set();
     var last = new Map();
@@ -130,13 +128,7 @@
       active.forEach(function (el) { reads.push([el, el.getBoundingClientRect()]); });
       reads.forEach(function (pair) {
         var el = pair[0], r = pair[1];
-        if (el.classList.contains('svc-row')) {
-          if (stacked.matches) return;   // phones: the pair plays once instead (below)
-          var p = easeOut(clamp01((vh - r.top) / (vh * 0.55)));
-          set(el, '--p', p.toFixed(3));
-          if (p > 0.995) el.classList.add('is-locked');       // the click, once, when the boxes meet
-          else if (p < 0.9) el.classList.remove('is-locked');
-        } else if (el.getAttribute('data-scroll') === 'fill') {
+        if (el.getAttribute('data-scroll') === 'fill') {
           set(el, '--f', clamp01((vh * 0.92 - r.top) / (vh * 0.5)).toFixed(3));
         } else {
           var t = clamp01((vh - r.top) / (vh + r.height));
@@ -160,19 +152,6 @@
     window.addEventListener('scroll', request, { passive: true });
     window.addEventListener('resize', request);
     request();
-  }
-
-  /* ---------------------------------------------------------- services on phones: play each pair once */
-  var pairs = Array.prototype.slice.call(document.querySelectorAll('.svc-row'));
-  if (pairs.length && 'IntersectionObserver' in window) {
-    var meet = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) { entry.target.classList.add('is-met'); meet.unobserve(entry.target); }
-      });
-    }, { rootMargin: '0px 0px -18% 0px', threshold: 0.2 });
-    pairs.forEach(function (row) { meet.observe(row); });
-  } else {
-    pairs.forEach(function (row) { row.classList.add('is-met'); });
   }
 
   /* ---------------------------------------------------------- phones: snap the project feed */

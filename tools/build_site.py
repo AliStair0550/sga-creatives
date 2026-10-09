@@ -108,7 +108,7 @@ def picture(name: str, alt: str, sizes: str, cls: str = "", eager: bool = False,
     )
 
 
-# Top menu and footer: plain words, the current page in red.
+# Top menu: plain words, the current page in red.
 NAV = [("Home", "/"), ("Services", "/services/"), ("Projects", "/work/"), ("About me", "/about/"), ("Contact", "/contact/")]
 
 
@@ -156,13 +156,11 @@ def header(path: str = "/") -> str:
 
 
 def footer() -> str:
-    items = "".join(f'<li><a href="{href}">{label}</a></li>' for label, href in NAV)
     return f"""
 <footer class="site-footer">
   <div class="container">
     <div class="footer-top">
       <p class="footer-claim">Where brands meet culture.</p>
-      <nav class="footer-col" aria-label="Footer"><ul>{items}</ul></nav>
       <div class="footer-col footer-contact">
         <ul>
           <li><a href="mailto:{SITE['email']}">{SITE['email']}</a></li>
@@ -289,25 +287,21 @@ def case_ld(c: dict) -> dict:
 
 # ---------------------------------------------------------------- shared content
 
-# Services: the problem and the solution are two boxes that slide together on scroll and lock
-# (main.js). Scope comes from Sarah's brief; projects link to cases that show the service.
+# Services: the name, the problem (grey), the solution and what it covers (from Sarah's brief).
 # Placeholder copy until Sarah sends her own service texts.
 SERVICES = [
     {"name": "Campaigns & creative production",
      "problem": "When your campaigns don’t connect with people.",
      "solution": "We turn cultural insight into campaigns that land.",
-     "scope": ["Campaigns", "Editorials", "Content", "Creative partners"],
-     "projects": ["adidas-ways-to-style", "rezet-lookbook"]},
+     "scope": ["Campaigns", "Editorials", "Content", "Creative partners"]},
     {"name": "Events & experiences",
      "problem": "When your events lack real connection.",
      "solution": "We create experiences that bring people together.",
-     "scope": ["Events", "Launches", "Activations", "Brand experiences"],
-     "projects": ["adidas-kiosk", "timberland-rezet", "nike-event-consulting"]},
+     "scope": ["Events", "Launches", "Activations", "Brand experiences"]},
     {"name": "Connections & project management",
      "problem": "When your projects lose direction and momentum.",
      "solution": "We bring the right people in and keep it moving.",
-     "scope": ["The right people", "Coordination", "Budgets", "Timelines", "Delivery"],
-     "projects": []},
+     "scope": ["The right people", "Coordination", "Budgets", "Timelines", "Delivery"]},
 ]
 
 # "My process": four giant words that fill in as you scroll, each with a line in Sarah's own voice.
@@ -412,7 +406,6 @@ def home() -> str:
 
 <section class="statement container" aria-label="What SGA creatives does">
   <p class="statement-text" data-reveal>{INTRO}</p>
-  <p class="statement-links" data-reveal><a href="/work/">All projects</a><a href="/services/">Services</a></p>
 </section>
 """
     return page(
@@ -446,11 +439,6 @@ def about_page() -> str:
   <ol class="process-list">{process}
   </ol>
 </section>
-
-<section class="page-cta container" aria-labelledby="cta-title">
-  <h2 id="cta-title" class="cta-title">Have a project in mind?</h2>
-  <a class="text-link" href="/contact/">Get in touch</a>
-</section>
 """
     return page(
         title="About me | SGA creatives",
@@ -473,22 +461,13 @@ def services_page() -> str:
     blocks = []
     for i, s in enumerate(SERVICES):
         scope = "".join(f"<li>{e(x)}</li>" for x in s["scope"])
-        related = ""
-        if s["projects"]:
-            links = "".join(f'<li><a href="/work/{slug}/">{e(CASE_BY_SLUG[slug]["title"])}</a></li>' for slug in s["projects"])
-            related = f'\n      <div class="svc-related"><h3 class="label">Projects</h3><ul>{links}</ul></div>'
         blocks.append(f"""
-    <article class="svc-item" aria-labelledby="svc-{i}">
-      <h2 id="svc-{i}" class="svc-name" data-reveal>{e(s['name'])}</h2>
-      <div class="svc-row" style="--tilt:{1 if i % 2 == 0 else -1}">
-        <div class="svc-box svc-problem"><p class="svc-line">{e(s['problem'])}</p></div>
-        <div class="svc-box svc-solution">
-          <span class="svc-key" aria-hidden="true"></span>
-          <p class="svc-line">{e(s['solution'])}</p>
-        </div>
-      </div>
-      <div class="svc-detail" data-reveal>
-        <div><h3 class="label">What it covers</h3><ul class="svc-scope">{scope}</ul></div>{related}
+    <article class="svc-item" aria-labelledby="svc-{i}" data-reveal>
+      <h2 id="svc-{i}" class="svc-name">{e(s['name'])}</h2>
+      <div class="svc-body">
+        <p class="svc-problem">{e(s['problem'])}</p>
+        <p class="svc-solution">{e(s['solution'])}</p>
+        <ul class="svc-scope" aria-label="What it covers">{scope}</ul>
       </div>
     </article>""")
     body = f"""

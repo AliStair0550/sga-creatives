@@ -172,13 +172,14 @@ def wordmark_svg(fg: str, title: str) -> tuple[str, float, float]:
     for g in set(wm.glyphs):
         wm.gs[g].draw(bp)
     _, y_min, _, y_max = bp.bounds   # font units, y up: descender of the g to the top of the t
-    baseline = y_max * wm.scale
-    width = wm.width() - lsb - rsb
-    height = (y_max - y_min) * wm.scale
+    pad = 4   # breathing room, so the outer s and the g are never clipped by antialiasing at the edge
+    baseline = y_max * wm.scale + pad
+    width = wm.width() - lsb - rsb + 2 * pad
+    height = (y_max - y_min) * wm.scale + 2 * pad
     svg = (
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width:.2f} {height:.2f}" '
         f'width="{width:.0f}" height="{height:.0f}" role="img" aria-labelledby="t">'
-        f'<title id="t">{title}</title><g fill="{fg}"><path d="{wm.path(-lsb, baseline)}"/></g></svg>'
+        f'<title id="t">{title}</title><g fill="{fg}"><path d="{wm.path(pad - lsb, baseline)}"/></g></svg>'
     )
     return svg, width, height
 
