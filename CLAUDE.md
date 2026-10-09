@@ -15,10 +15,12 @@ Denne branch erstatter det mørke udtryk. Hvor reglerne nedenfor strider mod det
 
 - **Hvidt først:** baggrund #FFFFFF, Ink #171918 til tekst, `--red` til små markeringer. Cases har ingen egne toner længere (`tone` i `cases.json` bruges ikke).
 - **Logo:** wordmark `sga.creatives` i Oswald Regular, genereret som SVG-stier af `tools/make_brand.py` (`sga-creatives-wordmark-*.svg`). Oswald indlæses ikke på sitet, så der stadig kun er to fontfamilier. Favicon er uændret indtil videre.
-- **Topmenu:** enkel som groove-intl.com: wordmark til venstre, Home, Services, Projects og Contact som ren tekst til højre. Den aktive side og hover er røde. Ingen knap og ingen kant. Footeren har ingen logo eller S-mærke.
-- **Hero (forsiden):** opbygget som groove-intl.com. "Where brands / meet culture." står stort i rødt (`--red`) øverst til venstre. Derunder lookbook-billedet uden tekst (`rezet-lookbook-01-hero`) til venstre og løftet ("We connect brands with creative people and lead projects ...") i stor, let skrift, højrestillet. På mobil og tablet fylder heroen præcis én skærm.
-- **Projekt-feed på mobil (under 900 px):** projekterne snapper ét pr. skærm som en TikTok-feed (`scroll-snap`, `scroll-snap-stop: always`). `main.js` sætter `html.is-feed` kun mens heroen eller et projekt er midt på skærmen. "All projects" er udgangen af feeden, og derefter scroller siden frit. Desktop scroller normalt.
-- **Sider:** `/` (intro, ét projekt ad gangen centreret med firma og projekttitel under, About og My process), `/services/` (problem/løsning-par med "What it covers" og relaterede projekter; midlertidig tekst), `/work/` (Projects: to forskudte kolonner), `/contact/` (kontaktord, alle kontaktoplysninger skrevet ud og About), casesider i `/work/<slug>/`.
+- **Typografi som renellmedrano.com:** én skrift, **Inter** (OFL) i medium 500, kun tre størrelser: `--t-s` 13 px (menu, billedtekster, detaljer), `--t-m` 20 til 26 px (tekst) og `--t-l` 32 til 56 px (hero, sidetitler, procesord). Stram linjeafstand, ingen spærrede versaler og ingen vægtkontrast. Hierarkiet skabes af luft og placering. Webfilen laves af `tools/make_webfont.py` fra `tools/fonts-src/Inter-VF.ttf`. Figtree og Archivo bruges ikke længere på sitet (kun som kilder i `make_brand.py`).
+- **Topmenu:** wordmark til venstre, Home, Services, Projects, About me og Contact som ren tekst til højre. Den aktive side og hover er røde. Ingen knap og ingen kant. Footeren har ingen logo eller S-mærke.
+- **Hero (forsiden):** kun "Where brands / meet culture." i rødt (`--red`) øverst til venstre og lookbook-billedet uden tekst (`rezet-lookbook-01-hero`) ved siden af, lidt nede og lidt til højre for midten. På mobil og tablet fylder heroen præcis én skærm.
+- **Forsidens rækkefølge:** hero, projekterne ét ad gangen (firma over titel), derefter løftet "We connect brands with creative people and lead projects ..." som en lille sektion for sig med links til Projects og Services.
+- **Projekt-feed på mobil (under 900 px):** projekterne snapper ét pr. skærm som en TikTok-feed (`scroll-snap`, `scroll-snap-stop: always`). `main.js` sætter `html.is-feed` kun mens heroen eller et projekt er midt på skærmen. Løftet efter projekterne er udgangen af feeden. Desktop scroller normalt.
+- **Sider:** `/` forside, `/services/` (problem/løsning-par med "What it covers" og relaterede projekter; midlertidig tekst), `/work/` (Projects: to forskudte kolonner), `/about/` (About me: portræt, rolle, erfaring og My process, hvor ordene fyldes fra grå til sort ved scroll), `/contact/` (kontaktord, alle kontaktoplysninger skrevet ud og en kort tekst med link til About me), casesider i `/work/<slug>/`.
 
 ## Brand
 
@@ -57,6 +59,7 @@ content/cases.json     de fem cases (tekst, roller, credits, billeder, alt-tekst
 tools/build_site.py    genererer ALLE html-sider + robots, sitemap, manifest, _headers i public/
 tools/optimize_media.py  assets/ (originaler) -> public/assets/img + video (AVIF/WebP/JPEG)
 tools/make_brand.py    logoer, favicons, delingsbillede
+tools/make_webfont.py  Inter -> public/assets/fonts/Inter-VF.woff2 (latin, vægt 400 til 600)
 tools/share/            delingsbilleder pr. side (node + playwright-core, bruger Google Chrome)
 tools/retouch_lookbook_hero.py  hero-udgave af lookbook-coveret uden tekst (kræver numpy + opencv); originalen bruges på casesiden
 tools/check.py         kvalitetsgate før commit

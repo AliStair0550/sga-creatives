@@ -109,7 +109,7 @@ def picture(name: str, alt: str, sizes: str, cls: str = "", eager: bool = False,
 
 
 # Top menu and footer: plain words, the current page in red.
-NAV = [("Home", "/"), ("Services", "/services/"), ("Projects", "/work/"), ("Contact", "/contact/")]
+NAV = [("Home", "/"), ("Services", "/services/"), ("Projects", "/work/"), ("About me", "/about/"), ("Contact", "/contact/")]
 
 
 def media(name: str, alt: str, sizes: str, *, cls: str = "", eager: bool = False,
@@ -161,7 +161,7 @@ def footer() -> str:
 <footer class="site-footer">
   <div class="container">
     <div class="footer-top">
-      <p class="footer-claim">Where brands <em>meet culture.</em></p>
+      <p class="footer-claim">Where brands meet culture.</p>
       <nav class="footer-col" aria-label="Footer"><ul>{items}</ul></nav>
       <div class="footer-col footer-contact">
         <ul>
@@ -218,8 +218,7 @@ def page(*, title: str, description: str, path: str, body: str, body_class: str 
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<link rel="preload" href="/assets/fonts/Figtree-VF.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/assets/fonts/Archivo-VF.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/Inter-VF.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{css}">
 <script>{HEAD_SCRIPT}</script>
 <script src="{js}" defer></script>
@@ -356,18 +355,17 @@ def contact_rows() -> str:
                    for ic, label, href, value, rel in rows)
 
 
-def about_block(heading_tag: str = "h2", *, portrait: bool = True, parallax: bool = True) -> str:
+def about_block() -> str:
+    """Sarah on the About me page: the portrait (revealed and drifting on scroll), role and experience."""
     experience = "".join(f"""
           <li><span class="xp-company">{e(co)}</span><span class="xp-role">{e(role)}</span></li>"""
                          for co, role in EXPERIENCE)
-    scroll = ' data-scroll="parallax"' if parallax else ""
-    photo = (f'<div class="about-portrait"{scroll}>{media("sarah-al-farhan-01", "Sarah Al-farhan on set in a photo studio, working on a laptop.", "(min-width: 900px) 40vw, 100vw", label="Sarah")}</div>'
-             if portrait else "")
+    photo = f'<div class="about-portrait" data-scroll="parallax">{media("sarah-al-farhan-01", "Sarah Al-farhan on set in a photo studio, working on a laptop.", "(min-width: 900px) 40vw, 100vw", label="Sarah")}</div>'
     return f"""
   <div class="container about-grid">
     {photo}
     <div class="about-body" data-reveal>
-      <{heading_tag} id="about-title" class="about-name">Sarah <em>Al-farhan</em></{heading_tag}>
+      <h2 id="about-title" class="about-name">Sarah Al-farhan</h2>
       <p class="about-role">Brand &amp; Creative Manager</p>
       <p class="about-stat"><span class="stat-figure">13+</span><span class="stat-text">years across fashion, footwear, branding, marketing, community and culture.</span></p>
       <p class="about-lead">{ABOUT_LEAD}</p>
@@ -380,48 +378,36 @@ def about_block(heading_tag: str = "h2", *, portrait: bool = True, parallax: boo
 # ---------------------------------------------------------------- home page
 
 def home() -> str:
-    """A hero (red headline, the lookbook image left, the promise right), then one project at a
-    time in the middle of the page with a small caption under each (company, then project title).
-    On phones the projects snap one per screen as you swipe (main.js turns the snapping on only
-    while the feed is in view). Then Sarah and her process."""
+    """The headline with the lookbook image beside it, a little lower and right of the middle.
+    Then one project at a time in the middle of the page with a small caption under each
+    (company, then project title); on phones they snap one per screen as you swipe (main.js
+    turns the snapping on only while the feed is in view). Then the promise, on its own."""
     projects = "".join(f"""
     <li class="show-item" data-reveal>
       <a class="show-link" href="/work/{c['slug']}/">
         <div class="show-media">{media(c['card_image'], alt_for(c, c['card_image']), "(min-width: 900px) 34vw, 78vw")}</div>
         {caption(c)}
       </a>
-    </li>""" for i, c in enumerate(CASES))
-    process = "".join(f"""
-        <li class="step" data-scroll="fill"><span class="step-word">{t}</span><span class="step-note">{e(d)}</span></li>"""
-                      for t, d in PROCESS)
+    </li>""" for c in CASES)
 
     website = {"@type": "WebSite", "@id": _id("website"), "url": DOMAIN + "/", "name": "SGA creatives",
                "inLanguage": "en", "publisher": {"@id": _id("org")}}
 
     body = f"""
 <section class="hero container" aria-labelledby="hero-title">
-  <h1 id="hero-title" class="hero-title"><span class="line"><span>Where brands</span></span> <span class="line"><span><em>meet culture.</em></span></span></h1>
-  <div class="hero-row">
-    <div class="hero-media">{picture("rezet-lookbook-01-hero", "A model from the Rezet Store Lookbook Autumn Winter 2025 in a black track jacket and a long grey pleated skirt.", "(min-width: 900px) 34vw, 72vw", eager=True, priority=True)}</div>
-    <p class="hero-text">{INTRO}</p>
-  </div>
+  <h1 id="hero-title" class="hero-title">Where brands <br>meet culture.</h1>
+  <div class="hero-media">{picture("rezet-lookbook-01-hero", "A model from the Rezet Store Lookbook Autumn Winter 2025 in a black track jacket and a long grey pleated skirt.", "(min-width: 900px) 30vw, 62vw", eager=True, priority=True)}</div>
 </section>
 
 <section class="showcase container" aria-labelledby="work-title">
   <h2 id="work-title" class="sr-only">Selected projects</h2>
   <ol class="show-list">{projects}
   </ol>
-  <p class="more-link" data-reveal><a href="/work/">All projects</a></p>
 </section>
 
-<section id="about" class="section about" aria-labelledby="about-title">{about_block()}
-  <div class="container">
-    <div class="process">
-      <h3 class="process-title">My <em>process</em></h3>
-      <ol class="process-list">{process}
-      </ol>
-    </div>
-  </div>
+<section class="statement container" aria-label="What SGA creatives does">
+  <p class="statement-text" data-reveal>{INTRO}</p>
+  <p class="statement-links" data-reveal><a href="/work/">All projects</a><a href="/services/">Services</a></p>
 </section>
 """
     return page(
@@ -432,6 +418,47 @@ def home() -> str:
         body_class="page-home",
         og_image_alt="SGA creatives: Where brands meet culture. Portraits from the Rezet Lookbook, adidas Ways to Style and Timberland × Rezet.",
         jsonld=graph(org_ld(), person_ld(), website),
+    )
+
+
+# ---------------------------------------------------------------- about page
+
+def about_page() -> str:
+    """Sarah (portrait, role, experience) and My process."""
+    process = "".join(f"""
+        <li class="step" data-scroll="fill"><span class="step-word">{t}</span><span class="step-note">{e(d)}</span></li>"""
+                      for t, d in PROCESS)
+    body = f"""
+<section class="page-head container" aria-labelledby="page-title">
+  <h1 id="page-title" class="page-title">About me</h1>
+</section>
+
+<section class="about" aria-labelledby="about-title">{about_block()}
+</section>
+
+<section class="process container" aria-labelledby="process-title">
+  <h2 id="process-title" class="process-title">My process</h2>
+  <ol class="process-list">{process}
+  </ol>
+</section>
+
+<section class="page-cta container" aria-labelledby="cta-title">
+  <h2 id="cta-title" class="cta-title">Have a project in mind?</h2>
+  <a class="text-link" href="/contact/">Get in touch</a>
+</section>
+"""
+    return page(
+        title="About me | SGA creatives",
+        description="Sarah Al-farhan, Brand & Creative Manager: 13+ years across fashion, footwear, branding, marketing, community and culture, and how she works.",
+        path="/about/",
+        body=body,
+        body_class="page-about",
+        jsonld=graph(
+            {"@type": "AboutPage", "@id": f"{DOMAIN}/about/#page", "url": f"{DOMAIN}/about/", "name": "About me",
+             "isPartOf": {"@id": _id("website")}, "about": {"@id": _id("sarah")}},
+            person_ld(),
+            breadcrumbs_ld([("Home", "/"), ("About me", "/about/")]),
+        ),
     )
 
 
@@ -462,15 +489,15 @@ def services_page() -> str:
     body = f"""
 <section class="page-head container" aria-labelledby="page-title">
   <h1 id="page-title" class="page-title">Services</h1>
-  <p class="page-lead">For fashion, footwear &amp; <strong>lifestyle.</strong></p>
+  <p class="page-lead">For fashion, footwear &amp; lifestyle.</p>
 </section>
 
 <section class="services container" aria-label="What SGA creatives does">{"".join(blocks)}
 </section>
 
 <section class="page-cta container" aria-labelledby="cta-title">
-  <h2 id="cta-title" class="cta-title">Have a project <em>in mind?</em></h2>
-  <a class="btn" href="/contact/">Get in touch</a>
+  <h2 id="cta-title" class="cta-title">Have a project in mind?</h2>
+  <a class="text-link" href="/contact/">Get in touch</a>
 </section>
 """
     return page(
@@ -492,7 +519,7 @@ def services_page() -> str:
 def contact_page() -> str:
     body = f"""
 <section class="contact container" aria-labelledby="page-title">
-  <h1 id="page-title" class="contact-title">Let’s make <em>something happen.</em></h1>
+  <h1 id="page-title" class="contact-title">Let’s make something happen.</h1>
   <ul class="contact-topics" data-reveal>
     <li style="--i:0">Branding</li><li style="--i:1">Campaigns</li><li style="--i:2">Events</li><li style="--i:3">Collaborations</li>
   </ul>
@@ -500,7 +527,9 @@ def contact_page() -> str:
   </ul>
 </section>
 
-<section class="section about about--contact" aria-labelledby="about-title">{about_block(parallax=False)}
+<section class="contact-note container" aria-label="About Sarah">
+  <p class="contact-note-text">{ABOUT_LEAD}</p>
+  <a class="text-link" href="/about/">More about Sarah</a>
 </section>
 """
     return page(
@@ -600,7 +629,7 @@ def case_page(i: int, c: dict) -> str:
   </nav>
 
   <section class="page-cta container" aria-labelledby="cta-title">
-    <h2 id="cta-title" class="cta-title">Have a project <em>in mind?</em></h2>
+    <h2 id="cta-title" class="cta-title">Have a project in mind?</h2>
     <details class="reach">
       <summary class="btn reach-toggle"><span>Get in touch</span><span class="reach-plus" aria-hidden="true"></span></summary>
       <div class="reach-options">
@@ -669,7 +698,7 @@ def not_found() -> str:
     body = f"""
 <section class="notfound container" aria-labelledby="nf-title">
   <p class="label">Error 404</p>
-  <h1 id="nf-title" class="notfound-title">This page <em>has moved on.</em></h1>
+  <h1 id="nf-title" class="notfound-title">This page has moved on.</h1>
   <div class="nf-actions">
     <a class="btn" href="/">Home</a>
     <a class="btn btn--ghost" href="/contact/">Contact</a>
@@ -706,6 +735,7 @@ def main(dry_run: bool = False) -> dict[Path, str]:
         write(PUBLIC / "work" / c["slug"] / "index.html", case_page(i, c))
     write(PUBLIC / "work" / "index.html", portfolio())
     write(PUBLIC / "services" / "index.html", services_page())
+    write(PUBLIC / "about" / "index.html", about_page())
     write(PUBLIC / "contact" / "index.html", contact_page())
     write(PUBLIC / "404.html", not_found())
 
@@ -713,7 +743,7 @@ def main(dry_run: bool = False) -> dict[Path, str]:
     sitemap = PUBLIC / "sitemap.xml"
     if DOMAIN:
         robots += f"\nSitemap: {DOMAIN}/sitemap.xml\n"
-        urls = ["/", "/services/", "/work/", "/contact/"] + [f"/work/{c['slug']}/" for c in CASES]
+        urls = ["/", "/services/", "/work/", "/about/", "/contact/"] + [f"/work/{c['slug']}/" for c in CASES]
         sitemap_xml = ('<?xml version="1.0" encoding="UTF-8"?>\n'
                        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
                        + "".join(f"  <url><loc>{DOMAIN}{u}</loc></url>\n" for u in urls)
