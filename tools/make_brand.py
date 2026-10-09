@@ -47,6 +47,11 @@ _vf = TTFont(FONTS / "Archivo-VF.ttf")
 # The wordmark "sga.creatives": Oswald Regular, a condensed grotesk. Only its outlines ship (as SVG
 # paths), so the site still loads just two font families.
 WORDMARK = instantiateVariableFont(TTFont(FONTS / "Oswald-VF.ttf"), {"wght": 400})
+# The app icon / favicon: "sga" from the wordmark, a touch bolder so it holds at 16 px, white on ink.
+ICON_AXES = {"wght": 500}
+ICON_FONT = instantiateVariableFont(TTFont(FONTS / "Oswald-VF.ttf"), ICON_AXES)
+ICON_BG = "#111111"
+ICON_FG = "#FFFFFF"
 GROTESK = instantiateVariableFont(_vf, {"wght": 560, "wdth": 125})
 
 
@@ -184,7 +189,42 @@ def wordmark_svg(fg: str, title: str) -> tuple[str, float, float]:
     return svg, width, height
 
 
-# ---------------------------------------------------------------- the mark: a creative S
+# ---------------------------------------------------------------- the app icon: sga on ink
+
+def icon_svg(radius: float = 12) -> str:
+    """Favicon (SVG): the letters sga from the wordmark, centred on an ink square (64-unit grid)."""
+    t = Text(ICON_FONT, "sga", 40)
+    lsb, rsb = t.ink_bounds()
+    bp = BoundsPen(t.gs)
+    for g in set(t.glyphs):
+        t.gs[g].draw(bp)
+    _, y_min, _, y_max = bp.bounds
+    ink_w = t.width() - lsb - rsb
+    ink_h = (y_max - y_min) * t.scale
+    x = (64 - ink_w) / 2 - lsb
+    baseline = (64 - ink_h) / 2 + y_max * t.scale
+    return (
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" '
+        'role="img" aria-labelledby="t"><title id="t">SGA creatives</title>'
+        f'<rect width="64" height="64" rx="{radius}" fill="{ICON_BG}"/>'
+        f'<path fill="{ICON_FG}" d="{t.path(x, baseline)}"/></svg>'
+    )
+
+
+def raster_icon(px: int, radius_ratio: float = 0.19) -> Image.Image:
+    """Pixel version of the app icon, drawn at 8x and downsampled."""
+    ss = 8
+    n = px * ss
+    im = Image.new("RGBA", (n, n), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle([0, 0, n - 1, n - 1], radius=int(n * radius_ratio), fill=ICON_BG)
+    font = static_font(FONTS / "Oswald-VF.ttf", ICON_AXES, int(n * 40 / 64))
+    l, t, r, b = d.textbbox((0, 0), "sga", font=font)
+    d.text(((n - (r - l)) / 2 - l, (n - (b - t)) / 2 - t), "sga", font=font, fill=ICON_FG)
+    return im.resize((px, px), Image.LANCZOS)
+
+
+# ---------------------------------------------------------------- the mark: a creative S (brand guide only)
 # Two hooks that lock into each other (the same idea as the services boxes): the upper hook in
 # paper, the lower in red, slanted forward. Drawn on a 64-unit grid, stroke 10.
 MARK_SKEW = 0.2126          # tan(12deg), forward slant
@@ -252,7 +292,6 @@ def main() -> None:
     wdark, _, _ = wordmark_svg(INK, "SGA creatives")
     wlight, _, _ = wordmark_svg(PAPER, "SGA creatives")
     mark = mark_svg()
-    mark_round = mark_svg(radius=12)
 
     files = {
         "sga-creatives-logo-dark.svg": dark,    # ink logo for light backgrounds
@@ -266,16 +305,18 @@ def main() -> None:
     for name, svg in files.items():
         (BRAND / name).write_text(svg)
         (PUBLIC / "assets" / "brand" / name).write_text(svg)
-    (PUBLIC / "favicon.svg").write_text(mark_round)
+    (PUBLIC / "favicon.svg").write_text(icon_svg())
+    (BRAND / "sga-creatives-icon.svg").write_text(icon_svg())
 
-    raster_mark(180).convert("RGB").save(PUBLIC / "apple-touch-icon.png")
+    # the site's icons: sga on ink (apple-touch-icon is square; iOS rounds the corners itself)
+    raster_icon(180, 0).convert("RGB").save(PUBLIC / "apple-touch-icon.png")
     raster_mark(512).save(BRAND / "sga-creatives-mark-512.png")
-    raster_mark(192, 0.19).save(PUBLIC / "assets" / "brand" / "icon-192.png")
-    raster_mark(512, 0.19).save(PUBLIC / "assets" / "brand" / "icon-512.png")
+    raster_icon(192).save(PUBLIC / "assets" / "brand" / "icon-192.png")
+    raster_icon(512).save(PUBLIC / "assets" / "brand" / "icon-512.png")
     ico_sizes = [16, 32, 48]
-    base = raster_mark(48, 0.19)
+    base = raster_icon(48)
     base.save(PUBLIC / "favicon.ico", sizes=[(s, s) for s in ico_sizes],
-              append_images=[raster_mark(s, 0.19) for s in ico_sizes[:-1]])
+              append_images=[raster_icon(s) for s in ico_sizes[:-1]])
     print(f"logo viewBox {w:.1f} x {h:.1f}")
 
 

@@ -65,6 +65,21 @@
     if (mq.addEventListener) mq.addEventListener('change', onChange); else mq.addListener(onChange);
   }
 
+  /* ---------------------------------------------------------- the logo always leads to the top of the home page */
+  // A link to the page you are already on does not reliably scroll back up (some browsers keep the
+  // position, and the swipe feed can snap back). On the home page the logo scrolls to the top itself;
+  // elsewhere it loads the home page, which always opens at the top.
+  Array.prototype.forEach.call(document.querySelectorAll('[data-home]'), function (link) {
+    link.addEventListener('click', function (event) {
+      if (location.pathname !== '/' || event.metaKey || event.ctrlKey || event.shiftKey) return;
+      event.preventDefault();
+      if (nav && nav.classList.contains('is-open')) setOpen(false, false);
+      var calmNow = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: calmNow ? 'auto' : 'smooth' });
+      if (location.hash) history.replaceState(null, '', '/');
+    });
+  });
+
   /* ---------------------------------------------------------- header border */
   var header = document.querySelector('[data-header]');
   if (header) {

@@ -109,7 +109,7 @@ def picture(name: str, alt: str, sizes: str, cls: str = "", eager: bool = False,
 
 
 # Top menu: plain words, the current page in red.
-NAV = [("Home", "/"), ("Services", "/services/"), ("Projects", "/work/"), ("About me", "/about/"), ("Contact", "/contact/")]
+NAV = [("Services", "/services/"), ("Projects", "/work/"), ("About me", "/about/"), ("Contact", "/contact/")]   # the logo is the way home
 
 
 def media(name: str, alt: str, sizes: str, *, cls: str = "", eager: bool = False,
@@ -127,7 +127,7 @@ def media(name: str, alt: str, sizes: str, *, cls: str = "", eager: bool = False
 
 
 def is_current(href: str, path: str) -> bool:
-    return path == "/" if href == "/" else path.startswith(href)
+    return path.startswith(href)
 
 
 def header(path: str = "/") -> str:
@@ -139,7 +139,7 @@ def header(path: str = "/") -> str:
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header" data-header>
   <div class="header-inner">
-    <a class="brand" href="/" aria-label="SGA creatives, home">{inline_logo()}</a>
+    <a class="brand" href="/" aria-label="SGA creatives, home" data-home>{inline_logo()}</a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>
       <span class="nav-toggle-label" data-label-closed="Menu" data-label-open="Close">Menu</span>
       <span class="nav-toggle-icon" aria-hidden="true"><span></span><span></span></span>
@@ -160,7 +160,10 @@ def footer() -> str:
 <footer class="site-footer">
   <div class="container">
     <div class="footer-top">
-      <p class="footer-claim">Where brands meet culture.</p>
+      <div class="footer-brand">
+        <p class="footer-claim">Where brands meet culture.</p>
+        <a class="footer-logo" href="/" aria-label="SGA creatives, home" data-home>{inline_logo()}</a>
+      </div>
       <div class="footer-col footer-contact">
         <ul>
           <li><a href="mailto:{SITE['email']}">{SITE['email']}</a></li>
@@ -287,21 +290,18 @@ def case_ld(c: dict) -> dict:
 
 # ---------------------------------------------------------------- shared content
 
-# Services: the name, the problem (grey), the solution and what it covers (from Sarah's brief).
+# Services: the name, the problem (grey) and the solution.
 # Placeholder copy until Sarah sends her own service texts.
 SERVICES = [
     {"name": "Campaigns & creative production",
      "problem": "When your campaigns don’t connect with people.",
-     "solution": "We turn cultural insight into campaigns that land.",
-     "scope": ["Campaigns", "Editorials", "Content", "Creative partners"]},
+     "solution": "We turn cultural insight into campaigns that land."},
     {"name": "Events & experiences",
      "problem": "When your events lack real connection.",
-     "solution": "We create experiences that bring people together.",
-     "scope": ["Events", "Launches", "Activations", "Brand experiences"]},
+     "solution": "We create experiences that bring people together."},
     {"name": "Connections & project management",
      "problem": "When your projects lose direction and momentum.",
-     "solution": "We bring the right people in and keep it moving.",
-     "scope": ["The right people", "Coordination", "Budgets", "Timelines", "Delivery"]},
+     "solution": "We bring the right people in and keep it moving."},
 ]
 
 # "My process": four giant words that fill in as you scroll, each with a line in Sarah's own voice.
@@ -468,14 +468,12 @@ def about_page() -> str:
 def services_page() -> str:
     blocks = []
     for i, s in enumerate(SERVICES):
-        scope = "".join(f"<li>{e(x)}</li>" for x in s["scope"])
         blocks.append(f"""
     <article class="svc-item" aria-labelledby="svc-{i}" data-reveal>
       <h2 id="svc-{i}" class="svc-name">{e(s['name'])}</h2>
       <div class="svc-body">
         <p class="svc-problem">{e(s['problem'])}</p>
         <p class="svc-solution">{e(s['solution'])}</p>
-        <ul class="svc-scope" aria-label="What it covers">{scope}</ul>
       </div>
     </article>""")
     body = f"""

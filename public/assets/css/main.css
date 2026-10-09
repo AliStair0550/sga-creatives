@@ -292,8 +292,7 @@ main:focus { outline: none; }
 .cta-title { font-size: var(--t-l); line-height: 1.02; letter-spacing: var(--track-l); }
 
 /* ------------------------------------------------------------ services page */
-/* Plain rows: the service name on the left; the problem (grey), the solution and what it covers
-   on the right. */
+/* Plain rows: the service name on the left; the problem (grey) and the solution on the right. */
 
 .services { padding-bottom: var(--space-xl); }
 .svc-item { display: grid; gap: var(--space-s) var(--gutter); padding-block: var(--space-l); border-top: 1px solid var(--line); }
@@ -302,8 +301,6 @@ main:focus { outline: none; }
 .svc-body { display: grid; gap: 0.15rem; }
 .svc-problem, .svc-solution { max-width: 30ch; font-size: var(--t-m); line-height: 1.12; letter-spacing: var(--track-m); }
 .svc-problem { color: var(--muted); }
-.svc-scope { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: var(--space-s); }
-.svc-scope li { padding: 0.35rem 0.8rem; border: 1px solid var(--line-strong); border-radius: 999px; }
 @media (min-width: 900px) {
   .svc-item { grid-template-columns: repeat(12, minmax(0, 1fr)); }
   .svc-name { grid-column: 1 / span 4; }
@@ -442,7 +439,10 @@ main:focus { outline: none; }
 
 .site-footer { border-top: 1px solid var(--line); padding-block: var(--space-xl) var(--space-m); }
 .footer-top { display: grid; gap: var(--space-l) var(--gutter); padding-bottom: var(--space-xl); }
+.footer-brand { display: grid; justify-items: start; gap: var(--space-m); }
 .footer-claim { font-size: var(--t-m); line-height: 1.12; letter-spacing: var(--track-m); max-width: 12ch; }
+.footer-logo { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); }
+.footer-logo svg { height: 1.6rem; width: auto; }
 .footer-col ul { display: grid; gap: 0; }
 .footer-col a {
   display: inline-flex; align-items: center; min-height: 32px; text-decoration: none; overflow-wrap: anywhere;
@@ -455,7 +455,7 @@ main:focus { outline: none; }
   padding-top: var(--space-s); border-top: 1px solid var(--line);
   color: var(--muted);
 }
-@media (min-width: 700px) { .footer-top { grid-template-columns: repeat(12, minmax(0, 1fr)); } .footer-claim { grid-column: 1 / span 6; } .footer-contact { grid-column: 8 / -1; } }
+@media (min-width: 700px) { .footer-top { grid-template-columns: repeat(12, minmax(0, 1fr)); } .footer-brand { grid-column: 1 / span 6; } .footer-contact { grid-column: 8 / -1; } }
 
 /* ------------------------------------------------------------ placeholders */
 

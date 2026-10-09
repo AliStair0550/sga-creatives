@@ -8,8 +8,9 @@ Statisk hjemmeside til SGA creatives (HTML, CSS og vanilla JavaScript). Alt offe
 SGAcreatives/                ← repo-roden (github.com/AliStair0550/sga-creatives)
 ├── CLAUDE.md                arbejdsregler, arkitektur og workflow
 ├── public/                  ← DET, DER PUBLICERES (build output directory)
-│   ├── index.html           forside: Work · Services · About · Contact
-│   ├── work/<slug>/         fem casesider med egne URL'er
+│   ├── index.html           forside: hero, projekterne ét ad gangen, løftet
+│   ├── services/ about/ contact/   Services, About me og Contact
+│   ├── work/                Projects (oversigt) og fem casesider i work/<slug>/
 │   ├── 404.html             fejlside (skal ligge i roden, ellers antager Pages en SPA)
 │   ├── _headers             sikkerheds- og cache-headers til Cloudflare Pages
 │   ├── robots.txt, site.webmanifest, favicon.svg/.ico, apple-touch-icon.png
@@ -21,7 +22,8 @@ SGAcreatives/                ← repo-roden (github.com/AliStair0550/sga-creativ
 ├── tools/
 │   ├── build_site.py        bygger alle HTML-sider i public/ ud fra content/
 │   ├── optimize_media.py    laver AVIF/WebP/JPEG i flere størrelser samt video og poster
-│   ├── make_brand.py        genererer logoer, favicons og delingsbillede
+│   ├── make_brand.py        genererer wordmark (sga.creatives), favicons og app-ikoner
+│   ├── make_webfont.py      skærer Inter til en lille webfil (public/assets/fonts/Inter-VF.woff2)
 │   ├── retouch_lookbook_hero.py  hero-udgave af lookbook-coveret uden coverteksten
 │   ├── share/               delingsbilleder (Open Graph) til hver side: `cd tools/share && npm install && npm run build`
 │   └── fonts-src/           originale fontfiler og OFL-licenser
@@ -85,9 +87,9 @@ python3 tools/build_site.py
 
 Scriptet bruger kun Pythons standardbibliotek. Det tilføjer automatisk en versionsnøgle til CSS og JS (`main.css?v=…`), så besøgende altid får den nyeste version, selvom filerne caches i et år.
 
-## Billeder og pladsholdere
+## Billeder, der mangler
 
-Galleriet i hver case (`gallery` i `content/cases.json`) kan indeholde billeder, der ikke findes endnu. De vises som elegante pladsholdere med SGA-mærket. Sådan udskifter du en pladsholder:
+Galleriet i hver case (`gallery` i `content/cases.json`) kan indeholde billeder, der ikke findes endnu. De vises ikke på sitet, og galleriets rækker udjævnes, så intet står halvtomt. Sådan tilføjer du et af dem:
 
 1. Gem billedet som `assets/images/<navn>.jpg`, fx `rezet-lookbook-03.jpg`. Navnet står i `cases.json`.
 2. Skriv en engelsk alt-tekst i feltet `"alt"` for billedet i `cases.json`.
@@ -99,11 +101,11 @@ Galleriet i hver case (`gallery` i `content/cases.json`) kan indeholde billeder,
    ```
 4. Commit og push.
 
-`layout` styrer formatet: `wide` er fuld bredde (16:9), `half` er halv bredde og `third` er en tredjedel (begge 4:5). Portrættet i About hedder `sarah-al-farhan-01`. `check.py` viser, hvilke pladsholdere der stadig venter.
+`layout` styrer formatet: `wide` er fuld bredde (16:9), `half` er halv bredde og `third` er en tredjedel (begge 4:5). Portrættet på About me hedder `sarah-al-farhan-01`. `check.py` viser, hvilke billeder der stadig mangler.
 
 ## Deling og SEO
 
-- Hver side har sit eget delingsbillede i 1200 × 630 (`public/assets/og/`): forsiden, Portfolio og én pr. case i casens farve. Lav dem igen efter ændringer i cases eller billeder:
+- Hver side har sit eget delingsbillede i 1200 × 630 (`public/assets/og/`) i sitets hvide stil: forsiden, Projects og én pr. case. Services, About me og Contact bruger forsidens. Lav dem igen efter ændringer i cases eller billeder:
   ```bash
   cd tools/share && npm install && npm run build && cd ../.. && python3 tools/build_site.py
   ```
@@ -120,11 +122,11 @@ Galleriet i hver case (`gallery` i `content/cases.json`) kan indeholde billeder,
    ```
 3. Kopiér en eksisterende case i `content/cases.json`, og udfyld felterne:
    - `slug` bliver URL'en (`/work/<slug>/`).
-   - `card_image` og `card_image_2` er de to billeder på forsiden, og `tone` er casens farveunivers (`bg` og `mode`: `dark` eller `light`).
+   - `card_image` er casens billede på forsiden og på Projects. Ligger det ikke i galleriet, skrives alt-teksten i `card_alt`. (`card_image_2` og `tone` stammer fra det tidligere mørke design og bruges ikke.)
    - `provenance` fortæller, i hvilken rolle Sarah lavede projektet.
    - `intro`, `facts`, `done` (Sarahs arbejde som korte punkter) og `credits` er casesidens tekst. Hold den kort.
-   - `gallery`: se "Billeder og pladsholdere" ovenfor.
-   - Rækkefølgen i filen er rækkefølgen på siden. "Next project" linker automatisk videre.
+   - `gallery`: se "Billeder, der mangler" ovenfor.
+   - Rækkefølgen i filen er rækkefølgen på Projects og i "Next project". Forsiden viser Nike først (`HOME_ORDER` i `build_site.py`).
 4. Kør `python3 tools/build_site.py`, og tjek siden lokalt.
 5. Tilføj den nye URL i sitemap. Det sker automatisk, når domænet er sat.
 
@@ -282,7 +284,8 @@ Cloudflare Registrar kræver, at domænet bruger Cloudflare DNS (trin A), og bet
 - **Lokalt:** Hele sitet kan genskabes ud fra `content/`, `tools/` og `assets/`:
   ```bash
   python3 tools/optimize_media.py   # billeder og video
-  python3 tools/make_brand.py       # logoer, favicons, delingsbillede
+  python3 tools/make_brand.py       # wordmark, favicons, app-ikoner
+  python3 tools/make_webfont.py     # Inter-webfonten
   python3 tools/build_site.py       # HTML, sitemap, headers
   ```
   Kræver Python 3.10+ med Pillow (AVIF/WebP) og fontTools samt ffmpeg.
@@ -290,14 +293,25 @@ Cloudflare Registrar kræver, at domænet bruger Cloudflare DNS (trin A), og bet
 
 ## Tekniske valg
 
-- **Fonte:** Figtree (fed, geometrisk, til logo og overskrifter) og Archivo (brødtekst og labels). Begge er under SIL OFL 1.1 og hostes lokalt, uden kald til Google.
+- **Fonte:** Inter (medium 500, tre størrelser) til al tekst, skåret til latin og vægt 400 til 600 (40 KB). Wordmarket er Oswald, men ligger som SVG-stier, så Oswald ikke indlæses. Begge er under SIL OFL 1.1 og hostes lokalt, uden kald til Google.
 - **Billeder:** AVIF og WebP i 480/800/fuld bredde med `srcset`, JPEG-fallback, faste dimensioner (ingen layout-skift) og lazy loading under heroen.
 - **Video:** Kun Nike-casen, med poster, kontroller og `preload="none"`. Ingen autoplay og ingen lyd uden klik.
 - **Bevægelse:** Kort hero-indgang, reveals ved scroll, let billedskalering og glidende menu. Alt slås fra ved `prefers-reduced-motion`. Uden JavaScript er alt indhold synligt, og navigationen vises som almindelige links.
 - **Sikkerhed:** `_headers` sætter Content-Security-Policy, X-Frame-Options, nosniff, Referrer-Policy og Permissions-Policy. CSP'en indeholder en hash af det lille inline-script i `<head>`, og `build_site.py` opdaterer den automatisk.
 - **Ingen cookies og ingen tracking.** Tilføjes der analytics senere, skal behovet for cookiebanner og privatlivstekst vurderes.
 
-## Udførte tests (seneste: mobilgennemgang 29. september 2026)
+## Udførte tests (seneste: kvalitetsgennemgang af det hvide redesign 9. oktober 2026)
+
+Testet mod `python3 -m http.server` med Chrome (Playwright) og Lighthouse:
+
+- Alle 12 sider (forside, Services, Projects, About me, Contact, 5 cases, 404) ved 390 og 1440 px: ingen konsolfejl, ingen fejlede requests, ingen billeder, der ikke loader, én `h1` pr. side. Vandret scroll tjekket ved 360, 390, 768, 1024 og 1440 px.
+- Lighthouse (forside og About me på mobil, en caseside på desktop): 100 i accessibility, best practices og SEO.
+- Simuleret 4G og 4x langsommere CPU: første indhold på 0,4 til 0,6 s, LCP 0,57 til 0,67 s på forside, Projects og About me, og ingen layout-skift.
+- Mobilmenu (fokus, Escape), tastaturrækkefølge, swipe-feeden på mobil ned og op, logoet til toppen fra alle positioner og visning uden JavaScript.
+
+**Ikke testet:** rigtige iOS- og Android-enheder, Safari og Firefox samt skærmlæser.
+
+### Tidligere: mobilgennemgang 29. september 2026 (det mørke design)
 
 Testet mod `wrangler pages dev` med Chromium (Playwright) og Lighthouse 12 (mobilprofil, simuleret throttling):
 
