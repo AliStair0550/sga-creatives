@@ -15,7 +15,9 @@ Denne branch erstatter det mørke udtryk. Hvor reglerne nedenfor strider mod det
 
 - **Hvidt først:** baggrund #FFFFFF, Ink #171918 til tekst, `--red` til små markeringer. Cases har ingen egne toner længere (`tone` i `cases.json` bruges ikke).
 - **Logo:** wordmark `sga.creatives` i Oswald Regular, genereret som SVG-stier af `tools/make_brand.py` (`sga-creatives-wordmark-*.svg`). Oswald indlæses ikke på sitet, så der stadig kun er to fontfamilier. Favicon er uændret indtil videre.
-- **Topmenu:** wordmark til venstre, Home, Services, Projects og en Contact-knap (CTA) til højre. Footeren har ingen logo eller S-mærke.
+- **Topmenu:** enkel som groove-intl.com: wordmark til venstre, Home, Services, Projects og Contact som ren tekst til højre. Den aktive side og hover er røde. Ingen knap og ingen kant. Footeren har ingen logo eller S-mærke.
+- **Hero (forsiden):** opbygget som groove-intl.com. "Where brands / meet culture." står stort i rødt (`--red`) øverst til venstre. Derunder lookbook-billedet uden tekst (`rezet-lookbook-01-hero`) til venstre og løftet ("We connect brands with creative people and lead projects ...") i stor, let skrift, højrestillet. På mobil og tablet fylder heroen præcis én skærm.
+- **Projekt-feed på mobil (under 900 px):** projekterne snapper ét pr. skærm som en TikTok-feed (`scroll-snap`, `scroll-snap-stop: always`). `main.js` sætter `html.is-feed` kun mens heroen eller et projekt er midt på skærmen. "All projects" er udgangen af feeden, og derefter scroller siden frit. Desktop scroller normalt.
 - **Sider:** `/` (intro, ét projekt ad gangen centreret med firma og projekttitel under, About og My process), `/services/` (problem/løsning-par med "What it covers" og relaterede projekter; midlertidig tekst), `/work/` (Projects: to forskudte kolonner), `/contact/` (kontaktord, alle kontaktoplysninger skrevet ud og About), casesider i `/work/<slug>/`.
 
 ## Brand

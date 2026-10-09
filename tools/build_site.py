@@ -108,7 +108,7 @@ def picture(name: str, alt: str, sizes: str, cls: str = "", eager: bool = False,
     )
 
 
-# Top menu and footer. The last item (Contact) is the call to action at the far right of the header.
+# Top menu and footer: plain words, the current page in red.
 NAV = [("Home", "/"), ("Services", "/services/"), ("Projects", "/work/"), ("Contact", "/contact/")]
 
 
@@ -131,11 +131,10 @@ def is_current(href: str, path: str) -> bool:
 
 
 def header(path: str = "/") -> str:
-    def item(i, label, href):
+    def item(label, href):
         current = ' aria-current="page"' if is_current(href, path) else ""
-        cta = ' class="nav-cta"' if i == len(NAV) - 1 else ""
-        return f'<li><a href="{href}"{cta}{current}>{label}</a></li>'
-    items = "".join(item(i, label, href) for i, (label, href) in enumerate(NAV))
+        return f'<li><a href="{href}"{current}>{label}</a></li>'
+    items = "".join(item(label, href) for label, href in NAV)
     return f"""
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header" data-header>
@@ -327,7 +326,7 @@ EXPERIENCE = [   # (company, role), most recent first; no years on the site
     ("Bestseller A/S · NAME IT", "Social Media and PR Manager"),
 ]
 
-INTRO = "SGA creatives connects brands with creative people and leads projects across branding, campaigns and cultural experiences."
+INTRO = "We connect brands with creative people and lead projects across branding, campaigns and cultural experiences."
 ABOUT_LEAD = "I connect brands, people and culture through creative vision and practical experience. I bring the right partners together and manage teams, budgets and every detail from concept to execution."
 CASE_BY_SLUG = {c["slug"]: c for c in CASES}
 
@@ -381,12 +380,14 @@ def about_block(heading_tag: str = "h2", *, portrait: bool = True, parallax: boo
 # ---------------------------------------------------------------- home page
 
 def home() -> str:
-    """White space, one project at a time in the middle of the page, a small caption under each
-    (company, then project title). Then Sarah and her process."""
+    """A hero (red headline, the lookbook image left, the promise right), then one project at a
+    time in the middle of the page with a small caption under each (company, then project title).
+    On phones the projects snap one per screen as you swipe (main.js turns the snapping on only
+    while the feed is in view). Then Sarah and her process."""
     projects = "".join(f"""
     <li class="show-item" data-reveal>
       <a class="show-link" href="/work/{c['slug']}/">
-        <div class="show-media">{media(c['card_image'], alt_for(c, c['card_image']), "(min-width: 900px) 34vw, 78vw", eager=(i == 0), priority=(i == 0))}</div>
+        <div class="show-media">{media(c['card_image'], alt_for(c, c['card_image']), "(min-width: 900px) 34vw, 78vw")}</div>
         {caption(c)}
       </a>
     </li>""" for i, c in enumerate(CASES))
@@ -398,9 +399,12 @@ def home() -> str:
                "inLanguage": "en", "publisher": {"@id": _id("org")}}
 
     body = f"""
-<section class="intro container" aria-labelledby="intro-title">
-  <h1 id="intro-title" class="intro-title"><span class="line"><span>Where brands</span></span> <span class="line"><span><em>meet culture.</em></span></span></h1>
-  <p class="intro-text">{INTRO}</p>
+<section class="hero container" aria-labelledby="hero-title">
+  <h1 id="hero-title" class="hero-title"><span class="line"><span>Where brands</span></span> <span class="line"><span><em>meet culture.</em></span></span></h1>
+  <div class="hero-row">
+    <div class="hero-media">{picture("rezet-lookbook-01-hero", "A model from the Rezet Store Lookbook Autumn Winter 2025 in a black track jacket and a long grey pleated skirt.", "(min-width: 900px) 34vw, 72vw", eager=True, priority=True)}</div>
+    <p class="hero-text">{INTRO}</p>
+  </div>
 </section>
 
 <section class="showcase container" aria-labelledby="work-title">

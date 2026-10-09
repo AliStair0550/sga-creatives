@@ -175,6 +175,22 @@
     pairs.forEach(function (row) { row.classList.add('is-met'); });
   }
 
+  /* ---------------------------------------------------------- phones: snap the project feed */
+  // The page snaps one project per screen only while the hero or a project crosses the middle of
+  // the screen (html.is-feed, see main.css). Below the feed the snapping is off, so long sections
+  // scroll freely on every browser.
+  var feed = Array.prototype.slice.call(document.querySelectorAll('.page-home .hero, .show-item'));
+  if (feed.length && 'IntersectionObserver' in window) {
+    var inBand = new Set();
+    var band = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) inBand.add(entry.target); else inBand.delete(entry.target);
+      });
+      root.classList.toggle('is-feed', inBand.size > 0);
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    feed.forEach(function (el) { band.observe(el); });
+  }
+
   /* ---------------------------------------------------------- portfolio: image follows the cursor */
   var pf = document.querySelector('[data-pf]');
   if (pf) {

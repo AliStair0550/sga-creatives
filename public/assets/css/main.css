@@ -143,32 +143,19 @@ main:focus { outline: none; }
   display: flex; align-items: center; justify-content: space-between; gap: var(--space-m);
   min-height: var(--header-h);
   padding-inline: var(--page-pad);
-  border-bottom: 1px solid transparent;   /* the line appears only once the page scrolls */
-  transition: border-color 0.5s var(--ease);
 }
-.site-header.is-scrolled .header-inner { border-bottom-color: var(--line); }
 
 .brand { display: inline-flex; align-items: center; min-height: 44px; color: inherit; z-index: 3; }
 .brand svg { height: 1.55rem; width: auto; }
 .site-nav { display: flex; align-items: center; justify-content: flex-end; flex: 1; }
-.nav-list { display: flex; align-items: center; gap: clamp(1.25rem, 2.4vw, 2.5rem); }
+.nav-list { display: flex; align-items: center; gap: clamp(1.25rem, 2.2vw, 2rem); }
+/* plain words, like a magazine masthead: the page you are on is red, hover turns red too */
 .nav-list a {
-  position: relative; display: inline-flex; align-items: center; min-height: 44px;
-  font-size: 0.9375rem; font-weight: 500; text-decoration: none;
+  display: inline-flex; align-items: center; min-height: 44px;
+  font-size: 1rem; font-weight: 400; text-decoration: none;
+  transition: color 0.3s var(--ease);
 }
-.nav-list a:not(.nav-cta)::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: 0.7rem; height: 1px;
-  background: currentColor; transform: scaleX(0); transform-origin: right;
-  transition: transform 0.45s var(--ease);
-}
-.nav-list a:hover::after, .nav-list a[aria-current="page"]::after { transform: scaleX(1); transform-origin: left; }
-/* the call to action at the far right */
-.nav-list .nav-cta {
-  min-height: 2.75rem; padding: 0 1.25rem; border-radius: 999px;
-  background: var(--ink); color: var(--white);
-  transition: background-color 0.3s var(--ease);
-}
-.nav-list .nav-cta:hover, .nav-list .nav-cta[aria-current="page"] { background: var(--red); }
+.nav-list a:hover, .nav-list a[aria-current="page"] { color: var(--red); }
 .nav-extra { display: none; }
 
 .nav-toggle {
@@ -202,18 +189,15 @@ main:focus { outline: none; }
   html.js .site-nav.is-open { opacity: 1; visibility: visible; transition: opacity 0.5s var(--ease), visibility 0s; }
   html.js .nav-list { flex-direction: column; align-items: stretch; gap: 0; }
   html.js .nav-list li { border-bottom: 1px solid var(--line); }
-  html.js .nav-list a, html.js .nav-list .nav-cta {
-    width: 100%; min-height: 0; padding: 0.55rem 0 0.35rem; border-radius: 0; background: none; color: var(--ink);
+  html.js .nav-list a {
+    width: 100%; min-height: 0; padding: 0.55rem 0 0.35rem;
     font-family: var(--font-display); font-weight: var(--display-weight);
     font-size: clamp(2.4rem, 10vw, 4rem); letter-spacing: -0.03em; line-height: 1.1;
   }
-  html.js .nav-list a::after { display: none; }
-  html.js .nav-list a[aria-current="page"] { color: var(--muted); }
   html.js .nav-extra { display: grid; gap: 0.25rem; margin-top: auto; }
   html.js .nav-extra a { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); text-decoration: none; }
   html.menu-open { overflow: hidden; }
   html.menu-open .site-header { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
-  html.menu-open .header-inner { border-bottom-color: transparent; }
   html.menu-open .nav-toggle-icon span:first-child { transform: translateY(4px) rotate(45deg); }
   html.menu-open .nav-toggle-icon span:last-child { transform: translateY(-4.5px) rotate(-45deg); }
   @media (prefers-reduced-motion: no-preference) {
@@ -234,24 +218,40 @@ main:focus { outline: none; }
   font-size: var(--step-0); line-height: 1.3; letter-spacing: -0.01em;
 }
 
-/* ------------------------------------------------------------ home: intro */
+/* ------------------------------------------------------------ home: hero */
+/* The red headline sits high on the left; below it the lookbook image (left) and the promise in
+   large light type, right-aligned (right). Phones stack the three. */
 
-.intro {
-  display: grid; justify-items: center; gap: var(--space-m); text-align: center;
-  padding-top: calc(var(--header-h) + var(--space-xl)); padding-bottom: var(--space-xl);
+.hero { padding-top: calc(var(--header-h) + var(--space-l)); padding-bottom: var(--space-2xl); }
+.hero-title {
+  color: var(--red);
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(3rem, 1.2rem + 7vw, 8.5rem); line-height: 0.92; letter-spacing: -0.05em;
 }
-.intro-title {
-  font-family: var(--font-display); font-weight: var(--display-weight);
-  font-size: var(--step-4); line-height: 0.95; letter-spacing: -0.045em;
+.hero-title .line { display: block; overflow: hidden; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+.hero-title .line > span { display: block; }
+.hero-row { display: grid; gap: var(--space-l); margin-top: var(--space-l); }
+.hero-media { width: min(72vw, 26rem); overflow: hidden; background: var(--ph); }
+.hero-media img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.hero-text {
+  justify-self: end; max-width: 15ch; text-align: right;
+  font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(1.75rem, 1rem + 3vw, 4.25rem); line-height: 1.08; letter-spacing: -0.035em;
 }
-.intro-title .line { display: inline-block; overflow: hidden; padding-bottom: 0.1em; margin-bottom: -0.1em; vertical-align: top; }
-.intro-title .line > span { display: inline-block; }
-@media (min-width: 700px) { .intro-title .line { display: block; } }
-.intro-text { max-width: 44ch; color: var(--muted); font-size: var(--step-0); line-height: 1.5; }
+@media (min-width: 600px) and (max-width: 899px) {   /* tablets: image and promise side by side */
+  .hero-row { grid-template-columns: auto minmax(0, 1fr); align-items: center; }
+}
+@media (min-width: 900px) {
+  .hero-title { padding-left: 7vw; }
+  .hero-row { grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: center; margin-top: var(--space-xl); }
+  .hero-media { grid-column: 2 / span 4; width: auto; }
+  .hero-text { grid-column: 6 / -1; max-width: 16ch; }
+}
 @media (prefers-reduced-motion: no-preference) {
-  .intro-title .line > span { animation: rise 1.2s var(--ease) both; }
-  .intro-title .line:nth-child(2) > span { animation-delay: 0.1s; }
-  .intro-text { animation: slide-up 1.2s var(--ease) 0.2s backwards; }
+  .hero-title .line > span { animation: rise 1.2s var(--ease) both; }
+  .hero-title .line:nth-child(2) > span { animation-delay: 0.1s; }
+  .hero-media img { animation: settle 2s var(--ease) both; }
+  .hero-text { animation: slide-up 1.2s var(--ease) 0.2s backwards; }
 }
 @keyframes rise { from { transform: translateY(105%); } to { transform: none; } }
 @keyframes slide-up { from { transform: translateY(1.5rem); } to { transform: none; } }  /* no fade: keeps LCP text visible */
@@ -270,6 +270,23 @@ main:focus { outline: none; }
 .show-link:hover .cap-title, .show-link:focus-visible .cap-title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.22em; }
 @media (prefers-reduced-motion: no-preference) and (hover: hover) {
   .show-link:hover .show-media img, .show-link:hover .pf-media img { transform: scale(1.025); }
+}
+/* Phones: one project per screen. main.js adds html.is-feed while the hero or a project is in the
+   middle of the screen; only then does the page snap, so Sarah's section below scrolls freely. */
+@media (max-width: 899px) {
+  html.is-feed { scroll-snap-type: y mandatory; }
+  /* the hero fits one screen, so the first swipe moves straight on to the first project */
+  .page-home .hero { scroll-snap-align: start; min-height: 100svh; padding-bottom: var(--space-m); }
+  .hero-media { width: auto; height: min(42svh, 26rem); aspect-ratio: 4 / 5; }
+  .hero-media picture, .hero-media img { height: 100%; }
+  .show-list { gap: 0; }
+  .show-item {
+    height: calc(100svh - var(--header-h)); align-content: center;
+    scroll-snap-align: start; scroll-snap-stop: always;
+  }
+  .show-media { width: min(82vw, calc((100svh - var(--header-h) - 7rem) * 0.8)); }
+  .page-home .more-link { scroll-snap-align: start; margin-top: var(--space-l); }   /* the way out of the feed */
+  html.js .show-item[data-reveal] { transform: none; }   /* fade only: a moving box would move its snap point */
 }
 .more-link { margin-top: var(--space-2xl); text-align: center; }
 .more-link a {
