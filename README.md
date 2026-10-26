@@ -153,17 +153,19 @@ Anbefalet opsætning: Git-integration, så hver ændring på `main` publiceres a
 
 Alternativ uden Git (Direct Upload): `npx wrangler pages deploy public --project-name=sga-creatives`. Bemærk, at et Direct Upload-projekt ikke senere kan skiftes til Git-integration.
 
-**Status pr. september 2026:** Cloudflare Pages er fortsat i drift, men Cloudflares dokumentation anbefaler nu Workers (Static Assets) til nye projekter. Pages opfylder alle behov her. Bekræft den aktuelle anbefaling ved lancering (se kilder nederst).
+**Status pr. september 2026:** Cloudflare Pages er fortsat i drift, men Cloudflares dokumentation anbefaler nu Workers (Static Assets) til nye projekter. Pages opfylder alle behov her, og sitet er lanceret på Pages (se kilder nederst).
 
-**Grænser:** Free-planen tillader 20.000 filer pr. site og 25 MiB pr. fil, `_headers` højst 100 regler. Sitet består af 163 filer på i alt ca. 12 MB, og den største fil er videoen på 1,1 MB.
+**Grænser:** Free-planen tillader 20.000 filer pr. site og 25 MiB pr. fil, `_headers` højst 100 regler. Sitet består af 267 filer på i alt ca. 15 MB (oktober 2026), og den største fil er videoen på 1,1 MB.
 
 ## Domæne: www på Pages, DNS hos Simply
 
-**Status 29. september 2026:**
-- Domænet er **www.sgacreatives.com**. `www` har CNAME til `sga-creatives.pages.dev` hos Simply.
+**Status 26. oktober 2026 (alt er sat op og testet):**
+- Domænet er **www.sgacreatives.com**. `www` har CNAME til `sga-creatives.pages.dev` hos Simply, og sitet kører live der.
 - `content/site.json` har domænet sat, så canonical-links og sitemap peger på det.
-- Roddomænet `sgacreatives.com` mangler stadig viderestilling (trin 4).
-- Domænet har ingen MX-records, så der er ingen mail at passe på.
+- Roddomænet `sgacreatives.com` viderestilles af Simply med **301**, og både sti og query bevares (`/work/timberland-rezet/?utm_source=test` lander samme sted på www). Det sker i to hop: først til `http://www…`, derefter opgraderer Cloudflare til `https://www…`. Ingen redirect-loop.
+- Domænet har ingen MX-, TXT- eller CAA-records, så der er ingen mail at passe på.
+
+Trinene herunder beskriver, hvordan det blev sat op, til brug ved gendannelse eller flytning.
 
 Rækkefølgen er vigtig. Hvis CNAME oprettes, før domænet er tilføjet i Pages, giver det fejl 522.
 
@@ -194,12 +196,7 @@ curl -I "https://<domæne>.dk/work/timberland-rezet/?utm_source=test"   # bevare
 curl -sIL https://<domæne>.dk/ | grep -i location        # ingen redirect-loop
 ```
 
-**Ikke bekræftet i Simplys dokumentation** (test ved lancering, eller spørg Simplys support):
-- om viderestillingen bevarer sti og query-parametre (fx `/work/…?utm=…`),
-- hvilken statuskode den bruger (301 eller 302),
-- om den ændrer andre records.
-
-Hvis stien ikke bevares, lander besøgende på forsiden. Det er acceptabelt, men bør noteres.
+**Testet 26.10.2026:** Simplys viderestilling bruger 301 og bevarer sti og query-parametre. Den har ikke ændret andre records.
 
 Kontrollér også MX og TXT bagefter, og send en testmail til og fra domænet.
 
@@ -229,7 +226,7 @@ Det anbefalede setup er det nuværende:
 **Status 29.9.2026:**
 - sgacreatives.com (.com, altså ikke Punktum dk) er registreret 18.8.2026 via Simply, med Key-Systems som registrator.
 - Domænet er betalt til 18.8.2027.
-- Nyregistrerede .com-domæner har 60 dages transferlås, så **registreringen kan tidligst flyttes omkring 17.10.2026**.
+- Nyregistrerede .com-domæner har 60 dages transferlås. Den udløb omkring 17.10.2026, så registreringen kan flyttes nu, hvis det en dag bliver aktuelt.
 - DNS-records i dag:
 
 | Type | Navn | Værdi | Formål |

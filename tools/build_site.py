@@ -325,6 +325,32 @@ HERO_BACK = (CASE_BY_SLUG["adidas-ways-to-style"], "adidas-ways-to-style-01")
 HOME_ORDER = [CASE_BY_SLUG["nike-event-consulting"]] + [c for c in CASES if c["slug"] != "nike-event-consulting"]
 
 
+# The meeting point under the statement: two lines draw in from either side (brands from the left,
+# creative people from the right), bend towards each other and meet in a soft S. Where they meet a
+# small red point appears (culture) and beats slowly, while dots keep flowing in along both lines.
+# Decorative: it retells the sentence above. Lines and points are CSS; the flow is SVG animateMotion,
+# hidden under prefers-reduced-motion (see .meet in main.css).
+def _flow(path: str) -> str:
+    return "".join(
+        f'<circle class="meet-dot" r="3.5"><animateMotion dur="3.6s" begin="{k * 1.2:.1f}s" repeatCount="indefinite" '
+        f'calcMode="spline" keyTimes="0;1" keyPoints="0;1" keySplines=".45 0 .55 1"><mpath href="#{path}"/></animateMotion>'
+        f'<animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.12;.82;1" dur="3.6s" begin="{k * 1.2:.1f}s" repeatCount="indefinite"/></circle>'
+        for k in range(3))
+
+
+MEET = f"""<figure class="meet" data-reveal aria-hidden="true">
+      <svg viewBox="0 0 640 200" focusable="false">
+        <path id="meet-a" class="meet-line" pathLength="1" d="M10 100C150 100 200 36 320 100"/>
+        <path id="meet-b" class="meet-line" pathLength="1" d="M630 100C490 100 440 164 320 100"/>
+        <g class="meet-flow">{_flow("meet-a")}{_flow("meet-b")}</g>
+        <circle class="meet-end" cx="10" cy="100" r="5"/><circle class="meet-end" cx="630" cy="100" r="5"/>
+        <circle class="meet-pulse" cx="320" cy="100" r="7"/>
+        <circle class="meet-core" cx="320" cy="100" r="7"/>
+      </svg>
+      <figcaption class="meet-labels"><span>Brands</span><span>Culture</span><span>Creative people</span></figcaption>
+    </figure>"""
+
+
 def alt_for(c: dict, name: str) -> str:
     if name == c["card_image"] and c.get("card_alt"):   # a card image that is not in the gallery
         return c["card_alt"]
@@ -410,6 +436,7 @@ def home() -> str:
 <section class="statement" aria-label="What SGA creatives does">
   <div class="container statement-inner">
     <p class="statement-text" data-reveal>{INTRO}</p>
+    {MEET}
   </div>
 </section>
 """
