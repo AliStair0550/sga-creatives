@@ -282,7 +282,7 @@ main:focus { outline: none; }
   html.js .meet[data-reveal].is-in .meet-line { stroke-dashoffset: 0; }
   html.js .meet[data-reveal] .meet-end { opacity: 0; transition: opacity 0.5s var(--ease) 0.1s; }
   html.js .meet[data-reveal].is-in .meet-end { opacity: 1; }
-  html.js .meet[data-reveal] .meet-core { transform: scale(0); transition: transform 0.7s cubic-bezier(0.2, 1.6, 0.35, 1) 1.55s; }
+  html.js .meet[data-reveal] .meet-core { transform: scale(0); transition: transform 0.9s var(--ease) 1.55s; }
   html.js .meet[data-reveal].is-in .meet-core { transform: none; }
   html.js .meet[data-reveal] .meet-flow { opacity: 0; transition: opacity 0.8s var(--ease) 1.9s; }
   html.js .meet[data-reveal].is-in .meet-flow { opacity: 1; }
@@ -437,7 +437,7 @@ main:focus { outline: none; }
 .reach-icon {
   grid-row: 1 / span 2; display: grid; place-items: center;
   width: 2.75rem; aspect-ratio: 1; border-radius: 50%; background: var(--ink); color: var(--white);
-  transition: background-color 0.3s var(--ease), transform 0.45s cubic-bezier(0.2, 1.6, 0.35, 1);
+  transition: background-color 0.3s var(--ease), transform 0.45s var(--ease);
 }
 .reach-icon svg { width: 42%; height: 42%; }
 .reach-kind { color: var(--muted); }
@@ -576,7 +576,7 @@ main:focus { outline: none; }
 .reach-option {
   display: inline-flex; align-items: center; gap: 0.6rem; min-height: 2.75rem; padding: 0 1.3rem 0 1rem;
   border: 1px solid var(--line-strong); border-radius: 999px; text-decoration: none;
-  transition: transform 0.4s cubic-bezier(0.2, 1.6, 0.35, 1), background-color 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
+  transition: transform 0.4s var(--ease), background-color 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
 }
 .reach-option svg { width: 1.1rem; height: 1.1rem; }
 .reach-option:focus-visible { background: var(--ink); color: var(--white); border-color: var(--ink); }
