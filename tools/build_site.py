@@ -325,27 +325,55 @@ HERO_BACK = (CASE_BY_SLUG["adidas-ways-to-style"], "adidas-ways-to-style-01")
 HOME_ORDER = [CASE_BY_SLUG["nike-event-consulting"]] + [c for c in CASES if c["slug"] != "nike-event-consulting"]
 
 
-# The meeting point under the statement: two lines draw in from either side (brands from the left,
-# creative people from the right), bend towards each other and meet in a soft S. Where they meet a
-# small red point appears (culture) and beats slowly, while dots keep flowing in along both lines.
-# Decorative: it retells the sentence above. Lines and points are CSS; the flow is SVG animateMotion,
-# hidden under prefers-reduced-motion (see .meet in main.css).
-def _flow(path: str) -> str:
-    return "".join(
-        f'<circle class="meet-dot" r="3.5"><animateMotion dur="3.6s" begin="{k * 1.2:.1f}s" repeatCount="indefinite" '
-        f'calcMode="spline" keyTimes="0;1" keyPoints="0;1" keySplines=".45 0 .55 1"><mpath href="#{path}"/></animateMotion>'
-        f'<animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.12;.82;1" dur="3.6s" begin="{k * 1.2:.1f}s" repeatCount="indefinite"/></circle>'
-        for k in range(3))
+# The meeting point under the statement: from each side a fan of seven fine threads, brands from
+# the left and creative people from the right, draws in and gathers in a single point in the middle,
+# where a small red point, culture, beats slowly. The threads fade in from nothing at the edges and
+# grow stronger towards the middle; once drawn they breathe slowly, each at its own pace, like silk
+# in a draught (SVG <animate> on the path; main.js pauses it off screen and under reduced motion).
+# Decorative: it retells the sentence above.
+MEET_W, MEET_H, MEET_C = 640, 220, 110          # viewBox width, height and the vertical centre
+MEET_STRANDS = 7
+
+
+def _strand(side: int, k: int) -> str:
+    """One thread: side -1 starts at the left edge, +1 at the right; k = 0..6 from top to bottom."""
+    off = k - (MEET_STRANDS - 1) / 2                # -3 .. 3
+    x0 = 8 if side < 0 else MEET_W - 8
+    c1x = 150 if side < 0 else MEET_W - 150
+    c2x = 255 if side < 0 else MEET_W - 255
+    mid = MEET_W / 2
+    tilt = 1 if side < 0 else -1                    # the two fans lean in opposite directions: a soft S
+    def d(spread: float, sway: float, lean: float) -> str:
+        y0 = MEET_C + off * spread
+        y1 = MEET_C + off * spread * 0.9 + sway
+        y2 = MEET_C + off * spread * 0.18 - tilt * lean
+        return f"M{x0} {y0:.1f}C{c1x} {y1:.1f} {c2x} {y2:.1f} {mid} {MEET_C}"
+    a = d(17, 0, 26)
+    b = d(15 + (k % 3) * 2.2, (6 if k % 2 else -6) * (1 + abs(off) / 3), 34)
+    dur = 6.5 + k * 0.55 + (0.8 if side > 0 else 0)
+    strength = 1 - abs(off) / 4.2                   # the middle thread strongest, the outer ones faint
+    grad = "meet-fade-l" if side < 0 else "meet-fade-r"
+    return (f'<path class="meet-line" pathLength="1" stroke="url(#{grad})" '
+            f'style="--i:{k};opacity:{strength:.2f}" d="{a}">'
+            f'<animate attributeName="d" dur="{dur:.2f}s" repeatCount="indefinite" calcMode="spline" '
+            f'keyTimes="0;.5;1" keySplines=".45 0 .55 1;.45 0 .55 1" values="{a};{b};{a}"/></path>')
 
 
 MEET = f"""<figure class="meet" data-reveal aria-hidden="true">
-      <svg viewBox="0 0 640 200" focusable="false">
-        <path id="meet-a" class="meet-line" pathLength="1" d="M10 100C150 100 200 36 320 100"/>
-        <path id="meet-b" class="meet-line" pathLength="1" d="M630 100C490 100 440 164 320 100"/>
-        <g class="meet-flow">{_flow("meet-a")}{_flow("meet-b")}</g>
-        <circle class="meet-end" cx="10" cy="100" r="5"/><circle class="meet-end" cx="630" cy="100" r="5"/>
-        <circle class="meet-pulse" cx="320" cy="100" r="7"/>
-        <circle class="meet-core" cx="320" cy="100" r="7"/>
+      <svg viewBox="0 0 {MEET_W} {MEET_H}" focusable="false">
+        <defs>
+          <linearGradient id="meet-fade-l" gradientUnits="userSpaceOnUse" x1="8" y1="0" x2="{MEET_W // 2}" y2="0">
+            <stop offset="0" stop-color="#111" stop-opacity="0"/><stop offset=".45" stop-color="#111" stop-opacity=".55"/><stop offset="1" stop-color="#111"/>
+          </linearGradient>
+          <linearGradient id="meet-fade-r" gradientUnits="userSpaceOnUse" x1="{MEET_W - 8}" y1="0" x2="{MEET_W // 2}" y2="0">
+            <stop offset="0" stop-color="#111" stop-opacity="0"/><stop offset=".45" stop-color="#111" stop-opacity=".55"/><stop offset="1" stop-color="#111"/>
+          </linearGradient>
+        </defs>
+        <g class="meet-fan meet-fan--l">{"".join(_strand(-1, k) for k in range(MEET_STRANDS))}</g>
+        <g class="meet-fan meet-fan--r">{"".join(_strand(1, k) for k in range(MEET_STRANDS))}</g>
+        <circle class="meet-halo" cx="{MEET_W // 2}" cy="{MEET_C}" r="7"/>
+        <circle class="meet-halo meet-halo--late" cx="{MEET_W // 2}" cy="{MEET_C}" r="7"/>
+        <circle class="meet-core" cx="{MEET_W // 2}" cy="{MEET_C}" r="6.5"/>
       </svg>
       <figcaption class="meet-labels"><span>Brands</span><span>Culture</span><span>Creative people</span></figcaption>
     </figure>"""
@@ -422,7 +450,7 @@ def home() -> str:
 <section class="hero container" aria-labelledby="hero-title">
   <h1 id="hero-title" class="hero-title">Where brands <br>meet culture.</h1>
   <div class="hero-stack">
-    <div class="hero-back" data-scroll="parallax"><div class="hero-back-inner">{picture(HERO_BACK[1], alt_for(*HERO_BACK), "(min-width: 900px) 18vw, 44vw", eager=True)}</div></div>
+    <div class="hero-back" data-scroll="drift"><div class="hero-back-inner">{picture(HERO_BACK[1], alt_for(*HERO_BACK), "(min-width: 900px) 18vw, 44vw", eager=True)}</div></div>
     <div class="hero-media">{picture(HERO_FRONT[1], alt_for(*HERO_FRONT), "(min-width: 900px) 24vw, 62vw", eager=True, priority=True)}</div>
   </div>
 </section>

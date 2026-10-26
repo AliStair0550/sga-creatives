@@ -119,6 +119,7 @@
   /* ---------------------------------------------------------- scroll-driven effects (one loop for all) */
   // [data-scroll=fill]    --f 0..1 as a process word travels from the bottom of the screen to above the middle
   // [data-scroll=parallax] --rv 0..1 reveal on the way in, --py -1..1 drift across the whole passage
+  // [data-scroll=drift]    --d 0..1 over the first screen of scrolling (0 at the top of the page)
   // Only elements near the viewport are measured (IntersectionObserver). Each frame reads every
   // position first and writes afterwards, and skips unchanged values, so the phone never has to
   // recalculate layout in between.
@@ -145,6 +146,8 @@
         var el = pair[0], r = pair[1];
         if (el.getAttribute('data-scroll') === 'fill') {
           set(el, '--f', clamp01((vh * 0.92 - r.top) / (vh * 0.5)).toFixed(3));
+        } else if (el.getAttribute('data-scroll') === 'drift') {
+          set(el, '--d', clamp01(window.scrollY / vh).toFixed(3));
         } else {
           var t = clamp01((vh - r.top) / (vh + r.height));
           set(el, '--rv', easeOut(clamp01(t / 0.32)).toFixed(3));
@@ -211,6 +214,20 @@
       window.scrollTo({ top: tops[to], behavior: calm.matches ? 'auto' : 'smooth' });
     }, { passive: true });
   }
+
+  /* ---------------------------------------------------------- the meeting point: threads breathe only in view */
+  // The threads' slow movement is SVG animation; it runs only while the figure is on screen, and
+  // never under reduced motion (the figure then stands still, fully drawn).
+  Array.prototype.forEach.call(document.querySelectorAll('.meet svg'), function (svg) {
+    if (!svg.pauseAnimations) return;
+    var seen = false;
+    var apply = function () { if (seen && !calm.matches) svg.unpauseAnimations(); else svg.pauseAnimations(); };
+    apply();
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) { seen = entries[0].isIntersecting; apply(); }).observe(svg);
+    } else { seen = true; apply(); }
+    if (calm.addEventListener) calm.addEventListener('change', apply);
+  });
 
   /* ---------------------------------------------------------- "Get in touch": close on Escape or click outside */
   Array.prototype.forEach.call(document.querySelectorAll('details.reach'), function (reach) {
