@@ -330,7 +330,7 @@ HOME_ORDER = [CASE_BY_SLUG["nike-event-consulting"]] + [c for c in CASES if c["s
 # where a small red point, culture, beats slowly. The threads fade in from nothing at the edges and
 # grow stronger towards the middle; once drawn they breathe slowly, each at its own pace, like silk
 # in a draught (SVG <animate> on the path; main.js pauses it off screen and under reduced motion).
-# Decorative: it retells the sentence above.
+# Decorative and wordless: a pure symbol for the sentence above.
 MEET_W, MEET_H, MEET_C = 640, 220, 110          # viewBox width, height and the vertical centre
 MEET_STRANDS = 7
 
@@ -375,7 +375,6 @@ MEET = f"""<figure class="meet" data-reveal aria-hidden="true">
         <circle class="meet-halo meet-halo--late" cx="{MEET_W // 2}" cy="{MEET_C}" r="7"/>
         <circle class="meet-core" cx="{MEET_W // 2}" cy="{MEET_C}" r="6.5"/>
       </svg>
-      <figcaption class="meet-labels"><span>Brands</span><span>Culture</span><span>Creative people</span></figcaption>
     </figure>"""
 
 
