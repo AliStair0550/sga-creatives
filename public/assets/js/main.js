@@ -169,20 +169,47 @@
     request();
   }
 
-  /* ---------------------------------------------------------- phones: snap the project feed */
-  // The page snaps one project per screen only while the hero or a project crosses the middle of
-  // the screen (html.is-feed, see main.css). Below the feed the snapping is off, so long sections
-  // scroll freely on every browser.
-  var feed = Array.prototype.slice.call(document.querySelectorAll('.page-home .hero, .show-item'));
-  if (feed.length && 'IntersectionObserver' in window) {
-    var inBand = new Set();
-    var band = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) inBand.add(entry.target); else inBand.delete(entry.target);
+  /* ---------------------------------------------------------- phones: the home page as a swipe feed */
+  // On the home page, phones and tablets snap one screen at a time: the hero, each project, the
+  // statement and the footer (html.is-feed, see main.css). Snapping stays on for the whole page:
+  // turning it on and off while scrolling made the browser jump back to the last stop.
+  // Swipe intent: plain snapping goes to the nearest stop, so a short swipe snapped back and had to
+  // be repeated, which felt like the page correcting itself. A clear swipe always moves exactly one
+  // stop in its direction, in one gliding movement.
+  var feedHome = document.querySelector('.page-home .show-list');
+  if (feedHome) {
+    root.classList.add('is-feed');
+    var stops = Array.prototype.slice.call(document.querySelectorAll('.page-home .hero, .show-item, .page-home .statement'));
+    var phone = window.matchMedia('(max-width: 899px)');
+    var start = null;
+    var stopTops = function () {
+      var pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
+      var max = root.scrollHeight - window.innerHeight;
+      var tops = stops.map(function (el, i) {
+        var top = i === 0 ? 0 : el.getBoundingClientRect().top + window.scrollY - pad;
+        return Math.min(Math.max(0, Math.round(top)), max);
       });
-      root.classList.toggle('is-feed', inBand.size > 0);
-    }, { rootMargin: '-45% 0px -45% 0px' });
-    feed.forEach(function (el) { band.observe(el); });
+      tops.push(max);   // the footer, at the very end
+      return tops.filter(function (top, i) { return i === 0 || top - tops[i - 1] > 4; });
+    };
+    window.addEventListener('touchstart', function (event) {
+      start = (phone.matches && event.touches.length === 1)
+        ? { x: event.touches[0].clientX, y: event.touches[0].clientY, scroll: window.scrollY, t: Date.now() } : null;
+    }, { passive: true });
+    window.addEventListener('touchend', function (event) {
+      if (!start || !event.changedTouches.length) return;
+      var dy = start.y - event.changedTouches[0].clientY;   // finger up = scroll down
+      var dx = start.x - event.changedTouches[0].clientX;
+      var quick = Date.now() - start.t < 400;
+      if (Math.abs(dy) < Math.abs(dx) || Math.abs(dy) < (quick ? 24 : 60)) { start = null; return; }
+      var tops = stopTops();
+      var from = 0;   // the stop the swipe started on
+      tops.forEach(function (top, i) { if (Math.abs(top - start.scroll) < Math.abs(tops[from] - start.scroll)) from = i; });
+      var to = Math.min(Math.max(from + (dy > 0 ? 1 : -1), 0), tops.length - 1);
+      start = null;
+      if (to === from) return;
+      window.scrollTo({ top: tops[to], behavior: calm.matches ? 'auto' : 'smooth' });
+    }, { passive: true });
   }
 
   /* ---------------------------------------------------------- "Get in touch": close on Escape or click outside */

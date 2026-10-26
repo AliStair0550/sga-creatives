@@ -20,9 +20,7 @@
     "gallery": [
       {"image": "adidas-kiosk-01", "alt": "The Friends & Family Kiosk inside Rezet Store: a black counter with white adidas stripes, menu boards and walls of sneakers behind it.", "layout": "wide"},
       {"image": "adidas-kiosk-03", "alt": "The striped kiosk counter with a glass cabinet of drink cans and hanging menu boards for drinks and ice cream.", "layout": "half"},
-      {"image": "adidas-kiosk-04", "alt": "Three people seen from behind on a city street, wearing Rezet Store × adidas Originals Kiosk T-shirts.", "layout": "half"},
-      {"image": "adidas-kiosk-05", "alt": "", "layout": "half"},
-      {"image": "adidas-kiosk-06", "alt": "", "layout": "half"}
+      {"image": "adidas-kiosk-04", "alt": "Three people seen from behind on a city street, wearing Rezet Store × adidas Originals Kiosk T-shirts.", "layout": "half"}
     ],
     "credits": [
       ["Concept & execution", "Sarah Al-farhan, Rezet Store"],
@@ -49,12 +47,7 @@
     "done": ["Idea", "Editorial approach", "Magazine format", "Content for multiple platforms"],
     "lead": {"image": "rezet-lookbook-01", "alt": "Cover of the Rezet Store Lookbook Autumn Winter 2025: a model in a black track jacket and a long grey skirt against an olive background."},
     "gallery": [
-      {"image": "rezet-lookbook-02", "alt": "An open spread from the Rezet Store Lookbook showing two styled looks against an olive background.", "layout": "wide"},
-      {"image": "rezet-lookbook-03", "alt": "", "layout": "half"},
-      {"image": "rezet-lookbook-04", "alt": "", "layout": "half"},
-      {"image": "rezet-lookbook-05", "alt": "", "layout": "third"},
-      {"image": "rezet-lookbook-06", "alt": "", "layout": "third"},
-      {"image": "rezet-lookbook-07", "alt": "", "layout": "third"}
+      {"image": "rezet-lookbook-02", "alt": "An open spread from the Rezet Store Lookbook showing two styled looks against an olive background.", "layout": "wide"}
     ],
     "credits": [
       ["Client", "Rezet Store"],
@@ -82,9 +75,7 @@
     "gallery": [
       {"image": "adidas-ways-to-style-03", "alt": "A man in a shearling-collared leather jacket sits on a red bicycle on a city street, wearing Adistar Control 5 sneakers.", "layout": "half"},
       {"image": "adidas-ways-to-style-02", "alt": "Close-up of silver Adistar Control 5 sneakers under wide red trousers on cobblestones.", "layout": "half"},
-      {"image": "adidas-ways-to-style-04", "alt": "Close-up of silver Adistar Control 5 sneakers with black trousers, next to a bicycle.", "layout": "wide"},
-      {"image": "adidas-ways-to-style-05", "alt": "", "layout": "half"},
-      {"image": "adidas-ways-to-style-06", "alt": "", "layout": "half"}
+      {"image": "adidas-ways-to-style-04", "alt": "Close-up of silver Adistar Control 5 sneakers with black trousers, next to a bicycle.", "layout": "wide"}
     ],
     "credits": [
       ["Brand", "adidas"],
@@ -148,9 +139,7 @@
     "gallery": [
       {"image": "nike-event-consulting-01", "alt": "A large black Swoosh on a white wall above a metal truss counter in a Nike activation space.", "layout": "half"},
       {"video": "nike-event-consulting", "label": "Video from the Nike activation space: a host prepares the counter beneath the Swoosh.", "layout": "half"},
-      {"image": "nike-event-consulting-02", "alt": "A tray of soap bars wrapped in paper printed with the Nike RUN logo.", "layout": "third"},
-      {"image": "nike-event-consulting-04", "alt": "", "layout": "third"},
-      {"image": "nike-event-consulting-05", "alt": "", "layout": "third"}
+      {"image": "nike-event-consulting-02", "alt": "A tray of soap bars wrapped in paper printed with the Nike RUN logo.", "layout": "wide"}
     ],
     "credits": [
       ["Client", "Nike"],

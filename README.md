@@ -87,21 +87,22 @@ python3 tools/build_site.py
 
 Scriptet bruger kun Pythons standardbibliotek. Det tilføjer automatisk en versionsnøgle til CSS og JS (`main.css?v=…`), så besøgende altid får den nyeste version, selvom filerne caches i et år.
 
-## Billeder, der mangler
+## Tilføj billeder til en case
 
-Galleriet i hver case (`gallery` i `content/cases.json`) kan indeholde billeder, der ikke findes endnu. De vises ikke på sitet, og galleriets rækker udjævnes, så intet står halvtomt. Sådan tilføjer du et af dem:
+`content/cases.json` indeholder kun billeder, der findes, så sitet aldrig viser tomme rammer. Sådan tilføjer du et nyt:
 
-1. Gem billedet som `assets/images/<navn>.jpg`, fx `rezet-lookbook-03.jpg`. Navnet står i `cases.json`.
-2. Skriv en engelsk alt-tekst i feltet `"alt"` for billedet i `cases.json`.
-3. Kør:
+1. Gem billedet som `assets/images/<navn>.jpg`, fx `rezet-lookbook-03.jpg`.
+2. Kør `python3 tools/optimize_media.py`.
+3. Tilføj det i casens `gallery` i `cases.json` med en engelsk alt-tekst og et layout, fx
+   `{"image": "rezet-lookbook-03", "alt": "...", "layout": "half"}`.
+4. Kør:
    ```bash
-   python3 tools/optimize_media.py
    python3 tools/build_site.py
    python3 tools/check.py
    ```
-4. Commit og push.
+5. Commit og push.
 
-`layout` styrer formatet: `wide` er fuld bredde (16:9), `half` er halv bredde og `third` er en tredjedel (begge 4:5). Portrættet på About me hedder `sarah-al-farhan-01`. `check.py` viser, hvilke billeder der stadig mangler.
+`layout` styrer formatet: `wide` er fuld bredde (16:9), `half` er halv bredde og `third` er en tredjedel (begge 4:5). Billeder i samme række skal have samme layout (to `half` eller tre `third`); en række, der ikke går op, udjævnes automatisk. Portrættet på About me hedder `sarah-al-farhan-01`.
 
 ## Deling og SEO
 
@@ -125,7 +126,7 @@ Galleriet i hver case (`gallery` i `content/cases.json`) kan indeholde billeder,
    - `card_image` er casens billede på forsiden og på Projects. Ligger det ikke i galleriet, skrives alt-teksten i `card_alt`.
    - `provenance` fortæller, i hvilken rolle Sarah lavede projektet.
    - `intro`, `facts`, `done` (Sarahs arbejde som korte punkter) og `credits` er casesidens tekst. Hold den kort.
-   - `gallery`: se "Billeder, der mangler" ovenfor.
+   - `gallery`: se "Tilføj billeder til en case" ovenfor.
    - Rækkefølgen i filen er rækkefølgen på Projects og i "Next project". Forsiden viser Nike først (`HOME_ORDER` i `build_site.py`).
 4. Kør `python3 tools/build_site.py`, og tjek siden lokalt.
 5. Tilføj den nye URL i sitemap. Det sker automatisk, når domænet er sat.
@@ -308,6 +309,7 @@ Testet mod `python3 -m http.server` med Chrome (Playwright) og Lighthouse:
 - Lighthouse (forside og About me på mobil, en caseside på desktop): 100 i accessibility, best practices og SEO.
 - Simuleret 4G og 4x langsommere CPU: første indhold på 0,4 til 0,6 s, LCP 0,57 til 0,67 s på forside, Projects og About me, og ingen layout-skift.
 - Mobilmenu (fokus, Escape), tastaturrækkefølge, swipe-feeden på mobil ned og op, logoet til toppen fra alle positioner og visning uden JavaScript.
+- 26. oktober 2026: swipe-feeden målt frame for frame i 390×844, 390×664 og 360×740 med touch-emulering. Korte og lange swipes går præcis ét stop frem eller tilbage uden at rette sig tilbage, også fra bunden. 55 sidevisninger (11 sider × 5 bredder) uden fejl.
 
 **Ikke testet:** rigtige iOS- og Android-enheder, Safari og Firefox samt skærmlæser.
 

@@ -379,11 +379,12 @@ def home() -> str:
     in front, adidas Ways to Style smaller, higher and behind it (it slides out on load and drifts on scroll).
     Then one project at a time in the middle of the page with a small caption under each
     (company, then project title); on phones they snap one per screen as you swipe (main.js
-    turns the snapping on only while the feed is in view). Then the promise, on its own."""
+    turns the snapping on only while the feed is in view). The project images load with the page,
+    so a fast swipe never lands on an empty frame. Then the promise, on its own."""
     projects = "".join(f"""
     <li class="show-item" data-reveal>
       <a class="show-link" href="/work/{c['slug']}/">
-        <div class="show-media">{media(c['card_image'], alt_for(c, c['card_image']), "(min-width: 900px) 34vw, 78vw")}</div>
+        <div class="show-media">{media(c['card_image'], alt_for(c, c['card_image']), "(min-width: 900px) 34vw, 78vw", eager=True)}</div>
         {caption(c)}
       </a>
     </li>""" for c in HOME_ORDER)
