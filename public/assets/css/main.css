@@ -482,7 +482,14 @@ main:focus { outline: none; }
   padding-top: var(--space-s); border-top: 1px solid var(--line);
   color: var(--muted);
 }
-@media (min-width: 700px) { .footer-top { grid-template-columns: repeat(12, minmax(0, 1fr)); } .footer-brand { grid-column: 1 / span 6; } .footer-contact { grid-column: 8 / -1; } }
+@media (min-width: 700px) {
+  .footer-top { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  /* side by side: the wordmark sits at the bottom, its lowest point level with the bottom of
+     "Instagram" (--logo-drop evens out the room under the letters in the link and in the logo) */
+  .footer-brand { grid-column: 1 / span 6; align-content: end; }
+  .footer-logo { --logo-drop: -8px; align-items: flex-end; transform: translateY(var(--logo-drop)); }
+  .footer-contact { grid-column: 8 / -1; }
+}
 
 /* ------------------------------------------------------------ missing image */
 
