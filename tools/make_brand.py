@@ -36,11 +36,13 @@ _TMP = Path(tempfile.mkdtemp())
 # The wordmark "sga.creatives": Oswald Regular, a condensed grotesk. Only its outlines ship (as SVG
 # paths), so the site loads no extra font.
 WORDMARK = instantiateVariableFont(TTFont(OSWALD), {"wght": 400})
-# The app icon / favicon: "sga" from the wordmark, a touch bolder so it holds at 16 px, white on ink.
+# The app icon / favicon: "sga" from the wordmark, a touch bolder so it holds at 16 px, ink on light
+# grey, so it sits quietly with the white site.
 ICON_AXES = {"wght": 500}
 ICON_FONT = instantiateVariableFont(TTFont(OSWALD), ICON_AXES)
-ICON_BG = INK
-ICON_FG = WHITE
+LIGHT_GREY = "#E9E9E7"
+ICON_BG = LIGHT_GREY
+ICON_FG = INK
 
 
 def static_font(src: Path, axes: dict, size: int) -> ImageFont.FreeTypeFont:
