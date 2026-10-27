@@ -98,7 +98,7 @@ main:focus { outline: none; }
 }
 .skip-link:focus { top: var(--space-s); }
 
-.text-link { display: inline-flex; align-items: center; min-height: 44px; text-decoration: underline; transition: color 0.3s var(--ease); }
+.text-link { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; transition: color 0.3s var(--ease); }   /* no underline: the hover colour shows it is a link */
 .text-link:hover { color: var(--red); }
 
 /* ------------------------------------------------------------ buttons */
@@ -467,8 +467,7 @@ main:focus { outline: none; }
 
 .site-footer { border-top: 1px solid var(--line); padding-block: var(--space-xl) var(--space-m); }
 .footer-top { display: grid; gap: var(--space-l) var(--gutter); padding-bottom: var(--space-xl); }
-.footer-brand { display: grid; justify-items: start; gap: var(--space-s); }   /* the wordmark, the claim under it */
-.footer-claim { font-size: var(--t-m); line-height: 1.12; letter-spacing: var(--track-m); max-width: 12ch; }
+.footer-brand { display: grid; justify-items: start; align-content: start; }   /* the wordmark only, at the top, level with the contact lines */
 .footer-logo { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); }
 .footer-logo svg { height: 1.6rem; width: auto; }
 .footer-col ul { display: grid; gap: 0; }

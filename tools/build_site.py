@@ -158,7 +158,6 @@ def footer() -> str:
     <div class="footer-top">
       <div class="footer-brand">
         <a class="footer-logo" href="/" aria-label="SGA creatives, home" data-home>{inline_logo()}</a>
-        <p class="footer-claim">Where brands meet culture.</p>
       </div>
       <div class="footer-col footer-contact">
         <ul>
@@ -291,13 +290,13 @@ def case_ld(c: dict) -> dict:
 SERVICES = [
     {"name": "Campaigns & creative production",
      "problem": "When your campaigns don’t connect with people.",
-     "solution": "We turn cultural insight into campaigns that land."},
+     "solution": "I turn cultural insight into campaigns that land."},
     {"name": "Events & experiences",
      "problem": "When your events lack real connection.",
-     "solution": "We create experiences that bring people together."},
+     "solution": "I create experiences that bring people together."},
     {"name": "Connections & project management",
      "problem": "When your projects lose direction and momentum.",
-     "solution": "We bring the right people in and keep it moving."},
+     "solution": "I bring the right people in and keep it moving."},
 ]
 
 # "My process": four giant words that fill in as you scroll, each with a line in Sarah's own voice.
@@ -315,7 +314,7 @@ EXPERIENCE = [   # (company, role), most recent first; no years on the site
     ("Bestseller A/S · NAME IT", "Social Media and PR Manager"),
 ]
 
-INTRO = "We connect brands with creative people across campaigns and cultural experiences."
+INTRO = "I connect brands with creative people across campaigns and cultural experiences."
 ABOUT_LEAD = "I connect brands, people and culture through creative vision and practical experience. I bring the right partners together and manage teams, budgets and every detail from concept to execution."
 CASE_BY_SLUG = {c["slug"]: c for c in CASES}
 # the two hero images on the home page: (case, image). The first is in front, the second smaller behind it
@@ -570,7 +569,6 @@ def contact_page() -> str:
 
 <section class="contact-note container" aria-label="About Sarah">
   <p class="contact-note-text">{ABOUT_LEAD}</p>
-  <a class="text-link" href="/about/">More about Sarah</a>
 </section>
 """
     return page(
