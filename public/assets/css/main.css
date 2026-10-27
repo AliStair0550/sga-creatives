@@ -380,7 +380,12 @@ main:focus { outline: none; }
 .step:last-child { border-bottom: 0; }   /* the footer's line closes the list: one line, not two */
 .step-word { font-size: var(--t-l); line-height: 1.02; letter-spacing: var(--track-l); color: var(--ink); }
 .step-note { max-width: 32ch; font-size: var(--t-m); line-height: 1.15; letter-spacing: var(--track-m); color: var(--muted); }
-@media (min-width: 900px) { .step { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+/* side by side, the word and Sarah's line are centred on each other (not on one baseline, which
+   left the word looking higher than its two-line note) */
+@media (min-width: 900px) {
+  .step { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; }
+  .step-word { position: relative; top: 0.05em; }   /* the words have no descenders: centre the letters, not the line box */
+}
 @supports ((-webkit-background-clip: text) or (background-clip: text)) {
   @media (prefers-reduced-motion: no-preference) {
     .step-word {
